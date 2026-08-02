@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scientific Visualization | SEES:4100 Week 07</title>
+<style>
+    :root {
+      --bg: #0d1b2a; --bg-alt: #1a1a2e;
+      --panel: rgba(255, 255, 255, 0.06); --panel-strong: rgba(255, 255, 255, 0.1);
+      --text: #e0e0e0; --title: #ffffff; --gold: #f4c542; --teal: #00bcd4; --coral: #ff6b6b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28); --radius: 26px;
+      --slide-w: 1280px; --slide-h: 720px; --body-size: 22px; --small-size: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(0, 188, 212, 0.12), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(244, 197, 66, 0.1), transparent 28%),
+        linear-gradient(180deg, #08121d 0%, #111a29 100%);
+      color: var(--text);
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between;
+      align-items: center; padding: 16px 28px; background: rgba(5, 10, 16, 0.9);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .toolbar .meta {
+      font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.72);
+    }
+    .toolbar a {
+      color: var(--title); text-decoration: none; padding: 10px 16px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--teal), #16789a); font-weight: 700;
+    }
+    .deck { padding: 28px 28px 56px; }
+    .slide {
+      position: relative; width: var(--slide-w); height: var(--slide-h); margin: 0 auto 28px;
+      padding: 56px 64px; border-radius: var(--radius); overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+      box-shadow: var(--shadow); page-break-after: always;
+    }
+    .slide::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(120deg, rgba(0, 188, 212, 0.08), transparent 22%),
+        radial-gradient(circle at 85% 16%, rgba(244, 197, 66, 0.08), transparent 18%);
+      pointer-events: none;
+    }
+    .slide > * { position: relative; z-index: 1; }
+    .kicker {
+      margin-bottom: 10px; font-size: 16px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--teal);
+    }
+    h1, h2 { margin: 0 0 18px; color: var(--title); line-height: 1.05; }
+    h1 { font-size: 54px; }
+    h2 { font-size: 40px; }
+    p, li { font-size: var(--body-size); line-height: 1.35; }
+    ul { margin: 8px 0 0 24px; padding: 0; max-width: 1080px; }
+    li + li { margin-top: 10px; }
+    .title-slide { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+    .title-slide .course { font-size: 26px; color: var(--gold); font-weight: 700; }
+    .title-slide .details { font-size: 24px; color: rgba(224, 224, 224, 0.78); }
+    .title-slide .hero {
+      font-size: 20px; color: rgba(224, 224, 224, 0.85); padding: 14px 20px;
+      border-radius: 14px; background: var(--panel); border: 1px solid rgba(255,255,255,0.08);
+      max-width: 900px;
+    }
+    .tags { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tag {
+      font-size: 15px; padding: 6px 14px; border-radius: 999px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.14); color: rgba(224, 224, 224, 0.85);
+    }
+    .two-col { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: start; }
+    .panel {
+      padding: 24px; border-radius: 20px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .panel h3 { margin: 0 0 12px; font-size: 24px; color: var(--gold); }
+    .panel strong, .key { color: var(--teal); }
+    .panel p { white-space: pre-line; margin: 6px 0 0; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+    .cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      min-height: 180px; padding: 22px; border-radius: 22px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+    }
+    .card h3 { margin: 0 0 12px; font-size: 23px; color: var(--gold); }
+    .card p { font-size: 19px; margin: 0; white-space: pre-line; }
+    .metrics { display: flex; gap: 14px; margin-top: 22px; }
+    .metric {
+      flex: 1; padding: 12px 18px; border-radius: 16px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .metric .label {
+      font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.6);
+    }
+    .metric .value { font-size: 26px; font-weight: 700; color: var(--title); }
+    .equation-box {
+      margin-top: 24px; padding: 26px 28px; border-radius: 22px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 188, 212, 0.35);
+    }
+    .equation {
+      font-size: 32px; line-height: 1.25; color: var(--title);
+      font-family: Consolas, "Cascadia Mono", monospace; text-align: center;
+    }
+    .variables {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 24px; margin-top: 18px; font-size: 18px;
+    }
+    .example-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+    .example-step {
+      padding: 22px; border-radius: 20px; background: var(--panel-strong);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .example-step h3 {
+      margin: 0 0 10px; font-size: 22px; color: var(--coral);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .example-step p { font-size: 19px; white-space: pre-line; margin: 0; }
+    .pause-box {
+      margin-top: 36px; padding: 28px 32px; border-left: 8px solid var(--coral);
+      border-radius: 20px; background: rgba(255, 107, 107, 0.12);
+    }
+    .pause-box p { font-size: 26px; color: var(--title); margin: 0; }
+    .pause-points { margin-top: 22px; }
+    .pause-points div {
+      margin-top: 12px; padding: 14px 20px; border-radius: 14px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); font-size: 19px;
+    }
+    .comparison-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 20px; }
+    .comparison-table th, .comparison-table td {
+      padding: 13px 16px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .comparison-table th {
+      color: var(--gold); font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .workflow { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 14px; margin-top: 26px; }
+    .workflow .step {
+      padding: 20px; border-radius: 18px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px;
+    }
+    .workflow .num {
+      display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
+      background: var(--teal); color: #06222b; font-weight: 800; font-size: 18px; margin-bottom: 12px;
+    }
+    .workflow h3 { margin: 0 0 8px; font-size: 20px; color: var(--gold); }
+    .workflow p { font-size: 17px; margin: 0; white-space: pre-line; }
+    .code-block {
+      margin-top: 20px; padding: 22px 26px; border-radius: 18px; background: #081420;
+      border: 1px solid rgba(0, 188, 212, 0.35); overflow-x: auto;
+    }
+    .code-block pre {
+      margin: 0; font-family: Consolas, "Cascadia Mono", monospace; font-size: 19px;
+      line-height: 1.45; color: #d8e6ee; white-space: pre;
+    }
+    .code-note { margin-top: 16px; }
+    .footer {
+      position: absolute; right: 28px; bottom: 20px; font-size: 14px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(224, 224, 224, 0.6);
+    }
+    .note {
+      position: absolute; left: 64px; bottom: 20px; font-size: 15px;
+      color: rgba(224, 224, 224, 0.55); max-width: 900px;
+    }
+    .small { font-size: var(--small-size); color: rgba(224, 224, 224, 0.78); }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="meta">SEES:4100 | Week 07 | Monday, October 5, 2026 | 22 slides</div>
+  <a href="#" id="download-link" download>Download HTML</a>
+</div>
+<div class="deck">
+<div class="slide title-slide"><div class="kicker">SEES:4100 | Computation in the Earth and Environment | Fall 2026</div><h1>Scientific Visualization</h1><div class="course">School of Earth, Environment, and Sustainability | University of Iowa</div><div class="details">Week 7 | Monday, October 5, 2026 | Group labs begin this week</div><div class="hero">A scientific figure exists to make one claim visible. Everything else is decoration.</div><div class="tags"><span class="tag">Figure design</span><span class="tag">Log axes</span><span class="tag">Color</span><span class="tag">Captions</span><span class="tag">Group Lab 1</span></div><div class="footer">SEES:4100 | Week 07 | 1</div></div>
+<div class="slide"><div class="kicker">Learning Objectives</div><h2>By the end of this lecture, you will be able to...</h2><ul><li>State the single message of a figure before building it</li><li>Apply the completeness checklist: labels, units, legend, size</li><li>Choose axis scales deliberately, including log axes</li><li>Write a three-part caption</li></ul><div class="footer">SEES:4100 | Week 07 | 2</div></div>
+<div class="slide"><div class="kicker">Recap</div><h2>Last Week in Sixty Seconds</h2><ul><li>groupby = typical; resample = actual; the difference = anomaly</li><li>The river peaks days after the rain: you measured the lag</li><li>Merges drop rows silently; len() catches them</li><li>Today: make that lag VISIBLE and defensible to a reader</li></ul><div class="footer">SEES:4100 | Week 07 | 3</div></div>
+<div class="slide"><div class="kicker">Motivation</div><h2>Message First</h2><div class="two-col"><div class="panel"><h3>The test</h3><ul><li>Say the figure&#x27;s claim in one sentence</li><li>Cannot say it? Not ready to design</li><li>Every element either serves the claim or leaves</li></ul></div><div class="panel"><h3>Why it matters</h3><ul><li>Figures are read 10x more than text</li><li>Reviewers judge papers by figures first</li><li>Your final project is graded this way too</li></ul></div></div><div class="footer">SEES:4100 | Week 07 | 4</div></div>
+<div class="slide"><div class="kicker">Anatomy</div><h2>Figure and Axes Vocabulary</h2><ul><li>fig, ax = plt.subplots(): the canvas and the plot area</li><li>Methods live on ax: ax.plot, ax.set_xlabel, ax.legend</li><li>Multi-panel: plt.subplots(2, 1, sharex=True)</li><li>sharex aligns panels so time reads straight down</li></ul><div class="footer">SEES:4100 | Week 07 | 5</div></div>
+<div class="slide"><div class="kicker">The Checklist</div><h2>Non-negotiable Elements</h2><div class="cards cols-4"><div class="card"><h3>Labels + units</h3><p>Discharge (cfs). A figure without units cannot be checked.</p></div><div class="card"><h3>Readable size</h3><p>Text legible from the back row, or in a two-column PDF.</p></div><div class="card"><h3>Legend</h3><p>Whenever two lines share a panel. No guessing.</p></div><div class="card"><h3>Stated message</h3><p>Title or caption says what to see, not just what it is.</p></div></div><div class="note">This checklist is the figure rubric for every remaining lab.</div><div class="footer">SEES:4100 | Week 07 | 6</div></div>
+<div class="slide"><div class="kicker">Live Critique</div><h2>Find Five Problems</h2><div class="code-block"><pre>fig, ax = plt.subplots(figsize=(3, 2))
+ax.plot(stream[&quot;date&quot;], stream[&quot;discharge_cfs&quot;])
+ax.plot(weather[&quot;date&quot;], weather[&quot;precipitation_mm&quot;])
+plt.show()</pre></div><div class="code-note"><ul><li>No labels, no units, no legend</li><li>Two incompatible quantities on one axis</li><li>Tiny canvas, unreadable ticks, no message</li></ul></div><div class="footer">SEES:4100 | Week 07 | 7</div></div>
+<div class="slide"><div class="kicker">Design Pattern</div><h2>The Two-Panel Rain-and-River Story</h2><div class="two-col"><div class="panel"><h3>Why two panels</h3><ul><li>Rain in mm/day, flow in cfs: different units</li><li>Shared x-axis keeps cause above effect</li><li>Inverted rain axis: hydrologic convention</li></ul></div><div class="panel"><h3>The highlight</h3><ul><li>axvspan marks the flood window</li><li>One highlight = one message</li><li>Annotate the peak, nothing else</li></ul></div></div><div class="footer">SEES:4100 | Week 07 | 8</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Your two lines are distinguishable only by color. Name two situations where the figure fails, and the fix.</p></div><div class="pause-points"><div>Grayscale printing and colorblind readers</div><div>Fix: vary line style or markers too; color is never the only encoding</div></div><div class="footer">SEES:4100 | Week 07 | 9</div></div>
+<div class="slide"><div class="kicker">Scales</div><h2>When Linear Axes Lie</h2><div class="equation-box"><div class="equation">ax.semilogy(exceedance * 100, discharge_cfs)</div><div class="variables"><div>Iowa River flow: ~100 to ~40,000 cfs</div><div>Two orders of magnitude on one axis</div><div>Linear: everything below floods flattens</div><div>Log: low flows and floods both visible</div></div></div><ul><li>The flow-duration curve is meaningful only with a log flow axis</li></ul><div class="footer">SEES:4100 | Week 07 | 10</div></div>
+<div class="slide"><div class="kicker">Color</div><h2>Color Rules That Survive Printing</h2><ul><li>Sequential colormaps for magnitude (viridis, YlGnBu)</li><li>Never rainbow for quantitative data: it invents boundaries</li><li>Check once in grayscale before submitting</li><li>Meaningful color deserves a colorbar with units</li></ul><div class="footer">SEES:4100 | Week 07 | 11</div></div>
+<div class="slide"><div class="kicker">Captions</div><h2>The Three-Part Caption</h2><div class="example-grid"><div class="example-step"><h3>What</h3><p>Daily discharge of the Iowa River at Iowa City for 2024, with daily precipitation inverted above.</p></div><div class="example-step"><h3>How</h3><p>USGS station 05454500 and Iowa Environmental Mesonet data; highlighted band marks the spring flood.</p></div><div class="example-step"><h3>Notice</h3><p>The river peaked N days after the heaviest rain; baseflow stayed elevated for weeks.</p></div></div><div class="footer">SEES:4100 | Week 07 | 12</div></div>
+<div class="slide"><div class="kicker">Captions</div><h2>From Caption to 200-Word Interpretation</h2><ul><li>Pattern: what the eye should find</li><li>Mechanism: the physical reason it looks that way</li><li>Caveat: one honest limitation of data or method</li><li>Group Lab 1 grades all three, not just the picture</li></ul><div class="footer">SEES:4100 | Week 07 | 13</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>A caption reads: &quot;Figure 1. Discharge versus time.&quot; Which of the three parts is present, and what is missing?</p></div><div class="pause-points"><div>Only &quot;what&quot;, barely: no how, no notice</div><div>A reader learns nothing they could not see already</div></div><div class="footer">SEES:4100 | Week 07 | 14</div></div>
+<div class="slide"><div class="kicker">The Menu</div><h2>Which Plot for Which Question</h2><table class="comparison-table"><thead><tr><th>Question</th><th>Plot</th><th>Watch for</th></tr></thead><tbody><tr><td>How does it change in time?</td><td>Line (ax.plot)</td><td>Too many lines = spaghetti</td></tr><tr><td>How do two variables relate?</td><td>Scatter</td><td>Overplotting: use alpha</td></tr><tr><td>How is it distributed?</td><td>Histogram</td><td>Bin count changes the story</td></tr><tr><td>What does the field look like?</td><td>imshow / contourf</td><td>Colorbar with units</td></tr><tr><td>Orders of magnitude?</td><td>semilogy</td><td>Log-scale ticks readable</td></tr></tbody></table><div class="footer">SEES:4100 | Week 07 | 15</div></div>
+<div class="slide"><div class="kicker">Craft</div><h2>Saving Figures Like a Professional</h2><div class="code-block"><pre>from sees4100.plotting import save_figure
+
+saved_path = save_figure(
+    fig, PROJECT_ROOT / &quot;figures&quot; / &quot;grouplab01_rain_river_2024.png&quot;
+)
+print(saved_path)</pre></div><div class="code-note"><ul><li>The saved file is the deliverable; name it like you mean it</li><li>Reference the filename in your caption and README</li></ul></div><div class="footer">SEES:4100 | Week 07 | 16</div></div>
+<div class="slide"><div class="kicker">Group Labs Begin</div><h2>How Group Lab 1 Runs</h2><div class="workflow"><div class="step"><div class="num">1</div><h3>Module A</h3><p>Data validation: date ranges, missing values, units confirmed before plotting.</p></div><div class="step"><div class="num">2</div><h3>Module B</h3><p>Statistics: the numbers the figure will carry (peaks, means, reference lines).</p></div><div class="step"><div class="num">3</div><h3>Module C</h3><p>Figure and caption: design, critique, 200-word interpretation.</p></div></div><div class="note">Groups of 2-3; roles posted before Wednesday; everyone signs a contribution statement.</div><div class="footer">SEES:4100 | Week 07 | 17</div></div>
+<div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Group Lab 1: Scientific Visualization</h2><div class="two-col"><div class="panel"><h3>Wednesday</h3><ul><li>Critique the deliberately bad figure</li><li>Build the two-panel rain-and-river figure</li><li>Flow-duration curve on a log axis</li></ul></div><div class="panel"><h3>Deliverables (Friday)</h3><ul><li>One polished, saved figure</li><li>Three-part caption</li><li>200-word interpretation</li></ul></div></div><div class="footer">SEES:4100 | Week 07 | 18</div></div>
+<div class="slide"><div class="kicker">Pitfalls</div><h2>Where Group Figures Go Wrong</h2><ul><li>Module C waits for final data instead of designing with placeholders</li><li>Over-decoration: gridlines and colors that add nothing</li><li>Captions that describe axes instead of stating the finding</li><li>A boring year chosen when a flood year was available</li></ul><div class="footer">SEES:4100 | Week 07 | 19</div></div>
+<div class="slide"><div class="kicker">Bridge</div><h2>Connection to Next Week</h2><table class="comparison-table"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Show the relationship</td><td>Statistics and regression</td><td>Quantify what the figure suggests, with uncertainty attached</td></tr></tbody></table><div class="footer">SEES:4100 | Week 07 | 20</div></div>
+<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>One figure, one claim, said in one sentence</li><li>Labels, units, legend, size: the non-negotiables</li><li>Log axes when data span orders of magnitude</li><li>Captions: what, how, notice</li></ul><div class="footer">SEES:4100 | Week 07 | 21</div></div>
+<div class="slide"><div class="kicker">Discussion</div><h2>Before You Leave</h2><div class="pause-box"><p>Find one published figure this week, from any paper, that fails the checklist. Bring it Friday; the best bad example earns bragging rights.</p></div><div class="footer">SEES:4100 | Week 07 | 22</div></div>
+</div>
+<script>
+    function buildDownloadBlob() {
+      return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    }
+    function downloadDeck(event) {
+      event.preventDefault();
+      const blob = new Blob([buildDownloadBlob()], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const title = document.title || "sees4100-slide-deck";
+      link.href = url;
+      link.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".html";
+      link.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    }
+    document.getElementById("download-link").addEventListener("click", downloadDeck);
+</script>
+</body>
+</html>

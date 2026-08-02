@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final Project Launch | SEES:4100 Week 13</title>
+<style>
+    :root {
+      --bg: #0d1b2a; --bg-alt: #1a1a2e;
+      --panel: rgba(255, 255, 255, 0.06); --panel-strong: rgba(255, 255, 255, 0.1);
+      --text: #e0e0e0; --title: #ffffff; --gold: #f4c542; --teal: #00bcd4; --coral: #ff6b6b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28); --radius: 26px;
+      --slide-w: 1280px; --slide-h: 720px; --body-size: 22px; --small-size: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(0, 188, 212, 0.12), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(244, 197, 66, 0.1), transparent 28%),
+        linear-gradient(180deg, #08121d 0%, #111a29 100%);
+      color: var(--text);
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between;
+      align-items: center; padding: 16px 28px; background: rgba(5, 10, 16, 0.9);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .toolbar .meta {
+      font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.72);
+    }
+    .toolbar a {
+      color: var(--title); text-decoration: none; padding: 10px 16px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--teal), #16789a); font-weight: 700;
+    }
+    .deck { padding: 28px 28px 56px; }
+    .slide {
+      position: relative; width: var(--slide-w); height: var(--slide-h); margin: 0 auto 28px;
+      padding: 56px 64px; border-radius: var(--radius); overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+      box-shadow: var(--shadow); page-break-after: always;
+    }
+    .slide::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(120deg, rgba(0, 188, 212, 0.08), transparent 22%),
+        radial-gradient(circle at 85% 16%, rgba(244, 197, 66, 0.08), transparent 18%);
+      pointer-events: none;
+    }
+    .slide > * { position: relative; z-index: 1; }
+    .kicker {
+      margin-bottom: 10px; font-size: 16px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--teal);
+    }
+    h1, h2 { margin: 0 0 18px; color: var(--title); line-height: 1.05; }
+    h1 { font-size: 54px; }
+    h2 { font-size: 40px; }
+    p, li { font-size: var(--body-size); line-height: 1.35; }
+    ul { margin: 8px 0 0 24px; padding: 0; max-width: 1080px; }
+    li + li { margin-top: 10px; }
+    .title-slide { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+    .title-slide .course { font-size: 26px; color: var(--gold); font-weight: 700; }
+    .title-slide .details { font-size: 24px; color: rgba(224, 224, 224, 0.78); }
+    .title-slide .hero {
+      font-size: 20px; color: rgba(224, 224, 224, 0.85); padding: 14px 20px;
+      border-radius: 14px; background: var(--panel); border: 1px solid rgba(255,255,255,0.08);
+      max-width: 900px;
+    }
+    .tags { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tag {
+      font-size: 15px; padding: 6px 14px; border-radius: 999px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.14); color: rgba(224, 224, 224, 0.85);
+    }
+    .two-col { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: start; }
+    .panel {
+      padding: 24px; border-radius: 20px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .panel h3 { margin: 0 0 12px; font-size: 24px; color: var(--gold); }
+    .panel strong, .key { color: var(--teal); }
+    .panel p { white-space: pre-line; margin: 6px 0 0; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+    .cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      min-height: 180px; padding: 22px; border-radius: 22px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+    }
+    .card h3 { margin: 0 0 12px; font-size: 23px; color: var(--gold); }
+    .card p { font-size: 19px; margin: 0; white-space: pre-line; }
+    .metrics { display: flex; gap: 14px; margin-top: 22px; }
+    .metric {
+      flex: 1; padding: 12px 18px; border-radius: 16px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .metric .label {
+      font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.6);
+    }
+    .metric .value { font-size: 26px; font-weight: 700; color: var(--title); }
+    .equation-box {
+      margin-top: 24px; padding: 26px 28px; border-radius: 22px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 188, 212, 0.35);
+    }
+    .equation {
+      font-size: 32px; line-height: 1.25; color: var(--title);
+      font-family: Consolas, "Cascadia Mono", monospace; text-align: center;
+    }
+    .variables {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 24px; margin-top: 18px; font-size: 18px;
+    }
+    .example-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+    .example-step {
+      padding: 22px; border-radius: 20px; background: var(--panel-strong);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .example-step h3 {
+      margin: 0 0 10px; font-size: 22px; color: var(--coral);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .example-step p { font-size: 19px; white-space: pre-line; margin: 0; }
+    .pause-box {
+      margin-top: 36px; padding: 28px 32px; border-left: 8px solid var(--coral);
+      border-radius: 20px; background: rgba(255, 107, 107, 0.12);
+    }
+    .pause-box p { font-size: 26px; color: var(--title); margin: 0; }
+    .pause-points { margin-top: 22px; }
+    .pause-points div {
+      margin-top: 12px; padding: 14px 20px; border-radius: 14px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); font-size: 19px;
+    }
+    .comparison-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 20px; }
+    .comparison-table th, .comparison-table td {
+      padding: 13px 16px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .comparison-table th {
+      color: var(--gold); font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .workflow { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 14px; margin-top: 26px; }
+    .workflow .step {
+      padding: 20px; border-radius: 18px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px;
+    }
+    .workflow .num {
+      display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
+      background: var(--teal); color: #06222b; font-weight: 800; font-size: 18px; margin-bottom: 12px;
+    }
+    .workflow h3 { margin: 0 0 8px; font-size: 20px; color: var(--gold); }
+    .workflow p { font-size: 17px; margin: 0; white-space: pre-line; }
+    .code-block {
+      margin-top: 20px; padding: 22px 26px; border-radius: 18px; background: #081420;
+      border: 1px solid rgba(0, 188, 212, 0.35); overflow-x: auto;
+    }
+    .code-block pre {
+      margin: 0; font-family: Consolas, "Cascadia Mono", monospace; font-size: 19px;
+      line-height: 1.45; color: #d8e6ee; white-space: pre;
+    }
+    .code-note { margin-top: 16px; }
+    .footer {
+      position: absolute; right: 28px; bottom: 20px; font-size: 14px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(224, 224, 224, 0.6);
+    }
+    .note {
+      position: absolute; left: 64px; bottom: 20px; font-size: 15px;
+      color: rgba(224, 224, 224, 0.55); max-width: 900px;
+    }
+    .small { font-size: var(--small-size); color: rgba(224, 224, 224, 0.78); }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="meta">SEES:4100 | Week 13 | Monday, November 16, 2026 | 20 slides</div>
+  <a href="#" id="download-link" download>Download HTML</a>
+</div>
+<div class="deck">
+<div class="slide title-slide"><div class="kicker">SEES:4100 | Computation in the Earth and Environment | Fall 2026</div><h1>Final Project Launch</h1><div class="course">School of Earth, Environment, and Sustainability | University of Iowa</div><div class="details">Week 13 | Monday, November 16, 2026 | Proposal workshop Wednesday</div><div class="hero">A specific quantity, a specific dataset, a specific comparison, three working weeks. That is the whole recipe.</div><div class="tags"><span class="tag">Research question</span><span class="tag">Scope</span><span class="tag">Group roles</span><span class="tag">Reproducibility</span><span class="tag">Dec 9-11</span></div><div class="footer">SEES:4100 | Week 13 | 1</div></div>
+<div class="slide"><div class="kicker">Learning Objectives</div><h2>By the end of this lecture, you will be able to...</h2><ul><li>State a question answerable with available data in three weeks</li><li>Match your question to one main course method</li><li>Divide group roles with named owners</li><li>List every item in the final package</li></ul><div class="footer">SEES:4100 | Week 13 | 2</div></div>
+<div class="slide"><div class="kicker">The Project</div><h2>Deliverables and Dates</h2><table class="comparison-table"><thead><tr><th>Item</th><th>Due</th></tr></thead><tbody><tr><td>Group proposal (template notebook)</td><td>Wednesday workshop, this week</td></tr><tr><td>Analysis notebook, runs top to bottom</td><td>Friday, December 11</td></tr><tr><td>2-3 quality figures + short README</td><td>Friday, December 11</td></tr><tr><td>Presentations (10 min per group)</td><td>December 9 and 11</td></tr><tr><td>Individual contribution statements</td><td>Friday, December 11</td></tr><tr><td>AI usage log, if tools were used</td><td>Friday, December 11</td></tr></tbody></table><div class="note">Fall Break sits in the middle: a solid proposal this Wednesday buys a calm November.</div><div class="footer">SEES:4100 | Week 13 | 3</div></div>
+<div class="slide"><div class="kicker">The Question</div><h2>Workable vs Career-Sized</h2><div class="two-col"><div class="panel"><h3>Workable</h3><p>How did the 2024 flood&#x27;s rain-to-peak lag compare with the five largest events of 2015-2025?
+
+Specific quantity, dataset in hand, one method.</p></div><div class="panel"><h3>A career</h3><p>How does climate change affect Iowa rivers?
+
+No dataset settles it; no method is THE method; December arrives first.</p></div></div><div class="footer">SEES:4100 | Week 13 | 4</div></div>
+<div class="slide"><div class="kicker">The Question</div><h2>Three Tests for Any Candidate Question</h2><div class="workflow"><div class="step"><div class="num">1</div><h3>Data in hand?</h3><p>In the repo, or one approved download away. This week, not week 15.</p></div><div class="step"><div class="num">2</div><h3>One method?</h3><p>A single course method answers it, done well.</p></div><div class="step"><div class="num">3</div><h3>Can it fail?</h3><p>A question that cannot fail is a description, not a question.</p></div></div><div class="footer">SEES:4100 | Week 13 | 5</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Scope Check, Live</h2><div class="pause-box"><p>&quot;We will analyze water quality in Iowa.&quot; Run the three tests on it. What is the smallest fix that makes it workable?</p></div><div class="pause-points"><div>Fails all three as stated</div><div>Fix: one site, one characteristic, one comparison, e.g. seasonal nitrate 1970s vs 2000s</div></div><div class="footer">SEES:4100 | Week 13 | 6</div></div>
+<div class="slide"><div class="kicker">Data</div><h2>What You Already Have</h2><div class="cards cols-3"><div class="card"><h3>Weather</h3><p>Iowa City daily and hourly, 2019-2025.</p></div><div class="card"><h3>Streamflow</h3><p>Iowa City daily 2015-2025, plus 17 watershed stations with drainage areas.</p></div><div class="card"><h3>More</h3><p>Historical water quality (1901-2012), synthetic spatial and grid sets.</p></div></div><div class="note">Outside data are welcome with instructor approval and a documented download step.</div><div class="footer">SEES:4100 | Week 13 | 7</div></div>
+<div class="slide"><div class="kicker">Methods</div><h2>The Method Menu Maps to the Labs</h2><table class="comparison-table"><thead><tr><th>Method</th><th>You built it in</th></tr></thead><tbody><tr><td>Statistics and regression</td><td>Group Lab 2</td></tr><tr><td>Interpolation and algorithms</td><td>Group Lab 3</td></tr><tr><td>Spatial prediction (IDW, variogram)</td><td>Group Lab 5</td></tr><tr><td>Environmental modeling</td><td>Group Lab 6</td></tr><tr><td>Time-series analysis</td><td>Lab 6</td></tr><tr><td>Visualization-led analysis</td><td>Group Lab 1</td></tr></tbody></table><div class="note">One method done well beats three sampled.</div><div class="footer">SEES:4100 | Week 13 | 8</div></div>
+<div class="slide"><div class="kicker">Group Mechanics</div><h2>Roles and Ownership</h2><ul><li>One named owner per deliverable</li><li>Every member can explain the whole notebook</li><li>Each student answers one oral question at the presentation</li><li>Contribution statements must match reality</li></ul><div class="footer">SEES:4100 | Week 13 | 9</div></div>
+<div class="slide"><div class="kicker">Group Mechanics</div><h2>If AI Tools Will Be Used</h2><ul><li>The proposal names the planned uses</li><li>One named verifier per AI-assisted component</li><li>The Week 10 workflow applies unchanged</li><li>Reference answers before refactors, log as you go</li></ul><div class="footer">SEES:4100 | Week 13 | 10</div></div>
+<div class="slide"><div class="kicker">The Bar</div><h2>The Reproducibility Test</h2><div class="equation-box"><div class="equation">fresh clone -&gt; Restart and Run All -&gt; your figures appear</div><div class="variables"><div>grader machine, not yours</div><div>no hand edits, no missing files</div><div>data documented or downloadable</div><div>README says what, how, who</div></div></div><ul><li>This single test covers paths, documentation, and the ran-once vs runs distinction</li></ul><div class="footer">SEES:4100 | Week 13 | 11</div></div>
+<div class="slide"><div class="kicker">Worked Example</div><h2>One Good Project, Sketched</h2><div class="example-grid"><div class="example-step"><h3>Question</h3><p>Do smaller watersheds respond faster? Rain-to-peak lag vs drainage area across 17 stations.</p></div><div class="example-step"><h3>Method</h3><p>Event detection (Lab 3) + time-series lags (Lab 6) + one regression (GL2).</p></div><div class="example-step"><h3>Figures</h3><p>Lag vs area scatter with fit; two contrasting event hydrographs; station map.</p></div></div><div class="footer">SEES:4100 | Week 13 | 12</div></div>
+<div class="slide"><div class="kicker">Grading</div><h2>How the Project Is Scored</h2><table class="comparison-table"><thead><tr><th>Component</th><th>Weight</th></tr></thead><tbody><tr><td>Research question and motivation</td><td>15%</td></tr><tr><td>Data cleaning and reproducibility</td><td>15%</td></tr><tr><td>Computational method</td><td>20%</td></tr><tr><td>Figures and communication</td><td>15%</td></tr><tr><td>Interpretation and limitations</td><td>15%</td></tr><tr><td>AI disclosure + verification of code</td><td>15%</td></tr><tr><td>Individual contribution and understanding</td><td>10%</td></tr></tbody></table><div class="note">Half the grade lives outside the code: framing, figures, honesty, ownership.</div><div class="footer">SEES:4100 | Week 13 | 13</div></div>
+<div class="slide"><div class="kicker">Wednesday</div><h2>How the Proposal Workshop Runs</h2><ul><li>Arrive with a drafted question; leave with a schedule</li><li>Template: question, data, method, figures, roles, AI plan</li><li>10-minute scope check per group with the instructor</li><li>The most common intervention: shrink the question by half</li></ul><div class="footer">SEES:4100 | Week 13 | 14</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Your group&#x27;s question needs a dataset you have not found yet. What is the decision rule?</p></div><div class="pause-points"><div>Found and approved by Wednesday: proceed</div><div>Otherwise: pivot to repo data now; the question adapts to the data, not the calendar</div></div><div class="footer">SEES:4100 | Week 13 | 15</div></div>
+<div class="slide"><div class="kicker">Planning</div><h2>Three Weeks, Three Milestones</h2><div class="cards cols-3"><div class="card"><h3>This week</h3><p>Proposal locked, data loaded, one exploratory figure.</p></div><div class="card"><h3>Week 15</h3><p>Main analysis complete, figures drafted, risks retired.</p></div><div class="card"><h3>Week 16</h3><p>Polish, README, rehearse, present, submit.</p></div></div><div class="note">Fall Break is next week: whatever is not locked Wednesday drifts two weeks.</div><div class="footer">SEES:4100 | Week 13 | 16</div></div>
+<div class="slide"><div class="kicker">Pitfalls</div><h2>How Final Projects Fail</h2><ul><li>Question still changing in Week 15</li><li>Data hunt that never ends</li><li>Three methods sampled, none finished</li><li>One member owns everything; three cannot explain it</li></ul><div class="footer">SEES:4100 | Week 13 | 17</div></div>
+<div class="slide"><div class="kicker">Bridge</div><h2>The Next Three Sessions</h2><table class="comparison-table"><thead><tr><th>Session</th><th>Purpose</th></tr></thead><tbody><tr><td>Wednesday</td><td>Proposal workshop with scope checks</td></tr><tr><td>Friday</td><td>Project studio: data loaded, first figure</td></tr><tr><td>Week 15 Monday</td><td>Advanced-application mini-modules, by class vote</td></tr></tbody></table><div class="footer">SEES:4100 | Week 13 | 18</div></div>
+<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>Specific quantity, dataset, comparison: three weeks</li><li>Pass the three tests before writing code</li><li>One method, done well, with validation</li><li>The package must run for a stranger</li></ul><div class="footer">SEES:4100 | Week 13 | 19</div></div>
+<div class="slide"><div class="kicker">Discussion</div><h2>Before You Leave</h2><div class="pause-box"><p>Write your group&#x27;s question in one sentence, right now. Trade with another group and run the three tests on each other&#x27;s.</p></div><div class="footer">SEES:4100 | Week 13 | 20</div></div>
+</div>
+<script>
+    function buildDownloadBlob() {
+      return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    }
+    function downloadDeck(event) {
+      event.preventDefault();
+      const blob = new Blob([buildDownloadBlob()], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const title = document.title || "sees4100-slide-deck";
+      link.href = url;
+      link.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".html";
+      link.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    }
+    document.getElementById("download-link").addEventListener("click", downloadDeck);
+</script>
+</body>
+</html>

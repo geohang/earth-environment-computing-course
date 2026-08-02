@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Advanced Applications and Project Support | SEES:4100 Week 15</title>
+<style>
+    :root {
+      --bg: #0d1b2a; --bg-alt: #1a1a2e;
+      --panel: rgba(255, 255, 255, 0.06); --panel-strong: rgba(255, 255, 255, 0.1);
+      --text: #e0e0e0; --title: #ffffff; --gold: #f4c542; --teal: #00bcd4; --coral: #ff6b6b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28); --radius: 26px;
+      --slide-w: 1280px; --slide-h: 720px; --body-size: 22px; --small-size: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(0, 188, 212, 0.12), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(244, 197, 66, 0.1), transparent 28%),
+        linear-gradient(180deg, #08121d 0%, #111a29 100%);
+      color: var(--text);
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between;
+      align-items: center; padding: 16px 28px; background: rgba(5, 10, 16, 0.9);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .toolbar .meta {
+      font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.72);
+    }
+    .toolbar a {
+      color: var(--title); text-decoration: none; padding: 10px 16px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--teal), #16789a); font-weight: 700;
+    }
+    .deck { padding: 28px 28px 56px; }
+    .slide {
+      position: relative; width: var(--slide-w); height: var(--slide-h); margin: 0 auto 28px;
+      padding: 56px 64px; border-radius: var(--radius); overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+      box-shadow: var(--shadow); page-break-after: always;
+    }
+    .slide::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(120deg, rgba(0, 188, 212, 0.08), transparent 22%),
+        radial-gradient(circle at 85% 16%, rgba(244, 197, 66, 0.08), transparent 18%);
+      pointer-events: none;
+    }
+    .slide > * { position: relative; z-index: 1; }
+    .kicker {
+      margin-bottom: 10px; font-size: 16px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--teal);
+    }
+    h1, h2 { margin: 0 0 18px; color: var(--title); line-height: 1.05; }
+    h1 { font-size: 54px; }
+    h2 { font-size: 40px; }
+    p, li { font-size: var(--body-size); line-height: 1.35; }
+    ul { margin: 8px 0 0 24px; padding: 0; max-width: 1080px; }
+    li + li { margin-top: 10px; }
+    .title-slide { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+    .title-slide .course { font-size: 26px; color: var(--gold); font-weight: 700; }
+    .title-slide .details { font-size: 24px; color: rgba(224, 224, 224, 0.78); }
+    .title-slide .hero {
+      font-size: 20px; color: rgba(224, 224, 224, 0.85); padding: 14px 20px;
+      border-radius: 14px; background: var(--panel); border: 1px solid rgba(255,255,255,0.08);
+      max-width: 900px;
+    }
+    .tags { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tag {
+      font-size: 15px; padding: 6px 14px; border-radius: 999px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.14); color: rgba(224, 224, 224, 0.85);
+    }
+    .two-col { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: start; }
+    .panel {
+      padding: 24px; border-radius: 20px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .panel h3 { margin: 0 0 12px; font-size: 24px; color: var(--gold); }
+    .panel strong, .key { color: var(--teal); }
+    .panel p { white-space: pre-line; margin: 6px 0 0; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+    .cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      min-height: 180px; padding: 22px; border-radius: 22px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+    }
+    .card h3 { margin: 0 0 12px; font-size: 23px; color: var(--gold); }
+    .card p { font-size: 19px; margin: 0; white-space: pre-line; }
+    .metrics { display: flex; gap: 14px; margin-top: 22px; }
+    .metric {
+      flex: 1; padding: 12px 18px; border-radius: 16px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .metric .label {
+      font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.6);
+    }
+    .metric .value { font-size: 26px; font-weight: 700; color: var(--title); }
+    .equation-box {
+      margin-top: 24px; padding: 26px 28px; border-radius: 22px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 188, 212, 0.35);
+    }
+    .equation {
+      font-size: 32px; line-height: 1.25; color: var(--title);
+      font-family: Consolas, "Cascadia Mono", monospace; text-align: center;
+    }
+    .variables {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 24px; margin-top: 18px; font-size: 18px;
+    }
+    .example-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+    .example-step {
+      padding: 22px; border-radius: 20px; background: var(--panel-strong);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .example-step h3 {
+      margin: 0 0 10px; font-size: 22px; color: var(--coral);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .example-step p { font-size: 19px; white-space: pre-line; margin: 0; }
+    .pause-box {
+      margin-top: 36px; padding: 28px 32px; border-left: 8px solid var(--coral);
+      border-radius: 20px; background: rgba(255, 107, 107, 0.12);
+    }
+    .pause-box p { font-size: 26px; color: var(--title); margin: 0; }
+    .pause-points { margin-top: 22px; }
+    .pause-points div {
+      margin-top: 12px; padding: 14px 20px; border-radius: 14px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); font-size: 19px;
+    }
+    .comparison-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 20px; }
+    .comparison-table th, .comparison-table td {
+      padding: 13px 16px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .comparison-table th {
+      color: var(--gold); font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .workflow { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 14px; margin-top: 26px; }
+    .workflow .step {
+      padding: 20px; border-radius: 18px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px;
+    }
+    .workflow .num {
+      display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
+      background: var(--teal); color: #06222b; font-weight: 800; font-size: 18px; margin-bottom: 12px;
+    }
+    .workflow h3 { margin: 0 0 8px; font-size: 20px; color: var(--gold); }
+    .workflow p { font-size: 17px; margin: 0; white-space: pre-line; }
+    .code-block {
+      margin-top: 20px; padding: 22px 26px; border-radius: 18px; background: #081420;
+      border: 1px solid rgba(0, 188, 212, 0.35); overflow-x: auto;
+    }
+    .code-block pre {
+      margin: 0; font-family: Consolas, "Cascadia Mono", monospace; font-size: 19px;
+      line-height: 1.45; color: #d8e6ee; white-space: pre;
+    }
+    .code-note { margin-top: 16px; }
+    .footer {
+      position: absolute; right: 28px; bottom: 20px; font-size: 14px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(224, 224, 224, 0.6);
+    }
+    .note {
+      position: absolute; left: 64px; bottom: 20px; font-size: 15px;
+      color: rgba(224, 224, 224, 0.55); max-width: 900px;
+    }
+    .small { font-size: var(--small-size); color: rgba(224, 224, 224, 0.78); }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="meta">SEES:4100 | Week 15 | Monday, November 30, 2026 | 18 slides</div>
+  <a href="#" id="download-link" download>Download HTML</a>
+</div>
+<div class="deck">
+<div class="slide title-slide"><div class="kicker">SEES:4100 | Computation in the Earth and Environment | Fall 2026</div><h1>Advanced Applications and Project Support</h1><div class="course">School of Earth, Environment, and Sustainability | University of Iowa</div><div class="details">Week 15 | Monday, November 30, 2026 | First session after Fall Break</div><div class="hero">Eleven days to the finish. Today: recover state, learn one technique your project needs, triage the rest.</div><div class="tags"><span class="tag">Re-entry</span><span class="tag">Mini-modules</span><span class="tag">Validation</span><span class="tag">Pitfalls</span><span class="tag">Studio</span></div><div class="footer">SEES:4100 | Week 15 | 1</div></div>
+<div class="slide"><div class="kicker">Learning Objectives</div><h2>By the end of this session, you will have...</h2><ul><li>Re-established exactly where your project stands</li><li>Seen one advanced technique relevant to your analysis</li><li>A triage list ordered by risk, not by preference</li></ul><div class="footer">SEES:4100 | Week 15 | 2</div></div>
+<div class="slide"><div class="kicker">Recap</div><h2>Where Week 13 Left You</h2><ul><li>Question locked, data loaded, one exploratory figure</li><li>Roles assigned with named owners</li><li>Then Fall Break happened to all of it</li><li>Today is about recovering that state with proof</li></ul><div class="footer">SEES:4100 | Week 15 | 3</div></div>
+<div class="slide"><div class="kicker">Re-entry</div><h2>Three Lines Before Any Code</h2><div class="workflow"><div class="step"><div class="num">1</div><h3>What works</h3><p>Restart and Run All proves it. Not memory: proof.</p></div><div class="step"><div class="num">2</div><h3>What is riskiest</h3><p>The piece that could still sink the project.</p></div><div class="step"><div class="num">3</div><h3>Due Friday</h3><p>The concrete milestone: analysis complete, figures drafted.</p></div></div><div class="note">Projects stall after breaks when groups resume typing instead of re-establishing state.</div><div class="footer">SEES:4100 | Week 15 | 4</div></div>
+<div class="slide"><div class="kicker">Mini-Modules</div><h2>Class Vote: Two of Three, 15 Minutes Each</h2><ul><li>A. Multi-site spatial analysis: 17 stations, drainage areas, specific discharge</li><li>B. Climatology and anomalies: was this period unusual?</li><li>C. Validation patterns: hold out, predict, score, report</li></ul><div class="footer">SEES:4100 | Week 15 | 5</div></div>
+<div class="slide"><div class="kicker">Module A</div><h2>Seventeen Stations on One Map</h2><div class="code-block"><pre>sites = pd.read_csv(PROCESSED / &quot;iowa_stream_sites_annual_flow.csv&quot;,
+                    dtype={&quot;site_no&quot;: str})
+per_site = sites.groupby([&quot;site_no&quot;, &quot;latitude&quot;, &quot;longitude&quot;,
+                          &quot;drainage_area_sqmi&quot;], as_index=False)\
+                [&quot;mean_discharge_cfs&quot;].mean()
+ax.scatter(per_site[&quot;longitude&quot;], per_site[&quot;latitude&quot;],
+           s=per_site[&quot;drainage_area_sqmi&quot;] / 20,
+           c=per_site[&quot;mean_discharge_cfs&quot;], cmap=&quot;viridis&quot;)</pre></div><div class="code-note"><ul><li>Size = drainage area, color = mean flow</li><li>Useful for any project comparing places</li></ul></div><div class="footer">SEES:4100 | Week 15 | 6</div></div>
+<div class="slide"><div class="kicker">Module A</div><h2>Specific Discharge Flips the Story</h2><div class="equation-box"><div class="equation">specific_q = mean_discharge / drainage_area</div><div class="variables"><div>raw flow: big rivers carry more water (no surprise)</div><div>per-area flow: which LANDSCAPES yield more water?</div><div>normalization turns size into science</div><div>units: cfs per square mile, or mm/day</div></div></div><ul><li>The most useful single trick for multi-site projects</li></ul><div class="footer">SEES:4100 | Week 15 | 7</div></div>
+<div class="slide"><div class="kicker">Module B</div><h2>Anomalies in Six Lines</h2><div class="code-block"><pre>s = series.set_index(&quot;date&quot;).sort_index()
+clim = s.groupby(s.index.month)[&quot;value&quot;].mean()
+s[&quot;anomaly&quot;] = s[&quot;value&quot;] - s.index.month.map(clim)
+
+# raw plot answers: what happened?
+# anomaly plot answers: was it unusual for the season?</pre></div><div class="code-note"><ul><li>Any observable minus its seasonal expectation</li><li>Useful for any project asking about unusual periods</li></ul></div><div class="footer">SEES:4100 | Week 15 | 8</div></div>
+<div class="slide"><div class="kicker">Module C</div><h2>Time-Split Validation in Six Lines</h2><div class="code-block"><pre>train, test = train_test_split_by_time(df, &quot;date&quot;, &quot;2024-01-01&quot;)
+fit = linear_regression_summary(train[x], train[y])
+pred_test = fit[&quot;intercept&quot;] + fit[&quot;slope&quot;] * test[x]
+print(&quot;train RMSE:&quot;, rmse(train[y], fit[&quot;intercept&quot;] + fit[&quot;slope&quot;] * train[x]))
+print(&quot;test RMSE: &quot;, rmse(test[y], pred_test))</pre></div><div class="code-note"><ul><li>Report the score next to every map, fit, or hydrograph</li><li>Useful for any project that fits anything</li></ul></div><div class="footer">SEES:4100 | Week 15 | 9</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Triage Check</h2><div class="pause-box"><p>Which mini-module applies to YOUR project, and what would its figure look like with your data? If none applies, is your analysis actually done?</p></div><div class="footer">SEES:4100 | Week 15 | 10</div></div>
+<div class="slide"><div class="kicker">Pitfalls</div><h2>The Final-Week Classics, Named in Advance</h2><div class="cards cols-2"><div class="card"><h3>Unlabeled figures</h3><p>Figures added faster than they are labeled. Fix: checklist pass tonight.</p></div><div class="card"><h3>Order-dependent notebook</h3><p>Runs only in the order last edited. Fix: Restart and Run All now.</p></div><div class="card"><h3>Overrun conclusions</h3><p>&quot;Proves&quot; where evidence &quot;suggests&quot;. Fix: calibrate the verbs.</p></div><div class="card"><h3>The unexplainable section</h3><p>One member cannot explain section 3. Fix: walk-throughs this week.</p></div></div><div class="footer">SEES:4100 | Week 15 | 11</div></div>
+<div class="slide"><div class="kicker">Pitfalls</div><h2>Each Has a Five-Minute Fix This Week</h2><ul><li>And no fix at all on December 10</li><li>Missing data citations: add source and access date today</li><li>Silent AI usage: complete the log while memory is fresh</li><li>Rehearsal deficit: one timed run this Friday</li></ul><div class="footer">SEES:4100 | Week 15 | 12</div></div>
+<div class="slide"><div class="kicker">Deliverable Craft</div><h2>The README Skeleton That Passes</h2><div class="code-block"><pre># Project title
+## Research question (one sentence)
+## Data
+- Source, URL, access date, license note
+## How to run
+- conda env create -f environment.yml
+- open notebooks/final_project/..., Restart and Run All
+## Who did what
+## AI usage
+- See AI_USAGE_LOG.md (or: no AI tools were used)</pre></div><div class="code-note"><ul><li>Write it now, not December 10: it exposes missing pieces early</li></ul></div><div class="footer">SEES:4100 | Week 15 | 13</div></div>
+<div class="slide"><div class="kicker">Deliverable Craft</div><h2>The Figure Polish Pass</h2><ul><li>Re-run the Week 7 checklist on every project figure</li><li>Labels, units, legend, readable size, stated message</li><li>One claim per figure; cut the figure that has none</li><li>Captions written in the notebook, not improvised in the talk</li></ul><div class="footer">SEES:4100 | Week 15 | 14</div></div>
+<div class="slide"><div class="kicker">This Week</div><h2>Studio Plan</h2><div class="two-col"><div class="panel"><h3>Wednesday</h3><ul><li>Data cleaning and analysis debugging</li><li>Instructor circulates with one question per group</li><li>Figure development</li></ul></div><div class="panel"><h3>Friday</h3><ul><li>Interpretation and README</li><li>Code cleanup, reproducibility pass</li><li>Presentation outline started</li></ul></div></div><div class="footer">SEES:4100 | Week 15 | 15</div></div>
+<div class="slide"><div class="kicker">Bridge</div><h2>Connection to Next Week</h2><table class="comparison-table"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Analysis complete, risks retired</td><td>Synthesis and presentations</td><td>From working code to a defensible ten-minute story</td></tr></tbody></table><div class="footer">SEES:4100 | Week 15 | 16</div></div>
+<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>Re-establish state with proof, not memory</li><li>Normalize, decompose, validate: three transferable moves</li><li>The classics are cheap to fix today, impossible on Dec 10</li><li>Friday milestone: analysis done, figures drafted</li></ul><div class="footer">SEES:4100 | Week 15 | 17</div></div>
+<div class="slide"><div class="kicker">Discussion</div><h2>Before You Leave</h2><div class="pause-box"><p>State your project&#x27;s riskiest unfinished piece and the Friday fallback if it fails. If you cannot name a fallback, that IS the risk.</p></div><div class="footer">SEES:4100 | Week 15 | 18</div></div>
+</div>
+<script>
+    function buildDownloadBlob() {
+      return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    }
+    function downloadDeck(event) {
+      event.preventDefault();
+      const blob = new Blob([buildDownloadBlob()], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const title = document.title || "sees4100-slide-deck";
+      link.href = url;
+      link.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".html";
+      link.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    }
+    document.getElementById("download-link").addEventListener("click", downloadDeck);
+</script>
+</body>
+</html>

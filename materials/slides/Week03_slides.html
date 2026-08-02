@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conditionals, Loops, and Environmental Events | SEES:4100 Week 03</title>
+<style>
+    :root {
+      --bg: #0d1b2a; --bg-alt: #1a1a2e;
+      --panel: rgba(255, 255, 255, 0.06); --panel-strong: rgba(255, 255, 255, 0.1);
+      --text: #e0e0e0; --title: #ffffff; --gold: #f4c542; --teal: #00bcd4; --coral: #ff6b6b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28); --radius: 26px;
+      --slide-w: 1280px; --slide-h: 720px; --body-size: 22px; --small-size: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(0, 188, 212, 0.12), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(244, 197, 66, 0.1), transparent 28%),
+        linear-gradient(180deg, #08121d 0%, #111a29 100%);
+      color: var(--text);
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between;
+      align-items: center; padding: 16px 28px; background: rgba(5, 10, 16, 0.9);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .toolbar .meta {
+      font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.72);
+    }
+    .toolbar a {
+      color: var(--title); text-decoration: none; padding: 10px 16px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--teal), #16789a); font-weight: 700;
+    }
+    .deck { padding: 28px 28px 56px; }
+    .slide {
+      position: relative; width: var(--slide-w); height: var(--slide-h); margin: 0 auto 28px;
+      padding: 56px 64px; border-radius: var(--radius); overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+      box-shadow: var(--shadow); page-break-after: always;
+    }
+    .slide::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(120deg, rgba(0, 188, 212, 0.08), transparent 22%),
+        radial-gradient(circle at 85% 16%, rgba(244, 197, 66, 0.08), transparent 18%);
+      pointer-events: none;
+    }
+    .slide > * { position: relative; z-index: 1; }
+    .kicker {
+      margin-bottom: 10px; font-size: 16px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--teal);
+    }
+    h1, h2 { margin: 0 0 18px; color: var(--title); line-height: 1.05; }
+    h1 { font-size: 54px; }
+    h2 { font-size: 40px; }
+    p, li { font-size: var(--body-size); line-height: 1.35; }
+    ul { margin: 8px 0 0 24px; padding: 0; max-width: 1080px; }
+    li + li { margin-top: 10px; }
+    .title-slide { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+    .title-slide .course { font-size: 26px; color: var(--gold); font-weight: 700; }
+    .title-slide .details { font-size: 24px; color: rgba(224, 224, 224, 0.78); }
+    .title-slide .hero {
+      font-size: 20px; color: rgba(224, 224, 224, 0.85); padding: 14px 20px;
+      border-radius: 14px; background: var(--panel); border: 1px solid rgba(255,255,255,0.08);
+      max-width: 900px;
+    }
+    .tags { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tag {
+      font-size: 15px; padding: 6px 14px; border-radius: 999px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.14); color: rgba(224, 224, 224, 0.85);
+    }
+    .two-col { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: start; }
+    .panel {
+      padding: 24px; border-radius: 20px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .panel h3 { margin: 0 0 12px; font-size: 24px; color: var(--gold); }
+    .panel strong, .key { color: var(--teal); }
+    .panel p { white-space: pre-line; margin: 6px 0 0; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+    .cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      min-height: 180px; padding: 22px; border-radius: 22px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+    }
+    .card h3 { margin: 0 0 12px; font-size: 23px; color: var(--gold); }
+    .card p { font-size: 19px; margin: 0; white-space: pre-line; }
+    .metrics { display: flex; gap: 14px; margin-top: 22px; }
+    .metric {
+      flex: 1; padding: 12px 18px; border-radius: 16px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .metric .label {
+      font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.6);
+    }
+    .metric .value { font-size: 26px; font-weight: 700; color: var(--title); }
+    .equation-box {
+      margin-top: 24px; padding: 26px 28px; border-radius: 22px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 188, 212, 0.35);
+    }
+    .equation {
+      font-size: 32px; line-height: 1.25; color: var(--title);
+      font-family: Consolas, "Cascadia Mono", monospace; text-align: center;
+    }
+    .variables {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 24px; margin-top: 18px; font-size: 18px;
+    }
+    .example-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+    .example-step {
+      padding: 22px; border-radius: 20px; background: var(--panel-strong);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .example-step h3 {
+      margin: 0 0 10px; font-size: 22px; color: var(--coral);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .example-step p { font-size: 19px; white-space: pre-line; margin: 0; }
+    .pause-box {
+      margin-top: 36px; padding: 28px 32px; border-left: 8px solid var(--coral);
+      border-radius: 20px; background: rgba(255, 107, 107, 0.12);
+    }
+    .pause-box p { font-size: 26px; color: var(--title); margin: 0; }
+    .pause-points { margin-top: 22px; }
+    .pause-points div {
+      margin-top: 12px; padding: 14px 20px; border-radius: 14px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); font-size: 19px;
+    }
+    .comparison-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 20px; }
+    .comparison-table th, .comparison-table td {
+      padding: 13px 16px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .comparison-table th {
+      color: var(--gold); font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .workflow { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 14px; margin-top: 26px; }
+    .workflow .step {
+      padding: 20px; border-radius: 18px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px;
+    }
+    .workflow .num {
+      display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
+      background: var(--teal); color: #06222b; font-weight: 800; font-size: 18px; margin-bottom: 12px;
+    }
+    .workflow h3 { margin: 0 0 8px; font-size: 20px; color: var(--gold); }
+    .workflow p { font-size: 17px; margin: 0; white-space: pre-line; }
+    .code-block {
+      margin-top: 20px; padding: 22px 26px; border-radius: 18px; background: #081420;
+      border: 1px solid rgba(0, 188, 212, 0.35); overflow-x: auto;
+    }
+    .code-block pre {
+      margin: 0; font-family: Consolas, "Cascadia Mono", monospace; font-size: 19px;
+      line-height: 1.45; color: #d8e6ee; white-space: pre;
+    }
+    .code-note { margin-top: 16px; }
+    .footer {
+      position: absolute; right: 28px; bottom: 20px; font-size: 14px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(224, 224, 224, 0.6);
+    }
+    .note {
+      position: absolute; left: 64px; bottom: 20px; font-size: 15px;
+      color: rgba(224, 224, 224, 0.55); max-width: 900px;
+    }
+    .small { font-size: var(--small-size); color: rgba(224, 224, 224, 0.78); }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="meta">SEES:4100 | Week 03 | Wednesday, September 9, 2026 (mini-lecture, then Lab 3) | 11 slides</div>
+  <a href="#" id="download-link" download>Download HTML</a>
+</div>
+<div class="deck">
+<div class="slide title-slide"><div class="kicker">SEES:4100 | Computation in the Earth and Environment | Fall 2026</div><h1>Conditionals, Loops, and Environmental Events</h1><div class="course">School of Earth, Environment, and Sustainability | University of Iowa</div><div class="details">Week 3 | Wednesday, September 9, 2026 | 20-minute mini-lecture, then Lab 3</div><div class="hero">An event is a threshold decision a scientist must defend. Today the code learns to decide.</div><div class="tags"><span class="tag">if / elif / else</span><span class="tag">for loops</span><span class="tag">Counters</span><span class="tag">Thresholds</span></div><div class="footer">SEES:4100 | Week 03 | 1</div></div>
+<div class="slide"><div class="kicker">Learning Objectives</div><h2>By the end of this mini-lecture, you will be able to...</h2><ul><li>Write if/elif/else chains and predict which branch fires</li><li>Maintain counters across loop iterations</li><li>Explain why an environmental event is a threshold choice</li></ul><div class="footer">SEES:4100 | Week 03 | 2</div></div>
+<div class="slide"><div class="kicker">Core Concept</div><h2>One Decision, Three Branches</h2><div class="code-block"><pre>rain_mm = 12.0
+
+if rain_mm &gt;= 10:
+    label = &quot;wet&quot;
+elif rain_mm &gt; 0:
+    label = &quot;damp&quot;
+else:
+    label = &quot;dry&quot;
+
+print(label)     # wet</pre></div><div class="code-note"><ul><li>Exactly one branch runs</li><li>Change rain_mm, watch the branch change</li></ul></div><div class="footer">SEES:4100 | Week 03 | 3</div></div>
+<div class="slide"><div class="kicker">Core Concept</div><h2>Counters Remember Across Iterations</h2><div class="code-block"><pre>longest = 0
+current = 0
+for precip in precip_values:
+    if precip &lt; 1.0:
+        current = current + 1
+        longest = max(longest, current)
+    else:
+        current = 0     # forget this line and see the next slide</pre></div><div class="code-note"><ul><li>current tracks the run in progress; longest keeps the record</li><li>The reset in the else branch is where the logic lives</li></ul></div><div class="footer">SEES:4100 | Week 03 | 4</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>The Planted Bug</h2><div class="pause-box"><p>Without the reset, the code reports a 900-day dry spell in a 7-year record of an Iowa town. What single check exposes the answer as absurd?</p></div><div class="pause-points"><div>Plausibility: can a dry spell exceed the record itself, or an Iowa summer?</div><div>Wrong answers that look like answers are the dangerous kind</div></div><div class="footer">SEES:4100 | Week 03 | 5</div></div>
+<div class="slide"><div class="kicker">Core Concept</div><h2>Branch Order Decides the Label</h2><div class="code-block"><pre># A day with 15 mm rain AND a 33 deg C maximum:
+if row[&quot;precipitation_mm&quot;] &gt;= 10:
+    label = &quot;wet&quot;            # &lt;- evaluation stops here
+elif row[&quot;temp_max_c&quot;] &gt;= 32:
+    label = &quot;hot&quot;            # never reached for this day
+else:
+    label = &quot;ordinary&quot;</pre></div><div class="code-note"><ul><li>elif chains stop at the first true branch</li><li>Wet-before-hot is a decision; the lab asks you to defend it</li></ul></div><div class="footer">SEES:4100 | Week 03 | 6</div></div>
+<div class="slide"><div class="kicker">Verification</div><h2>Two Implementations, One Answer</h2><div class="two-col"><div class="panel"><h3>Loop version</h3><p>for each row:
+  if hot and humid:
+    count = count + 1</p></div><div class="panel"><h3>Vectorized version</h3><p>((temp_max &gt;= 30) &amp;
+ (humidity &gt;= 70)).sum()</p></div></div><div class="note">The counts must match. Agreement between independent implementations is the lab&#x27;s built-in test.</div><div class="footer">SEES:4100 | Week 03 | 7</div></div>
+<div class="slide"><div class="kicker">The Science</div><h2>Thresholds Are Choices</h2><div class="cards cols-3"><div class="card"><h3>Farmer</h3><p>5 mm wets the topsoil: a useful rain.</p></div><div class="card"><h3>Flood manager</h3><p>25 mm in a day starts mattering downstream.</p></div><div class="card"><h3>Climatologist</h3><p>1 mm separates a wet day from a dry one in many indices.</p></div></div><div class="note">Every event count in this lab depends on a threshold somebody chose.</div><div class="footer">SEES:4100 | Week 03 | 8</div></div>
+<div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Lab 3: Event Detection</h2><div class="two-col"><div class="panel"><h3>Today</h3><ul><li>Label every day: wet, hot, cold, ordinary</li><li>Count high-flow days by month</li><li>Find the longest dry spell</li></ul></div><div class="panel"><h3>Friday studio</h3><ul><li>Muggy-day agreement check</li><li>Season function and wet-day table</li><li>Freeze-thaw months, threshold defense</li></ul></div></div><div class="footer">SEES:4100 | Week 03 | 9</div></div>
+<div class="slide"><div class="kicker">Bridge</div><h2>Connection to Next Week</h2><table class="comparison-table"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Decisions inside loops</td><td>Functions and debugging</td><td>Package the decision so it can be named, reused, and tested</td></tr></tbody></table><div class="footer">SEES:4100 | Week 03 | 10</div></div>
+<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>One branch fires; order decides which</li><li>Counters need a reset path</li><li>Check plausibility, not just execution</li><li>Defend your thresholds with a reason</li></ul><div class="footer">SEES:4100 | Week 03 | 11</div></div>
+</div>
+<script>
+    function buildDownloadBlob() {
+      return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    }
+    function downloadDeck(event) {
+      event.preventDefault();
+      const blob = new Blob([buildDownloadBlob()], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const title = document.title || "sees4100-slide-deck";
+      link.href = url;
+      link.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".html";
+      link.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    }
+    document.getElementById("download-link").addEventListener("click", downloadDeck);
+</script>
+</body>
+</html>

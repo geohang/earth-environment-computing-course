@@ -1,0 +1,41 @@
+weather:
+  source: Iowa Environmental Mesonet ASOS archive
+  url: https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py
+  station_priority: [IOW, CID, DSM]
+  date_range: 2019-01-01 to 2025-12-31
+  variables: [temperature, dew point, relative humidity, precipitation, wind speed, latitude, longitude, elevation]
+  attribution: Iowa Environmental Mesonet, Iowa State University
+  fallback: synthetic hourly weather with matching column names
+streamflow_daily:
+  source: USGS National Water Information System daily values
+  url: https://waterservices.usgs.gov/nwis/dv/
+  site: "05454500"
+  date_range: 2015-01-01 to 2025-12-31
+  variables: [daily mean discharge]
+  attribution: U.S. Geological Survey
+  fallback: synthetic daily discharge with matching column names
+streamflow_multisite:
+  source: USGS National Water Information System
+  url: https://waterservices.usgs.gov/nwis/
+  date_range: 2020-01-01 to 2025-12-31
+  variables: [site metadata, daily mean discharge]
+  attribution: U.S. Geological Survey
+  fallback: synthetic annual streamflow summaries with matching column names
+water_quality:
+  source: Water Quality Portal
+  url: https://www.waterqualitydata.us/data/Result/search
+  site: USGS-05454500
+  date_range: 1901 to 2012 (full historical site record; date-filtered queries return no rows, so the download uses no date filter)
+  variables: [specific conductance, water temperature, pH, nitrate, turbidity]
+  notes: real download 2026-07-12; no dissolved oxygen results exist at this site; most samples fall between 1940 and 2009; record does not overlap the 2015-2025 streamflow record; nitrate is normalized to mg/L as N and exact duplicate rows are removed
+  attribution: Water Quality Portal partners
+  fallback: synthetic water-quality observations with matching column names
+processed_data:
+  source_label: source_type
+  allowed_values: [public observation, synthetic fallback]
+  notes: retained in processed weather, streamflow, multisite, and water-quality tables
+synthetic_spatial:
+  source: Generated for SEES:4100
+  license: Course teaching material
+  variables: [soil moisture, elevation, distance to river, landcover, gridded elevation, gridded temperature]
+  seed: 4100

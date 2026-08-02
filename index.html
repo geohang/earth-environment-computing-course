@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Student course site for SEES:4100 Computation in the Earth and Environment, Fall 2026.">
+  <title>SEES:4100 | Computation in the Earth and Environment</title>
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to course content</a>
+
+  <header class="site-header">
+    <a class="course-mark" href="#top" aria-label="SEES 4100 home">
+      <span class="course-code">SEES:4100</span>
+      <span>Fall 2026</span>
+    </a>
+    <nav aria-label="Course navigation">
+      <a href="#schedule">Schedule</a>
+      <a href="#materials">Materials</a>
+      <a href="#setup">Setup</a>
+      <a href="#policies">Policies</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <p class="eyebrow">University of Iowa · 3 semester hours</p>
+        <h1>Computation in the<br><span>Earth and Environment</span></h1>
+        <p class="hero-summary">
+          Learn Python through real Earth and environmental questions. Build
+          reproducible workflows, analyze data, make clear figures, develop
+          algorithms, and test simple environmental models.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#setup">Start here</a>
+          <a class="button secondary" href="#materials">Open course materials</a>
+        </div>
+      </div>
+      <aside class="hero-panel" aria-label="Course rhythm">
+        <p class="panel-label">Weekly rhythm</p>
+        <div class="rhythm-row">
+          <span class="day">MON</span>
+          <span><strong>Lecture</strong><small>Concepts and live coding</small></span>
+        </div>
+        <div class="rhythm-row">
+          <span class="day">WED</span>
+          <span><strong>Debrief + new lab</strong><small>Debug together, then begin</small></span>
+        </div>
+        <div class="rhythm-row">
+          <span class="day">FRI</span>
+          <span><strong>Open studio</strong><small>Work, test, and ask questions</small></span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section learning" aria-labelledby="learning-title">
+      <div class="section-heading">
+        <p class="eyebrow">What you will practice</p>
+        <h2 id="learning-title">Code as a scientific tool</h2>
+      </div>
+      <div class="learning-grid">
+        <article><span>01</span><h3>Reproducible work</h3><p>Organize code, data, and environments so another person can repeat your analysis.</p></article>
+        <article><span>02</span><h3>Data analysis</h3><p>Use NumPy and pandas to work with weather, streamflow, water-quality, and gridded data.</p></article>
+        <article><span>03</span><h3>Scientific reasoning</h3><p>Write algorithms, quantify uncertainty, validate results, and explain limitations.</p></article>
+        <article><span>04</span><h3>Clear communication</h3><p>Create figures and notebooks that connect computation to an environmental question.</p></article>
+      </div>
+    </section>
+
+    <section class="section" id="schedule" aria-labelledby="schedule-title">
+      <div class="section-heading split-heading">
+        <div>
+          <p class="eyebrow">Fall 2026</p>
+          <h2 id="schedule-title">Course schedule</h2>
+        </div>
+        <p>Lecture slides open in a new tab. Week 14 is Fall Break.</p>
+      </div>
+      <div class="schedule-wrap">
+        <table>
+          <thead><tr><th>Week</th><th>Dates</th><th>Monday topic</th><th>Lab focus</th><th>Slides</th></tr></thead>
+          <tbody>
+            <tr><td>01</td><td>Aug 24–28</td><td>Course overview and reproducible computation</td><td>Jupyter setup and first plot</td><td><a href="materials/slides/Week01_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>02</td><td>Aug 31–Sep 4</td><td>Python basics</td><td>Weather variables</td><td><a href="materials/slides/Week02_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>03</td><td>Sep 7–11</td><td>Conditionals, loops, and events</td><td>Environmental events</td><td><a href="materials/slides/Week03_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>04</td><td>Sep 14–18</td><td>Functions and debugging</td><td>Hydrologic indices</td><td><a href="materials/slides/Week04_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>05</td><td>Sep 21–25</td><td>NumPy and array thinking</td><td>Gridded Earth data</td><td><a href="materials/slides/Week05_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>06</td><td>Sep 28–Oct 2</td><td>Pandas and time series</td><td>Streamflow and weather</td><td><a href="materials/slides/Week06_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>07</td><td>Oct 5–9</td><td>Scientific visualization</td><td>Group Lab 1</td><td><a href="materials/slides/Week07_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>08</td><td>Oct 12–16</td><td>Statistics, regression, and uncertainty</td><td>Group Lab 2</td><td><a href="materials/slides/Week08_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>09</td><td>Oct 19–23</td><td>Algorithm development</td><td>Group Lab 3</td><td><a href="materials/slides/Week09_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>10</td><td>Oct 26–30</td><td>Responsible AI-assisted coding</td><td>Group Lab 4</td><td><a href="materials/slides/Week10_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>11</td><td>Nov 2–6</td><td>Geostatistics and spatial prediction</td><td>Group Lab 5</td><td><a href="materials/slides/Week11_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>12</td><td>Nov 9–13</td><td>Simple environmental modeling</td><td>Group Lab 6</td><td><a href="materials/slides/Week12_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>13</td><td>Nov 16–20</td><td>Final project launch</td><td>Proposal workshop</td><td><a href="materials/slides/Week13_slides.html" target="_blank">Open</a></td></tr>
+            <tr class="break-row"><td>14</td><td>Nov 23–27</td><td colspan="3">Fall Break</td></tr>
+            <tr><td>15</td><td>Nov 30–Dec 4</td><td>Advanced applications and project support</td><td>Project studio</td><td><a href="materials/slides/Week15_slides.html" target="_blank">Open</a></td></tr>
+            <tr><td>16</td><td>Dec 7–11</td><td>Course synthesis</td><td>Final presentations</td><td><a href="materials/slides/Week16_slides.html" target="_blank">Open</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section materials-section" id="materials" aria-labelledby="materials-title">
+      <div class="section-heading">
+        <p class="eyebrow">Student workspace</p>
+        <h2 id="materials-title">Course materials</h2>
+        <p>Download a clean notebook before you begin. Keep your completed work in a separate copy.</p>
+      </div>
+
+      <div class="material-group">
+        <div class="group-heading"><span>01</span><div><h3>Individual labs</h3><p>Six guided notebooks that build core Python skills.</p></div></div>
+        <div class="card-grid compact">
+          <a class="material-card" href="notebooks/individual_labs/Lab01_setup_jupyter_first_plot.ipynb" download><span>Lab 01</span><strong>Setup, Jupyter, and a first plot</strong><em>Download notebook ↓</em></a>
+          <a class="material-card" href="notebooks/individual_labs/Lab02_python_basics_weather_variables.ipynb" download><span>Lab 02</span><strong>Python basics and weather variables</strong><em>Download notebook ↓</em></a>
+          <a class="material-card" href="notebooks/individual_labs/Lab03_conditionals_loops_environmental_events.ipynb" download><span>Lab 03</span><strong>Conditionals, loops, and events</strong><em>Download notebook ↓</em></a>
+          <a class="material-card" href="notebooks/individual_labs/Lab04_functions_debugging_hydrologic_indices.ipynb" download><span>Lab 04</span><strong>Functions, debugging, and flow indices</strong><em>Download notebook ↓</em></a>
+          <a class="material-card" href="notebooks/individual_labs/Lab05_numpy_arrays_gridded_earth_data.ipynb" download><span>Lab 05</span><strong>NumPy arrays and gridded data</strong><em>Download notebook ↓</em></a>
+          <a class="material-card" href="notebooks/individual_labs/Lab06_pandas_time_series_streamflow_weather.ipynb" download><span>Lab 06</span><strong>Pandas time series</strong><em>Download notebook ↓</em></a>
+        </div>
+      </div>
+
+      <div class="material-group">
+        <div class="group-heading"><span>02</span><div><h3>Group labs</h3><p>Six collaborative investigations connecting methods to environmental data.</p></div></div>
+        <div class="card-grid compact">
+          <a class="material-card" href="notebooks/group_labs/GroupLab01_scientific_visualization.ipynb" download><span>Group 01</span><strong>Scientific visualization</strong><em>Download notebook ↓</em></a>
+          <a class="material-card" href="notebooks/group_labs/GroupLab02_statistics_regression_uncertainty.ipynb" download><span>Group 02</span><strong>Statistics and uncertainty</strong><em>Download notebook ↓</em></a>
+          <a class="material-card" href="notebooks/group_labs/GroupLab03_algorithm_development_interpolation_smoothing.ipynb" download><span>Group 03</span><strong>Interpolation and smoothing</strong><em>Download notebook ↓</em></a>
+          <a class="material-card" href="notebooks/group_labs/GroupLab04_ai_agent_scientific_coding.ipynb" download><span>Group 04</span><strong>AI-assisted scientific coding</strong><em>Download notebook ↓</em></a>
+          <a class="material-card" href="notebooks/group_labs/GroupLab05_geostatistics_semivariogram_idw.ipynb" download><span>Group 05</span><strong>Geostatistics and IDW</strong><em>Download notebook ↓</em></a>
+          <a class="material-card" href="notebooks/group_labs/GroupLab06_simple_environmental_model_calibration.ipynb" download><span>Group 06</span><strong>Model calibration</strong><em>Download notebook ↓</em></a>
+        </div>
+      </div>
+
+      <div class="material-group final-project">
+        <div class="group-heading"><span>03</span><div><h3>Final project</h3><p>Move from a testable question to a reproducible analysis and presentation.</p></div></div>
+        <div class="project-steps">
+          <a href="notebooks/final_project/FinalProject01_group_proposal_template.ipynb" download><span>1</span>Group proposal template</a>
+          <a href="notebooks/final_project/FinalProject02_analysis_template.ipynb" download><span>2</span>Analysis template</a>
+          <a href="notebooks/final_project/FinalProject03_presentation_outline.md" download><span>3</span>Presentation outline</a>
+          <a href="notebooks/final_project/FinalProject04_individual_contribution_statement.md" download><span>4</span>Contribution statement</a>
+          <a href="notebooks/final_project/AI_USAGE_LOG.md" download><span>+</span>AI usage log</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section setup-section" id="setup" aria-labelledby="setup-title">
+      <div class="setup-copy">
+        <p class="eyebrow">Before the first lab</p>
+        <h2 id="setup-title">Set up the course environment</h2>
+        <p>Install Anaconda or Miniconda, download the course repository, then run these commands from the repository folder.</p>
+        <a class="text-link" href="environment.yml" download>Download environment.yml ↓</a>
+      </div>
+      <div class="terminal" role="region" aria-label="Setup commands" tabindex="0">
+        <div class="terminal-bar"><span></span><span></span><span></span><strong>Terminal</strong></div>
+        <pre><code><span>conda</span> env create -f environment.yml
+<span>conda</span> activate sees4100
+<span>python</span> scripts/download_data.py
+<span>python</span> scripts/clean_data.py
+<span>jupyter</span> lab</code></pre>
+      </div>
+    </section>
+
+    <section class="section policies-section" id="policies" aria-labelledby="policies-title">
+      <div class="section-heading">
+        <p class="eyebrow">How work is evaluated</p>
+        <h2 id="policies-title">Grading and course policies</h2>
+      </div>
+      <div class="policy-grid">
+        <div class="grade-card">
+          <h3>Grading weights</h3>
+          <dl>
+            <div><dt>Individual labs</dt><dd>30%</dd></div>
+            <div><dt>Group labs</dt><dd>25%</dd></div>
+            <div><dt>Final group project</dt><dd>30%</dd></div>
+            <div><dt>Contribution + participation</dt><dd>10%</dd></div>
+            <div><dt>Attendance + engagement</dt><dd>5%</dd></div>
+          </dl>
+        </div>
+        <article class="policy-card">
+          <span class="policy-number">AI</span>
+          <h3>Responsible tool use</h3>
+          <p>When allowed, AI tools may support debugging, refactoring, comments, tests, and documentation. Disclose meaningful assistance, run and review every line, verify outputs, and be ready to explain your work.</p>
+          <p>Never use AI to fabricate data, citations, results, or interpretations. Never upload restricted data.</p>
+        </article>
+        <article class="policy-card">
+          <span class="policy-number">DB</span>
+          <h3>Lab debrief</h3>
+          <p>Beginning with Lab 2, arrive Wednesday with a short record of a solved problem, an unresolved problem with evidence, or a design and verification choice.</p>
+          <a class="text-link" href="notebooks/LAB_DEBRIEF_GUIDE.md" download>Download debrief guide ↓</a>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div><strong>SEES:4100</strong><span>Computation in the Earth and Environment</span></div>
+    <p>Fall 2026 · University of Iowa</p>
+  </footer>
+</body>
+</html>

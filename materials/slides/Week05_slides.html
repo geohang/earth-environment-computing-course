@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NumPy and Array Thinking | SEES:4100 Week 05</title>
+<style>
+    :root {
+      --bg: #0d1b2a; --bg-alt: #1a1a2e;
+      --panel: rgba(255, 255, 255, 0.06); --panel-strong: rgba(255, 255, 255, 0.1);
+      --text: #e0e0e0; --title: #ffffff; --gold: #f4c542; --teal: #00bcd4; --coral: #ff6b6b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28); --radius: 26px;
+      --slide-w: 1280px; --slide-h: 720px; --body-size: 22px; --small-size: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(0, 188, 212, 0.12), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(244, 197, 66, 0.1), transparent 28%),
+        linear-gradient(180deg, #08121d 0%, #111a29 100%);
+      color: var(--text);
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between;
+      align-items: center; padding: 16px 28px; background: rgba(5, 10, 16, 0.9);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .toolbar .meta {
+      font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.72);
+    }
+    .toolbar a {
+      color: var(--title); text-decoration: none; padding: 10px 16px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--teal), #16789a); font-weight: 700;
+    }
+    .deck { padding: 28px 28px 56px; }
+    .slide {
+      position: relative; width: var(--slide-w); height: var(--slide-h); margin: 0 auto 28px;
+      padding: 56px 64px; border-radius: var(--radius); overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+      box-shadow: var(--shadow); page-break-after: always;
+    }
+    .slide::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(120deg, rgba(0, 188, 212, 0.08), transparent 22%),
+        radial-gradient(circle at 85% 16%, rgba(244, 197, 66, 0.08), transparent 18%);
+      pointer-events: none;
+    }
+    .slide > * { position: relative; z-index: 1; }
+    .kicker {
+      margin-bottom: 10px; font-size: 16px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--teal);
+    }
+    h1, h2 { margin: 0 0 18px; color: var(--title); line-height: 1.05; }
+    h1 { font-size: 54px; }
+    h2 { font-size: 40px; }
+    p, li { font-size: var(--body-size); line-height: 1.35; }
+    ul { margin: 8px 0 0 24px; padding: 0; max-width: 1080px; }
+    li + li { margin-top: 10px; }
+    .title-slide { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+    .title-slide .course { font-size: 26px; color: var(--gold); font-weight: 700; }
+    .title-slide .details { font-size: 24px; color: rgba(224, 224, 224, 0.78); }
+    .title-slide .hero {
+      font-size: 20px; color: rgba(224, 224, 224, 0.85); padding: 14px 20px;
+      border-radius: 14px; background: var(--panel); border: 1px solid rgba(255,255,255,0.08);
+      max-width: 900px;
+    }
+    .tags { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tag {
+      font-size: 15px; padding: 6px 14px; border-radius: 999px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.14); color: rgba(224, 224, 224, 0.85);
+    }
+    .two-col { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: start; }
+    .panel {
+      padding: 24px; border-radius: 20px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .panel h3 { margin: 0 0 12px; font-size: 24px; color: var(--gold); }
+    .panel strong, .key { color: var(--teal); }
+    .panel p { white-space: pre-line; margin: 6px 0 0; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+    .cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      min-height: 180px; padding: 22px; border-radius: 22px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+    }
+    .card h3 { margin: 0 0 12px; font-size: 23px; color: var(--gold); }
+    .card p { font-size: 19px; margin: 0; white-space: pre-line; }
+    .metrics { display: flex; gap: 14px; margin-top: 22px; }
+    .metric {
+      flex: 1; padding: 12px 18px; border-radius: 16px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .metric .label {
+      font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.6);
+    }
+    .metric .value { font-size: 26px; font-weight: 700; color: var(--title); }
+    .equation-box {
+      margin-top: 24px; padding: 26px 28px; border-radius: 22px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 188, 212, 0.35);
+    }
+    .equation {
+      font-size: 32px; line-height: 1.25; color: var(--title);
+      font-family: Consolas, "Cascadia Mono", monospace; text-align: center;
+    }
+    .variables {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 24px; margin-top: 18px; font-size: 18px;
+    }
+    .example-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+    .example-step {
+      padding: 22px; border-radius: 20px; background: var(--panel-strong);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .example-step h3 {
+      margin: 0 0 10px; font-size: 22px; color: var(--coral);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .example-step p { font-size: 19px; white-space: pre-line; margin: 0; }
+    .pause-box {
+      margin-top: 36px; padding: 28px 32px; border-left: 8px solid var(--coral);
+      border-radius: 20px; background: rgba(255, 107, 107, 0.12);
+    }
+    .pause-box p { font-size: 26px; color: var(--title); margin: 0; }
+    .pause-points { margin-top: 22px; }
+    .pause-points div {
+      margin-top: 12px; padding: 14px 20px; border-radius: 14px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); font-size: 19px;
+    }
+    .comparison-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 20px; }
+    .comparison-table th, .comparison-table td {
+      padding: 13px 16px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .comparison-table th {
+      color: var(--gold); font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .workflow { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 14px; margin-top: 26px; }
+    .workflow .step {
+      padding: 20px; border-radius: 18px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px;
+    }
+    .workflow .num {
+      display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
+      background: var(--teal); color: #06222b; font-weight: 800; font-size: 18px; margin-bottom: 12px;
+    }
+    .workflow h3 { margin: 0 0 8px; font-size: 20px; color: var(--gold); }
+    .workflow p { font-size: 17px; margin: 0; white-space: pre-line; }
+    .code-block {
+      margin-top: 20px; padding: 22px 26px; border-radius: 18px; background: #081420;
+      border: 1px solid rgba(0, 188, 212, 0.35); overflow-x: auto;
+    }
+    .code-block pre {
+      margin: 0; font-family: Consolas, "Cascadia Mono", monospace; font-size: 19px;
+      line-height: 1.45; color: #d8e6ee; white-space: pre;
+    }
+    .code-note { margin-top: 16px; }
+    .footer {
+      position: absolute; right: 28px; bottom: 20px; font-size: 14px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(224, 224, 224, 0.6);
+    }
+    .note {
+      position: absolute; left: 64px; bottom: 20px; font-size: 15px;
+      color: rgba(224, 224, 224, 0.55); max-width: 900px;
+    }
+    .small { font-size: var(--small-size); color: rgba(224, 224, 224, 0.78); }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="meta">SEES:4100 | Week 05 | Monday, September 21, 2026 | 22 slides</div>
+  <a href="#" id="download-link" download>Download HTML</a>
+</div>
+<div class="deck">
+<div class="slide title-slide"><div class="kicker">SEES:4100 | Computation in the Earth and Environment | Fall 2026</div><h1>NumPy and Array Thinking</h1><div class="course">School of Earth, Environment, and Sustainability | University of Iowa</div><div class="details">Week 5 | Monday, September 21, 2026</div><div class="hero">A slice is a subregion, a mask is a map of a condition, a gradient is terrain slope.</div><div class="tags"><span class="tag">Arrays</span><span class="tag">Shape</span><span class="tag">Masks</span><span class="tag">Grids</span><span class="tag">Gradients</span></div><div class="footer">SEES:4100 | Week 05 | 1</div></div>
+<div class="slide"><div class="kicker">Learning Objectives</div><h2>By the end of this lecture, you will be able to...</h2><ul><li>Explain what an array adds over a list: shape and elementwise math</li><li>Reshape a flat column into a 2-D grid and say which axis is which</li><li>Build and use boolean masks</li><li>Anticipate the reshape-order and image-origin gotchas</li></ul><div class="footer">SEES:4100 | Week 05 | 2</div></div>
+<div class="slide"><div class="kicker">Recap</div><h2>Last Week in Sixty Seconds</h2><ul><li>Functions return; printing functions return None</li><li>Tiny tests on hand-checkable data catch logic errors</li><li>Magnitude anchors catch silent unit bugs</li><li>Today: the same discipline, applied to data with SHAPE</li></ul><div class="footer">SEES:4100 | Week 05 | 3</div></div>
+<div class="slide"><div class="kicker">Motivation</div><h2>Earth Data Are Arrays</h2><div class="two-col"><div class="panel"><h3>Everywhere you look</h3><ul><li>Elevation rasters and satellite images</li><li>Climate model output on grids</li><li>Seismic sections, radar scans</li></ul></div><div class="panel"><h3>The shape IS the science</h3><ul><li>2,555 values in a line: a time series</li><li>2,500 values in 50 x 50: a map</li><li>Same numbers, different questions</li></ul></div></div><div class="footer">SEES:4100 | Week 05 | 4</div></div>
+<div class="slide"><div class="kicker">Core Concept</div><h2>From Flat Column to Grid</h2><div class="code-block"><pre>elevation = elev[&quot;elevation_m&quot;].to_numpy().reshape(50, 50)
+
+elevation.shape        # (50, 50)
+elevation[0, 0]        # one corner cell
+elevation[25, :]       # row 25: a west-east profile
+elevation[:, 10]       # column 10: a south-north profile</pre></div><div class="code-note"><ul><li>reshape fills row by row: value 51 starts row two</li><li>Convention all semester: rows are y, columns are x</li></ul></div><div class="footer">SEES:4100 | Week 05 | 5</div></div>
+<div class="slide"><div class="kicker">Core Concept</div><h2>Indexing a Grid</h2><div class="equation-box"><div class="equation">elevation[row, col]      # NOT (x, y)</div><div class="variables"><div>row = position along y (south to north)</div><div>col = position along x (west to east)</div><div>elevation[25:, :] = the northern half</div><div>elevation[25, :] = one terrain profile</div></div></div><ul><li>The plotting habit of (x, y) fights this all week; say row-column out loud</li></ul><div class="footer">SEES:4100 | Week 05 | 6</div></div>
+<div class="slide"><div class="kicker">Core Concept</div><h2>Vectorization: No Loops for Arithmetic</h2><div class="code-block"><pre>temp_f = temp_c * 9 / 5 + 32        # whole 50x50 grid, one line
+
+elevation.mean()                     # one number for the map
+elevation.mean(axis=0)               # 50 column means: a profile
+elevation.max() - elevation.min()    # total relief</pre></div><div class="code-note"><ul><li>The code reads like the equation</li><li>Aggregations collapse the grid: whole map, or one axis at a time</li></ul></div><div class="footer">SEES:4100 | Week 05 | 7</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>A flat column of 2,500 values becomes reshape(50, 50). Where does value number 51 land?</p></div><div class="pause-points"><div>Row 1 (the second row), column 0: filling is row-major</div><div>Getting this wrong scrambles the whole map, with no error</div></div><div class="footer">SEES:4100 | Week 05 | 8</div></div>
+<div class="slide"><div class="kicker">Masks</div><h2>A Mask Is a Map of a Condition</h2><div class="code-block"><pre>high = elevation &gt; np.percentile(elevation, 75)
+
+high.sum()               # how many cells
+high.mean()              # fraction of the area
+temperature[high].mean() # temperature only where high</pre></div><div class="code-note"><ul><li>The mask has the same shape as the grid: it IS a map</li><li>Masks count, measure area, and select in one move</li></ul></div><div class="footer">SEES:4100 | Week 05 | 9</div></div>
+<div class="slide"><div class="kicker">Masks</div><h2>Combining Conditions on Arrays</h2><ul><li>Use &amp; and |, never the words and / or</li><li>Parentheses around every comparison</li><li>(temp &lt; t25) &amp; (elev &gt; e75): cool AND high</li><li>Check mask.sum() before trusting any masked statistic</li></ul><div class="footer">SEES:4100 | Week 05 | 10</div></div>
+<div class="slide"><div class="kicker">Display</div><h2>The Two Classic Grid Gotchas</h2><div class="two-col"><div class="panel"><h3>1. Reshape order</h3><ul><li>Row-major filling, always</li><li>reshape(ny, nx), not (nx, ny)</li><li>Verify: check one corner value against the table</li></ul></div><div class="panel"><h3>2. Image origin</h3><ul><li>imshow counts rows downward by default</li><li>origin=&quot;lower&quot; restores map orientation</li><li>An upside-down landscape is obvious in a plot, invisible in print</li></ul></div></div><div class="footer">SEES:4100 | Week 05 | 11</div></div>
+<div class="slide"><div class="kicker">Display</div><h2>Every Gridded Figure, Same Rules</h2><div class="code-block"><pre>fig, ax = plt.subplots(figsize=(6, 5))
+image = ax.imshow(elevation, origin=&quot;lower&quot;, cmap=&quot;terrain&quot;)
+ax.set_xlabel(&quot;Grid column&quot;)
+ax.set_ylabel(&quot;Grid row&quot;)
+fig.colorbar(image, ax=ax, label=&quot;Elevation (m)&quot;)</pre></div><div class="code-note"><ul><li>A colorbar with units is the map&#x27;s axis label</li></ul></div><div class="footer">SEES:4100 | Week 05 | 12</div></div>
+<div class="slide"><div class="kicker">Gradients</div><h2>Slope Needs Real Spacing</h2><div class="equation-box"><div class="equation">dz_dy, dz_dx = np.gradient(elevation, dy_m, dx_m)</div><div class="variables"><div>dz_dx = elevation change per meter, west-east</div><div>dz_dy = elevation change per meter, south-north</div><div>dx_m, dy_m = grid spacing from the coordinate columns</div><div>slope = sqrt(dz_dx**2 + dz_dy**2)</div></div></div><ul><li>Without spacing arguments the units are meters per grid cell: physically meaningless</li></ul><div class="footer">SEES:4100 | Week 05 | 13</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Your slope map has values near 40. Percent, degrees, or meters per cell? How do you know?</p></div><div class="pause-points"><div>Whatever the code made it: trace the spacing arguments and the times-100</div><div>Units are decided by you, not discovered by the computer</div></div><div class="footer">SEES:4100 | Week 05 | 14</div></div>
+<div class="slide"><div class="kicker">Worked Example</div><h2>Does Temperature Follow Elevation?</h2><div class="example-grid"><div class="example-step"><h3>Given</h3><p>50 x 50 synthetic elevation and temperature grids on the same coordinates.</p></div><div class="example-step"><h3>Solve</h3><p>Flatten both with .ravel(), fit a line with np.polyfit, plot scatter plus fit.</p></div><div class="example-step"><h3>Interpret</h3><p>Slope times 100 = an apparent lapse rate in deg C per 100 m, sign included.</p></div></div><div class="footer">SEES:4100 | Week 05 | 15</div></div>
+<div class="slide"><div class="kicker">Visual Summary</div><h2>Three Sentences to Keep</h2><div class="cards cols-3"><div class="card"><h3>Slice</h3><p>A slice is a subregion of the map: elevation[25:, :] is the north half.</p></div><div class="card"><h3>Mask</h3><p>A mask is a map of a condition: where is it steep, high, or cold?</p></div><div class="card"><h3>Gradient</h3><p>A gradient with real spacing is terrain slope with real units.</p></div></div><div class="footer">SEES:4100 | Week 05 | 16</div></div>
+<div class="slide"><div class="kicker">Error Gallery</div><h2>Three Messages You Will Meet This Week</h2><ul><li>ValueError: cannot reshape array of size 2500 into (60, 60): count your cells</li><li>The ambiguous truth-value error: you wrote and/or where &amp; / | belongs</li><li>IndexError: index 50 out of bounds: rows run 0 to 49</li><li>Each names its cause; read the bottom line first</li></ul><div class="footer">SEES:4100 | Week 05 | 17</div></div>
+<div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Lab 5: NumPy Arrays and Gridded Earth Data</h2><div class="two-col"><div class="panel"><h3>Wednesday</h3><ul><li>Reshape and verify the elevation grid</li><li>North/south comparison, one profile plot</li><li>Slope with correct units</li></ul></div><div class="panel"><h3>Friday studio</h3><ul><li>Lapse-rate scatter and fit</li><li>Joint mask percentage, column profile</li><li>Steep versus gentle temperature contrast</li></ul></div></div><div class="footer">SEES:4100 | Week 05 | 18</div></div>
+<div class="slide"><div class="kicker">Pitfalls</div><h2>Where This Week Goes Wrong</h2><ul><li>reshape(nx, ny) instead of (ny, nx)</li><li>origin left at the default, map upside down</li><li>and / or on arrays instead of &amp; / |</li><li>Gradient without spacing: wrong units, no warning</li></ul><div class="footer">SEES:4100 | Week 05 | 19</div></div>
+<div class="slide"><div class="kicker">Bridge</div><h2>Connection to Next Week</h2><table class="comparison-table"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Grids indexed by position</td><td>Pandas time series</td><td>From cells in space to days in time: the index becomes a date</td></tr></tbody></table><div class="footer">SEES:4100 | Week 05 | 20</div></div>
+<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>Shape is the science: line = series, grid = map</li><li>Rows are y, columns are x; reshape fills row-major</li><li>Masks count, measure, and select at once</li><li>Gradients need real spacing for real units</li></ul><div class="footer">SEES:4100 | Week 05 | 21</div></div>
+<div class="slide"><div class="kicker">Discussion</div><h2>Before You Leave</h2><div class="pause-box"><p>Name one gridded dataset from your own field. What would a mask of it show, and what would its gradient mean?</p></div><div class="footer">SEES:4100 | Week 05 | 22</div></div>
+</div>
+<script>
+    function buildDownloadBlob() {
+      return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    }
+    function downloadDeck(event) {
+      event.preventDefault();
+      const blob = new Blob([buildDownloadBlob()], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const title = document.title || "sees4100-slide-deck";
+      link.href = url;
+      link.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".html";
+      link.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    }
+    document.getElementById("download-link").addEventListener("click", downloadDeck);
+</script>
+</body>
+</html>

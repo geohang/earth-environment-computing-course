@@ -1,0 +1,32 @@
+# Python and Jupyter artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Private course-production content
+data/raw/
+notebooks/instructor/
+**/*solution*
+**/*answer_key*
+**/*teaching_notes*
+_docx_temp/
+_syllabus_render/
+scripts/slides/
+tests/
+*.pptx
+*.inspect.ndjson
+SEES4100_Computation_Earth_Environment_Syllabus_*.docx
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example

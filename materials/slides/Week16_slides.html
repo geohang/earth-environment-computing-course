@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course Synthesis | SEES:4100 Week 16</title>
+<style>
+    :root {
+      --bg: #0d1b2a; --bg-alt: #1a1a2e;
+      --panel: rgba(255, 255, 255, 0.06); --panel-strong: rgba(255, 255, 255, 0.1);
+      --text: #e0e0e0; --title: #ffffff; --gold: #f4c542; --teal: #00bcd4; --coral: #ff6b6b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28); --radius: 26px;
+      --slide-w: 1280px; --slide-h: 720px; --body-size: 22px; --small-size: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(0, 188, 212, 0.12), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(244, 197, 66, 0.1), transparent 28%),
+        linear-gradient(180deg, #08121d 0%, #111a29 100%);
+      color: var(--text);
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between;
+      align-items: center; padding: 16px 28px; background: rgba(5, 10, 16, 0.9);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .toolbar .meta {
+      font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.72);
+    }
+    .toolbar a {
+      color: var(--title); text-decoration: none; padding: 10px 16px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--teal), #16789a); font-weight: 700;
+    }
+    .deck { padding: 28px 28px 56px; }
+    .slide {
+      position: relative; width: var(--slide-w); height: var(--slide-h); margin: 0 auto 28px;
+      padding: 56px 64px; border-radius: var(--radius); overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+      box-shadow: var(--shadow); page-break-after: always;
+    }
+    .slide::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(120deg, rgba(0, 188, 212, 0.08), transparent 22%),
+        radial-gradient(circle at 85% 16%, rgba(244, 197, 66, 0.08), transparent 18%);
+      pointer-events: none;
+    }
+    .slide > * { position: relative; z-index: 1; }
+    .kicker {
+      margin-bottom: 10px; font-size: 16px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--teal);
+    }
+    h1, h2 { margin: 0 0 18px; color: var(--title); line-height: 1.05; }
+    h1 { font-size: 54px; }
+    h2 { font-size: 40px; }
+    p, li { font-size: var(--body-size); line-height: 1.35; }
+    ul { margin: 8px 0 0 24px; padding: 0; max-width: 1080px; }
+    li + li { margin-top: 10px; }
+    .title-slide { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+    .title-slide .course { font-size: 26px; color: var(--gold); font-weight: 700; }
+    .title-slide .details { font-size: 24px; color: rgba(224, 224, 224, 0.78); }
+    .title-slide .hero {
+      font-size: 20px; color: rgba(224, 224, 224, 0.85); padding: 14px 20px;
+      border-radius: 14px; background: var(--panel); border: 1px solid rgba(255,255,255,0.08);
+      max-width: 900px;
+    }
+    .tags { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tag {
+      font-size: 15px; padding: 6px 14px; border-radius: 999px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.14); color: rgba(224, 224, 224, 0.85);
+    }
+    .two-col { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: start; }
+    .panel {
+      padding: 24px; border-radius: 20px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .panel h3 { margin: 0 0 12px; font-size: 24px; color: var(--gold); }
+    .panel strong, .key { color: var(--teal); }
+    .panel p { white-space: pre-line; margin: 6px 0 0; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+    .cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      min-height: 180px; padding: 22px; border-radius: 22px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+    }
+    .card h3 { margin: 0 0 12px; font-size: 23px; color: var(--gold); }
+    .card p { font-size: 19px; margin: 0; white-space: pre-line; }
+    .metrics { display: flex; gap: 14px; margin-top: 22px; }
+    .metric {
+      flex: 1; padding: 12px 18px; border-radius: 16px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .metric .label {
+      font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.6);
+    }
+    .metric .value { font-size: 26px; font-weight: 700; color: var(--title); }
+    .equation-box {
+      margin-top: 24px; padding: 26px 28px; border-radius: 22px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 188, 212, 0.35);
+    }
+    .equation {
+      font-size: 32px; line-height: 1.25; color: var(--title);
+      font-family: Consolas, "Cascadia Mono", monospace; text-align: center;
+    }
+    .variables {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 24px; margin-top: 18px; font-size: 18px;
+    }
+    .example-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+    .example-step {
+      padding: 22px; border-radius: 20px; background: var(--panel-strong);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .example-step h3 {
+      margin: 0 0 10px; font-size: 22px; color: var(--coral);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .example-step p { font-size: 19px; white-space: pre-line; margin: 0; }
+    .pause-box {
+      margin-top: 36px; padding: 28px 32px; border-left: 8px solid var(--coral);
+      border-radius: 20px; background: rgba(255, 107, 107, 0.12);
+    }
+    .pause-box p { font-size: 26px; color: var(--title); margin: 0; }
+    .pause-points { margin-top: 22px; }
+    .pause-points div {
+      margin-top: 12px; padding: 14px 20px; border-radius: 14px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); font-size: 19px;
+    }
+    .comparison-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 20px; }
+    .comparison-table th, .comparison-table td {
+      padding: 13px 16px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .comparison-table th {
+      color: var(--gold); font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .workflow { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 14px; margin-top: 26px; }
+    .workflow .step {
+      padding: 20px; border-radius: 18px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px;
+    }
+    .workflow .num {
+      display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
+      background: var(--teal); color: #06222b; font-weight: 800; font-size: 18px; margin-bottom: 12px;
+    }
+    .workflow h3 { margin: 0 0 8px; font-size: 20px; color: var(--gold); }
+    .workflow p { font-size: 17px; margin: 0; white-space: pre-line; }
+    .code-block {
+      margin-top: 20px; padding: 22px 26px; border-radius: 18px; background: #081420;
+      border: 1px solid rgba(0, 188, 212, 0.35); overflow-x: auto;
+    }
+    .code-block pre {
+      margin: 0; font-family: Consolas, "Cascadia Mono", monospace; font-size: 19px;
+      line-height: 1.45; color: #d8e6ee; white-space: pre;
+    }
+    .code-note { margin-top: 16px; }
+    .footer {
+      position: absolute; right: 28px; bottom: 20px; font-size: 14px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(224, 224, 224, 0.6);
+    }
+    .note {
+      position: absolute; left: 64px; bottom: 20px; font-size: 15px;
+      color: rgba(224, 224, 224, 0.55); max-width: 900px;
+    }
+    .small { font-size: var(--small-size); color: rgba(224, 224, 224, 0.78); }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="meta">SEES:4100 | Week 16 | Monday, December 7, 2026 | 18 slides</div>
+  <a href="#" id="download-link" download>Download HTML</a>
+</div>
+<div class="deck">
+<div class="slide title-slide"><div class="kicker">SEES:4100 | Computation in the Earth and Environment | Fall 2026</div><h1>Course Synthesis: from Syntax to Insight</h1><div class="course">School of Earth, Environment, and Sustainability | University of Iowa</div><div class="details">Week 16 | Monday, December 7, 2026 | Presentations Wed and Fri | Package due Fri Dec 11</div><div class="hero">Sixteen weeks, one river, one standard: an analysis anyone can check.</div><div class="tags"><span class="tag">The arc</span><span class="tag">Checklist</span><span class="tag">Presentations</span><span class="tag">What transfers</span></div><div class="footer">SEES:4100 | Week 16 | 1</div></div>
+<div class="slide"><div class="kicker">Learning Objectives</div><h2>By the end of this lecture, you will be able to...</h2><ul><li>Trace the semester&#x27;s arc from syntax to scientific insight</li><li>Run the reproducibility checklist on your own package</li><li>State the habits that transfer beyond this course</li><li>Know exactly how the presentations run</li></ul><div class="footer">SEES:4100 | Week 16 | 2</div></div>
+<div class="slide"><div class="kicker">Recap</div><h2>Where Week 15 Left You</h2><ul><li>Analysis complete, riskiest pieces retired</li><li>Figures drafted and polished against the checklist</li><li>README written; reproducibility pass run</li><li>This week: the story, the checklist, the podium</li></ul><div class="footer">SEES:4100 | Week 16 | 3</div></div>
+<div class="slide"><div class="kicker">The Arc</div><h2>One Dataset, Sixteen Weeks</h2><div class="workflow"><div class="step"><div class="num">1</div><h3>See (Wk 1-3)</h3><p>Plot the river&#x27;s record; count its events; first thresholds defended.</p></div><div class="step"><div class="num">2</div><h3>Build (Wk 4-6)</h3><p>Tested functions; grids; the rain-to-peak lag measured.</p></div><div class="step"><div class="num">3</div><h3>Argue (Wk 7-9)</h3><p>Figures with claims; regressions with residuals; tools you built yourself.</p></div><div class="step"><div class="num">4</div><h3>Judge (Wk 10-12)</h3><p>Verified AI edits; validated maps; a model diagnosed honestly.</p></div></div><div class="note">The syntax was never the point: each week&#x27;s question needed the previous week&#x27;s skill.</div><div class="footer">SEES:4100 | Week 16 | 4</div></div>
+<div class="slide"><div class="kicker">The Arc</div><h2>Say It Back</h2><div class="pause-box"><p>In Week 6 you measured the rain-to-peak lag. Which THREE earlier skills did that measurement quietly require?</p></div><div class="pause-points"><div>Dates parsed and merged (Wk 6), boolean events (Wk 3), labeled figures (Wk 1)</div><div>Every analysis is a stack; the final project is your stack</div></div><div class="footer">SEES:4100 | Week 16 | 5</div></div>
+<div class="slide"><div class="kicker">What Transfers</div><h2>The Durable Habits</h2><div class="cards cols-3"><div class="card"><h3>Verification</h3><p>Tiny tests, magnitude anchors, two routes to every important number.</p></div><div class="card"><h3>Honest scoring</h3><p>Residuals as diagnosis; unseen data as the judge; calibrated verbs.</p></div><div class="card"><h3>Disclosure</h3><p>Sources cited, assistance logged, work explainable line by line.</p></div></div><div class="note">Libraries churn; these habits are the skill.</div><div class="footer">SEES:4100 | Week 16 | 6</div></div>
+<div class="slide"><div class="kicker">What Transfers</div><h2>Where These Habits Go Next</h2><ul><li>A thesis: the reproducibility bar is now the journal bar</li><li>An agency job: USGS and DNR workflows look exactly like this</li><li>Any career touching data: the verification instinct compounds</li><li>The specific dataset was Iowa; the practices are portable</li></ul><div class="footer">SEES:4100 | Week 16 | 7</div></div>
+<div class="slide"><div class="kicker">The Checklist</div><h2>Final-Package Pass, Item by Item</h2><table class="comparison-table"><thead><tr><th>Check</th><th>How</th></tr></thead><tbody><tr><td>Runs for a stranger</td><td>Fresh clone, Restart and Run All succeeds</td></tr><tr><td>Figures complete</td><td>Labels, units, legend, caption on every one</td></tr><tr><td>Data cited</td><td>Source, URL, access date in the README</td></tr><tr><td>Statements match reality</td><td>Contribution statements name real work</td></tr><tr><td>AI log complete</td><td>Or explicitly empty</td></tr><tr><td>One number traced</td><td>A conclusion value followed back to raw data by hand</td></tr></tbody></table><div class="note">Ten minutes today saves a grade on Friday.</div><div class="footer">SEES:4100 | Week 16 | 8</div></div>
+<div class="slide"><div class="kicker">The Checklist</div><h2>Self-Assessment, Right Now</h2><div class="pause-box"><p>Which checklist item is your group most likely to fail today, and what is the fix before Wednesday?</p></div><div class="footer">SEES:4100 | Week 16 | 9</div></div>
+<div class="slide"><div class="kicker">Presentations</div><h2>How Wednesday and Friday Run</h2><ul><li>Ten minutes per group, then questions</li><li>Every member speaks</li><li>Every member answers one oral question, instructor&#x27;s choice</li><li>The oral question is the course&#x27;s definition of ownership</li></ul><div class="footer">SEES:4100 | Week 16 | 10</div></div>
+<div class="slide"><div class="kicker">Presentations</div><h2>What the Rubric Rewards</h2><table class="comparison-table"><thead><tr><th>Component</th><th>What strong looks like</th></tr></thead><tbody><tr><td>Question and motivation</td><td>Specific, answerable, honestly framed</td></tr><tr><td>Method</td><td>One method, applied correctly, validated</td></tr><tr><td>Figures</td><td>Each makes one claim visible</td></tr><tr><td>Interpretation</td><td>Limitations named without prompting</td></tr><tr><td>Disclosure and verification</td><td>Log complete; checks described</td></tr><tr><td>Individual understanding</td><td>Any member explains any section</td></tr></tbody></table><div class="footer">SEES:4100 | Week 16 | 11</div></div>
+<div class="slide"><div class="kicker">Presentations</div><h2>The Ten-Minute Shape That Works</h2><ul><li>One slide: question and why it matters (1 min)</li><li>One slide: data and method (2 min)</li><li>Two or three figures, one claim each (5 min)</li><li>One slide: limitations and what you would do next (2 min)</li></ul><div class="footer">SEES:4100 | Week 16 | 12</div></div>
+<div class="slide"><div class="kicker">Closing</div><h2>The Course&#x27;s Quiet Thesis</h2><div class="example-grid"><div class="example-step"><h3>Claim</h3><p>Computation is how modern Earth science asks whether its own claims are true.</p></div><div class="example-step"><h3>Evidence</h3><p>Sixteen weeks of checks: asserts, anchors, residuals, holdouts, logs.</p></div><div class="example-step"><h3>Charge</h3><p>A reproducible analysis is an argument anyone can check. Hold your own work to it first.</p></div></div><div class="footer">SEES:4100 | Week 16 | 13</div></div>
+<div class="slide"><div class="kicker">The Semester</div><h2>By the Numbers</h2><div class="cards cols-3"><div class="card"><h3>What you ran</h3><p>12 labs, 26 notebooks, one final project, every one reproducible.</p></div><div class="card"><h3>What you analyzed</h3><p>7 years of weather, 11 years of river flow, 17 stations, a century of water quality.</p></div><div class="card"><h3>What you built</h3><p>Functions with tests, maps with validation, a model with an honest diagnosis.</p></div></div><div class="metrics"><div class="metric"><div class="label">Labs</div><div class="value">12</div></div><div class="metric"><div class="label">Notebooks</div><div class="value">26</div></div><div class="metric"><div class="label">Years of flow data</div><div class="value">11</div></div><div class="metric"><div class="label">Spatial pairs</div><div class="value">3,160</div></div></div><div class="footer">SEES:4100 | Week 16 | 14</div></div>
+<div class="slide"><div class="kicker">Keep Going</div><h2>If This Course Clicked</h2><ul><li>Undergraduate research: hydrogeophysics and computation opportunities in SEES</li><li>Next courses: GIS, hydrology, and data-science electives</li><li>Portfolio: your final project is a public-ready repository</li><li>The Iowa River keeps flowing; the record keeps growing</li></ul><div class="footer">SEES:4100 | Week 16 | 15</div></div>
+<div class="slide"><div class="kicker">Logistics</div><h2>The Last Week, Exactly</h2><table class="comparison-table"><thead><tr><th>When</th><th>What</th></tr></thead><tbody><tr><td>Wednesday, Dec 9</td><td>Presentations, part 1: order posted on the course site</td></tr><tr><td>Friday, Dec 11</td><td>Presentations, part 2</td></tr><tr><td>Friday, Dec 11</td><td>Final package due: notebook, figures, README, statements, AI log</td></tr></tbody></table><div class="note">Submission path and presentation order are posted on the course site.</div><div class="footer">SEES:4100 | Week 16 | 16</div></div>
+<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>The arc: see, build, argue, judge</li><li>Run the checklist before Wednesday</li><li>Rehearse the oral questions inside your group</li><li>A notebook that ran is not a notebook that runs</li></ul><div class="footer">SEES:4100 | Week 16 | 17</div></div>
+<div class="slide"><div class="kicker">Discussion</div><h2>Before You Leave</h2><div class="pause-box"><p>A committee member asks: how do you KNOW your main number is right? Which two habits from this course answer them? Practice the answer out loud this week.</p></div><div class="footer">SEES:4100 | Week 16 | 18</div></div>
+</div>
+<script>
+    function buildDownloadBlob() {
+      return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    }
+    function downloadDeck(event) {
+      event.preventDefault();
+      const blob = new Blob([buildDownloadBlob()], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const title = document.title || "sees4100-slide-deck";
+      link.href = url;
+      link.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".html";
+      link.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    }
+    document.getElementById("download-link").addEventListener("click", downloadDeck);
+</script>
+</body>
+</html>

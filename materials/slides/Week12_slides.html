@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simple Environmental Modeling | SEES:4100 Week 12</title>
+<style>
+    :root {
+      --bg: #0d1b2a; --bg-alt: #1a1a2e;
+      --panel: rgba(255, 255, 255, 0.06); --panel-strong: rgba(255, 255, 255, 0.1);
+      --text: #e0e0e0; --title: #ffffff; --gold: #f4c542; --teal: #00bcd4; --coral: #ff6b6b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28); --radius: 26px;
+      --slide-w: 1280px; --slide-h: 720px; --body-size: 22px; --small-size: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(0, 188, 212, 0.12), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(244, 197, 66, 0.1), transparent 28%),
+        linear-gradient(180deg, #08121d 0%, #111a29 100%);
+      color: var(--text);
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between;
+      align-items: center; padding: 16px 28px; background: rgba(5, 10, 16, 0.9);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .toolbar .meta {
+      font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.72);
+    }
+    .toolbar a {
+      color: var(--title); text-decoration: none; padding: 10px 16px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--teal), #16789a); font-weight: 700;
+    }
+    .deck { padding: 28px 28px 56px; }
+    .slide {
+      position: relative; width: var(--slide-w); height: var(--slide-h); margin: 0 auto 28px;
+      padding: 56px 64px; border-radius: var(--radius); overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+      box-shadow: var(--shadow); page-break-after: always;
+    }
+    .slide::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(120deg, rgba(0, 188, 212, 0.08), transparent 22%),
+        radial-gradient(circle at 85% 16%, rgba(244, 197, 66, 0.08), transparent 18%);
+      pointer-events: none;
+    }
+    .slide > * { position: relative; z-index: 1; }
+    .kicker {
+      margin-bottom: 10px; font-size: 16px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--teal);
+    }
+    h1, h2 { margin: 0 0 18px; color: var(--title); line-height: 1.05; }
+    h1 { font-size: 54px; }
+    h2 { font-size: 40px; }
+    p, li { font-size: var(--body-size); line-height: 1.35; }
+    ul { margin: 8px 0 0 24px; padding: 0; max-width: 1080px; }
+    li + li { margin-top: 10px; }
+    .title-slide { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+    .title-slide .course { font-size: 26px; color: var(--gold); font-weight: 700; }
+    .title-slide .details { font-size: 24px; color: rgba(224, 224, 224, 0.78); }
+    .title-slide .hero {
+      font-size: 20px; color: rgba(224, 224, 224, 0.85); padding: 14px 20px;
+      border-radius: 14px; background: var(--panel); border: 1px solid rgba(255,255,255,0.08);
+      max-width: 900px;
+    }
+    .tags { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tag {
+      font-size: 15px; padding: 6px 14px; border-radius: 999px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.14); color: rgba(224, 224, 224, 0.85);
+    }
+    .two-col { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: start; }
+    .panel {
+      padding: 24px; border-radius: 20px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .panel h3 { margin: 0 0 12px; font-size: 24px; color: var(--gold); }
+    .panel strong, .key { color: var(--teal); }
+    .panel p { white-space: pre-line; margin: 6px 0 0; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+    .cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      min-height: 180px; padding: 22px; border-radius: 22px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+    }
+    .card h3 { margin: 0 0 12px; font-size: 23px; color: var(--gold); }
+    .card p { font-size: 19px; margin: 0; white-space: pre-line; }
+    .metrics { display: flex; gap: 14px; margin-top: 22px; }
+    .metric {
+      flex: 1; padding: 12px 18px; border-radius: 16px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .metric .label {
+      font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.6);
+    }
+    .metric .value { font-size: 26px; font-weight: 700; color: var(--title); }
+    .equation-box {
+      margin-top: 24px; padding: 26px 28px; border-radius: 22px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 188, 212, 0.35);
+    }
+    .equation {
+      font-size: 32px; line-height: 1.25; color: var(--title);
+      font-family: Consolas, "Cascadia Mono", monospace; text-align: center;
+    }
+    .variables {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 24px; margin-top: 18px; font-size: 18px;
+    }
+    .example-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+    .example-step {
+      padding: 22px; border-radius: 20px; background: var(--panel-strong);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .example-step h3 {
+      margin: 0 0 10px; font-size: 22px; color: var(--coral);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .example-step p { font-size: 19px; white-space: pre-line; margin: 0; }
+    .pause-box {
+      margin-top: 36px; padding: 28px 32px; border-left: 8px solid var(--coral);
+      border-radius: 20px; background: rgba(255, 107, 107, 0.12);
+    }
+    .pause-box p { font-size: 26px; color: var(--title); margin: 0; }
+    .pause-points { margin-top: 22px; }
+    .pause-points div {
+      margin-top: 12px; padding: 14px 20px; border-radius: 14px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); font-size: 19px;
+    }
+    .comparison-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 20px; }
+    .comparison-table th, .comparison-table td {
+      padding: 13px 16px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .comparison-table th {
+      color: var(--gold); font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .workflow { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 14px; margin-top: 26px; }
+    .workflow .step {
+      padding: 20px; border-radius: 18px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px;
+    }
+    .workflow .num {
+      display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
+      background: var(--teal); color: #06222b; font-weight: 800; font-size: 18px; margin-bottom: 12px;
+    }
+    .workflow h3 { margin: 0 0 8px; font-size: 20px; color: var(--gold); }
+    .workflow p { font-size: 17px; margin: 0; white-space: pre-line; }
+    .code-block {
+      margin-top: 20px; padding: 22px 26px; border-radius: 18px; background: #081420;
+      border: 1px solid rgba(0, 188, 212, 0.35); overflow-x: auto;
+    }
+    .code-block pre {
+      margin: 0; font-family: Consolas, "Cascadia Mono", monospace; font-size: 19px;
+      line-height: 1.45; color: #d8e6ee; white-space: pre;
+    }
+    .code-note { margin-top: 16px; }
+    .footer {
+      position: absolute; right: 28px; bottom: 20px; font-size: 14px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(224, 224, 224, 0.6);
+    }
+    .note {
+      position: absolute; left: 64px; bottom: 20px; font-size: 15px;
+      color: rgba(224, 224, 224, 0.55); max-width: 900px;
+    }
+    .small { font-size: var(--small-size); color: rgba(224, 224, 224, 0.78); }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="meta">SEES:4100 | Week 12 | Monday, November 9, 2026 | 22 slides</div>
+  <a href="#" id="download-link" download>Download HTML</a>
+</div>
+<div class="deck">
+<div class="slide title-slide"><div class="kicker">SEES:4100 | Computation in the Earth and Environment | Fall 2026</div><h1>Simple Environmental Modeling</h1><div class="course">School of Earth, Environment, and Sustainability | University of Iowa</div><div class="details">Week 12 | Monday, November 9, 2026</div><div class="hero">A one-bucket model of an Iowa river will fail honestly. Diagnosing WHERE it fails is the science.</div><div class="tags"><span class="tag">Water balance</span><span class="tag">Calibration</span><span class="tag">NSE</span><span class="tag">Validation</span><span class="tag">Equifinality</span></div><div class="footer">SEES:4100 | Week 12 | 1</div></div>
+<div class="slide"><div class="kicker">Learning Objectives</div><h2>By the end of this lecture, you will be able to...</h2><ul><li>Diagram a bucket water-balance model: inputs, states, parameters</li><li>Explain calibration as parameter search against observations</li><li>Interpret Nash-Sutcliffe efficiency, including negative values</li><li>Define equifinality and why a good fit is not proof</li></ul><div class="footer">SEES:4100 | Week 12 | 2</div></div>
+<div class="slide"><div class="kicker">Recap</div><h2>Last Week in Sixty Seconds</h2><ul><li>A map between observations is a claim; LOO tests it</li><li>Nugget, sill, range: noise, budget, reach</li><li>Memorizing maps validate worst</li><li>Today: predict in TIME with physics, and hold out a year</li></ul><div class="footer">SEES:4100 | Week 12 | 3</div></div>
+<div class="slide"><div class="kicker">The Model</div><h2>The Bucket, Drawn Before Coded</h2><div class="two-col"><div class="panel"><h3>Flows</h3><ul><li>Precipitation in at the top</li><li>Evapotranspiration out</li><li>Quickflow spills from surplus</li><li>Baseflow leaks through the bottom</li></ul></div><div class="panel"><h3>Two knobs</h3><ul><li>k_runoff: fraction of surplus to quickflow</li><li>k_baseflow: fraction of storage leaked per day</li><li>Every code line = an arrow on this drawing</li></ul></div></div><div class="footer">SEES:4100 | Week 12 | 4</div></div>
+<div class="slide"><div class="kicker">Vocabulary</div><h2>Inputs, States, Parameters</h2><div class="cards cols-3"><div class="card"><h3>Inputs</h3><p>Time series the world provides: rain, potential evapotranspiration.</p></div><div class="card"><h3>States</h3><p>What the model remembers between days: storage in the bucket.</p></div><div class="card"><h3>Parameters</h3><p>Numbers we choose or fit: the two k values.</p></div></div><div class="note">Keep these three straight and any environmental model becomes readable.</div><div class="footer">SEES:4100 | Week 12 | 5</div></div>
+<div class="slide"><div class="kicker">The Model</div><h2>One Day of the Bucket</h2><div class="code-block"><pre>available = storage + max(precip, 0)
+actual_et = min(max(pet, 0), available)
+surplus   = max(precip - actual_et, 0)
+quickflow = k_runoff * surplus
+storage   = max(available - actual_et - quickflow, 0)
+baseflow  = k_baseflow * storage
+flow      = quickflow + baseflow</pre></div><div class="code-note"><ul><li>Seven lines of mass accounting</li><li>Water is conserved: nothing appears, nothing vanishes</li></ul></div><div class="footer">SEES:4100 | Week 12 | 6</div></div>
+<div class="slide"><div class="kicker">Units</div><h2>The Price of Admission: Real Units</h2><div class="equation-box"><div class="equation">runoff_mm_per_day = Q_m3s * 86.4 / area_km2</div><div class="variables"><div>Q = discharge (m3/s), from the USGS record</div><div>area = 3,271 sq mi = about 8,470 km2 at Iowa City</div><div>86.4 = seconds per day / 1e6 * 1000</div><div>result: same unit as precipitation</div></div></div><ul><li>Model and observations must speak mm/day before any comparison</li></ul><div class="footer">SEES:4100 | Week 12 | 7</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>pandas reads the station ID &quot;05454500&quot; and prints 5454500. What happened, and where will it bite?</p></div><div class="pause-points"><div>Numeric parsing dropped the leading zero</div><div>Any string lookup on site_no fails: dtype={&quot;site_no&quot;: str} at read time</div></div><div class="footer">SEES:4100 | Week 12 | 8</div></div>
+<div class="slide"><div class="kicker">Calibration</div><h2>Calibration Is a Search</h2><ul><li>No handbook lists your watershed&#x27;s k values</li><li>Try parameter pairs, score each against observed flow</li><li>The lab&#x27;s grid search: 320 model runs, fully transparent</li><li>Silent assumptions: observations trustworthy, structure adequate</li></ul><div class="footer">SEES:4100 | Week 12 | 9</div></div>
+<div class="slide"><div class="kicker">Scoring</div><h2>Nash-Sutcliffe Efficiency</h2><div class="equation-box"><div class="equation">NSE = 1 - sum((obs - sim)^2) / sum((obs - mean(obs))^2)</div><div class="variables"><div>NSE = 1: perfect match</div><div>NSE = 0: you tied the mean</div><div>NSE &lt; 0: the mean beats your model</div><div>the rival is always: just predict the mean</div></div></div><ul><li>Expect modest or negative validation NSE this week, and say so out loud</li></ul><div class="footer">SEES:4100 | Week 12 | 10</div></div>
+<div class="slide"><div class="kicker">Honest Testing</div><h2>Calibrate on Year 1, Judge on Year 2</h2><div class="two-col"><div class="panel"><h3>The split</h3><ul><li>Grid search sees days 1-365 only</li><li>The model then runs both years</li><li>NSE reported separately per year</li></ul></div><div class="panel"><h3>Reading the pair</h3><ul><li>Validation below calibration: expected</li><li>Validation far below: memorized the year</li><li>Validation above: get suspicious, check the split</li></ul></div></div><div class="footer">SEES:4100 | Week 12 | 11</div></div>
+<div class="slide"><div class="kicker">Equifinality</div><h2>The Valley in the Calibration Surface</h2><ul><li>Many parameter pairs fit almost equally well</li><li>Different internal stories, same hydrograph</li><li>A good fit cannot certify the mechanism</li><li>Report ranges; validate on unseen data; prefer measurable parameters</li></ul><div class="footer">SEES:4100 | Week 12 | 12</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Two parameter pairs sit in the same RMSE valley. Name two ways to choose between them, and one reason to refuse to choose.</p></div><div class="pause-points"><div>Choose: independent field evidence, or validation-year performance</div><div>Refuse: report the range; the data cannot tell them apart</div></div><div class="footer">SEES:4100 | Week 12 | 13</div></div>
+<div class="slide"><div class="kicker">Worked Example</div><h2>Where the Bucket Fails, and Why</h2><div class="example-grid"><div class="example-step"><h3>Given</h3><p>Two years of Iowa City rain, temperature-based PET, observed runoff in mm/day.</p></div><div class="example-step"><h3>Solve</h3><p>Calibrate year 1, validate year 2, average the residual by month.</p></div><div class="example-step"><h3>Interpret</h3><p>Late-winter and spring residuals point at snowmelt: the bucket has no snow store.</p></div></div><div class="footer">SEES:4100 | Week 12 | 14</div></div>
+<div class="slide"><div class="kicker">Missing Processes</div><h2>What Iowa Does That the Bucket Cannot</h2><ul><li>Stores precipitation as snow, releases it in spring</li><li>Freezes the ground: infiltration shuts off</li><li>Grows corn: water use peaks in July</li><li>One added snow store would fix the biggest miss</li></ul><div class="footer">SEES:4100 | Week 12 | 15</div></div>
+<div class="slide"><div class="kicker">Inputs</div><h2>The PET Proxy, and Its Honesty Problem</h2><div class="equation-box"><div class="equation">PET = 0.12 * max(T_mean, 0)     [mm/day]</div><div class="variables"><div>T_mean = daily mean temperature (deg C)</div><div>0.12 = a crude coefficient, not a law</div><div>monotonic with temperature: the right shape</div><div>ignores radiation, humidity, wind, crops</div></div></div><ul><li>One of the model&#x27;s largest input uncertainties, and Friday&#x27;s sensitivity practice: change 0.12 to 0.20 and watch the calibration shift</li></ul><div class="footer">SEES:4100 | Week 12 | 16</div></div>
+<div class="slide"><div class="kicker">Reading States</div><h2>The Storage Series Is a Sanity Check</h2><ul><li>Fills in fall and winter, draws down through summer</li><li>If storage grows without bound, a leak term is broken</li><li>If it pins at zero all year, ET or runoff is eating everything</li><li>Plot the state, not just the output: models fail visibly there first</li></ul><div class="footer">SEES:4100 | Week 12 | 17</div></div>
+<div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Group Lab 6: Modeling and Calibration</h2><div class="two-col"><div class="panel"><h3>Wednesday</h3><ul><li>Real-unit conversion via drainage area</li><li>Calibrate year 1, NSE both years</li><li>Observed vs simulated figure</li></ul></div><div class="panel"><h3>Friday studio</h3><ul><li>Calibration-surface heatmap</li><li>Residual-by-month table</li><li>Limitation paragraph naming a missing process</li></ul></div></div><div class="footer">SEES:4100 | Week 12 | 18</div></div>
+<div class="slide"><div class="kicker">Pitfalls</div><h2>Where This Week Goes Wrong</h2><ul><li>Unit conversion off by area or by 1000</li><li>Negative NSE read as a personal failure instead of a finding</li><li>The leading-zero station ID trap</li><li>Never looking at WHICH months carry the residual</li></ul><div class="footer">SEES:4100 | Week 12 | 19</div></div>
+<div class="slide"><div class="kicker">Bridge</div><h2>Connection to Next Week</h2><table class="comparison-table"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>A complete model-test cycle</td><td>Final project launch</td><td>Now do the whole arc on a question your group chooses</td></tr></tbody></table><div class="footer">SEES:4100 | Week 12 | 20</div></div>
+<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>Inputs, states, parameters: keep them straight</li><li>Calibration searches; validation judges</li><li>NSE = 0 means you tied the mean</li><li>Equifinality: fit is evidence, never proof</li><li>The residual calendar names the missing process</li></ul><div class="footer">SEES:4100 | Week 12 | 21</div></div>
+<div class="slide"><div class="kicker">Discussion</div><h2>Before You Leave</h2><div class="pause-box"><p>If you could add ONE process to the bucket before rerunning, which buys the most realism per line of code? Defend your pick.</p></div><div class="footer">SEES:4100 | Week 12 | 22</div></div>
+</div>
+<script>
+    function buildDownloadBlob() {
+      return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    }
+    function downloadDeck(event) {
+      event.preventDefault();
+      const blob = new Blob([buildDownloadBlob()], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const title = document.title || "sees4100-slide-deck";
+      link.href = url;
+      link.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".html";
+      link.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    }
+    document.getElementById("download-link").addEventListener("click", downloadDeck);
+</script>
+</body>
+</html>

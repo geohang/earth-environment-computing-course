@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Responsible AI-Assisted Scientific Coding | SEES:4100 Week 10</title>
+<style>
+    :root {
+      --bg: #0d1b2a; --bg-alt: #1a1a2e;
+      --panel: rgba(255, 255, 255, 0.06); --panel-strong: rgba(255, 255, 255, 0.1);
+      --text: #e0e0e0; --title: #ffffff; --gold: #f4c542; --teal: #00bcd4; --coral: #ff6b6b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28); --radius: 26px;
+      --slide-w: 1280px; --slide-h: 720px; --body-size: 22px; --small-size: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(0, 188, 212, 0.12), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(244, 197, 66, 0.1), transparent 28%),
+        linear-gradient(180deg, #08121d 0%, #111a29 100%);
+      color: var(--text);
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between;
+      align-items: center; padding: 16px 28px; background: rgba(5, 10, 16, 0.9);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .toolbar .meta {
+      font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.72);
+    }
+    .toolbar a {
+      color: var(--title); text-decoration: none; padding: 10px 16px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--teal), #16789a); font-weight: 700;
+    }
+    .deck { padding: 28px 28px 56px; }
+    .slide {
+      position: relative; width: var(--slide-w); height: var(--slide-h); margin: 0 auto 28px;
+      padding: 56px 64px; border-radius: var(--radius); overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+      box-shadow: var(--shadow); page-break-after: always;
+    }
+    .slide::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(120deg, rgba(0, 188, 212, 0.08), transparent 22%),
+        radial-gradient(circle at 85% 16%, rgba(244, 197, 66, 0.08), transparent 18%);
+      pointer-events: none;
+    }
+    .slide > * { position: relative; z-index: 1; }
+    .kicker {
+      margin-bottom: 10px; font-size: 16px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--teal);
+    }
+    h1, h2 { margin: 0 0 18px; color: var(--title); line-height: 1.05; }
+    h1 { font-size: 54px; }
+    h2 { font-size: 40px; }
+    p, li { font-size: var(--body-size); line-height: 1.35; }
+    ul { margin: 8px 0 0 24px; padding: 0; max-width: 1080px; }
+    li + li { margin-top: 10px; }
+    .title-slide { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+    .title-slide .course { font-size: 26px; color: var(--gold); font-weight: 700; }
+    .title-slide .details { font-size: 24px; color: rgba(224, 224, 224, 0.78); }
+    .title-slide .hero {
+      font-size: 20px; color: rgba(224, 224, 224, 0.85); padding: 14px 20px;
+      border-radius: 14px; background: var(--panel); border: 1px solid rgba(255,255,255,0.08);
+      max-width: 900px;
+    }
+    .tags { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tag {
+      font-size: 15px; padding: 6px 14px; border-radius: 999px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.14); color: rgba(224, 224, 224, 0.85);
+    }
+    .two-col { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: start; }
+    .panel {
+      padding: 24px; border-radius: 20px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .panel h3 { margin: 0 0 12px; font-size: 24px; color: var(--gold); }
+    .panel strong, .key { color: var(--teal); }
+    .panel p { white-space: pre-line; margin: 6px 0 0; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+    .cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      min-height: 180px; padding: 22px; border-radius: 22px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+    }
+    .card h3 { margin: 0 0 12px; font-size: 23px; color: var(--gold); }
+    .card p { font-size: 19px; margin: 0; white-space: pre-line; }
+    .metrics { display: flex; gap: 14px; margin-top: 22px; }
+    .metric {
+      flex: 1; padding: 12px 18px; border-radius: 16px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .metric .label {
+      font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.6);
+    }
+    .metric .value { font-size: 26px; font-weight: 700; color: var(--title); }
+    .equation-box {
+      margin-top: 24px; padding: 26px 28px; border-radius: 22px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 188, 212, 0.35);
+    }
+    .equation {
+      font-size: 32px; line-height: 1.25; color: var(--title);
+      font-family: Consolas, "Cascadia Mono", monospace; text-align: center;
+    }
+    .variables {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 24px; margin-top: 18px; font-size: 18px;
+    }
+    .example-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+    .example-step {
+      padding: 22px; border-radius: 20px; background: var(--panel-strong);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .example-step h3 {
+      margin: 0 0 10px; font-size: 22px; color: var(--coral);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .example-step p { font-size: 19px; white-space: pre-line; margin: 0; }
+    .pause-box {
+      margin-top: 36px; padding: 28px 32px; border-left: 8px solid var(--coral);
+      border-radius: 20px; background: rgba(255, 107, 107, 0.12);
+    }
+    .pause-box p { font-size: 26px; color: var(--title); margin: 0; }
+    .pause-points { margin-top: 22px; }
+    .pause-points div {
+      margin-top: 12px; padding: 14px 20px; border-radius: 14px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); font-size: 19px;
+    }
+    .comparison-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 20px; }
+    .comparison-table th, .comparison-table td {
+      padding: 13px 16px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .comparison-table th {
+      color: var(--gold); font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .workflow { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 14px; margin-top: 26px; }
+    .workflow .step {
+      padding: 20px; border-radius: 18px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px;
+    }
+    .workflow .num {
+      display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
+      background: var(--teal); color: #06222b; font-weight: 800; font-size: 18px; margin-bottom: 12px;
+    }
+    .workflow h3 { margin: 0 0 8px; font-size: 20px; color: var(--gold); }
+    .workflow p { font-size: 17px; margin: 0; white-space: pre-line; }
+    .code-block {
+      margin-top: 20px; padding: 22px 26px; border-radius: 18px; background: #081420;
+      border: 1px solid rgba(0, 188, 212, 0.35); overflow-x: auto;
+    }
+    .code-block pre {
+      margin: 0; font-family: Consolas, "Cascadia Mono", monospace; font-size: 19px;
+      line-height: 1.45; color: #d8e6ee; white-space: pre;
+    }
+    .code-note { margin-top: 16px; }
+    .footer {
+      position: absolute; right: 28px; bottom: 20px; font-size: 14px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(224, 224, 224, 0.6);
+    }
+    .note {
+      position: absolute; left: 64px; bottom: 20px; font-size: 15px;
+      color: rgba(224, 224, 224, 0.55); max-width: 900px;
+    }
+    .small { font-size: var(--small-size); color: rgba(224, 224, 224, 0.78); }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="meta">SEES:4100 | Week 10 | Monday, October 26, 2026 | 22 slides</div>
+  <a href="#" id="download-link" download>Download HTML</a>
+</div>
+<div class="deck">
+<div class="slide title-slide"><div class="kicker">SEES:4100 | Computation in the Earth and Environment | Fall 2026</div><h1>Responsible AI-Assisted Scientific Coding</h1><div class="course">School of Earth, Environment, and Sustainability | University of Iowa</div><div class="details">Week 10 | Monday, October 26, 2026</div><div class="hero">Agents manipulate code. You own the science. This week trains the judgment in between.</div><div class="tags"><span class="tag">Coding agents</span><span class="tag">Prompts</span><span class="tag">Verification</span><span class="tag">Disclosure</span><span class="tag">Tool-agnostic</span></div><div class="footer">SEES:4100 | Week 10 | 1</div></div>
+<div class="slide"><div class="kicker">Learning Objectives</div><h2>By the end of this lecture, you will be able to...</h2><ul><li>Name what coding agents do well and what they cannot take over</li><li>Write specific, verifiable prompts</li><li>Run the inspect-plan-small-change-verify workflow</li><li>State the course&#x27;s disclosure and responsibility rules</li></ul><div class="footer">SEES:4100 | Week 10 | 2</div></div>
+<div class="slide"><div class="kicker">Recap</div><h2>Last Week in Sixty Seconds</h2><ul><li>You implemented the moving average yourself</li><li>Verified it three ways: tiny input, trusted twin, manufactured truth</li><li>Hidden decisions surfaced: placement, edges, missing values</li><li>Today: apply that same verification instinct to code you did NOT write</li></ul><div class="footer">SEES:4100 | Week 10 | 3</div></div>
+<div class="slide"><div class="kicker">Why Now</div><h2>The Timing Is Deliberate</h2><div class="two-col"><div class="panel"><h3>Why Week 10</h3><ul><li>Eight weeks of Python behind you</li><li>You can finally JUDGE generated code</li><li>Final projects start in three weeks</li></ul></div><div class="panel"><h3>Ground rules</h3><ul><li>Tool-agnostic: no paid product required</li><li>A no-AI path earns identical credit</li><li>Grading rewards verification, not tool access</li></ul></div></div><div class="footer">SEES:4100 | Week 10 | 4</div></div>
+<div class="slide"><div class="kicker">Capabilities</div><h2>What Agents Are Genuinely Good At</h2><div class="cards cols-3"><div class="card"><h3>Explain</h3><p>Summarize unfamiliar code; name what each block does.</p></div><div class="card"><h3>Refactor</h3><p>Spot repeated blocks; extract clean functions; improve names.</p></div><div class="card"><h3>Scaffold</h3><p>Draft tests, docstrings, README text, plot labels.</p></div></div><div class="footer">SEES:4100 | Week 10 | 5</div></div>
+<div class="slide"><div class="kicker">Limits</div><h2>What Agents Cannot Take Over</h2><div class="cards cols-3"><div class="card"><h3>Plausibility</h3><p>Is 283 m3/s believable for this river? The agent does not know Iowa.</p></div><div class="card"><h3>Units and data</h3><p>Whether a column is cfs or m3/s, trustworthy or corrupted.</p></div><div class="card"><h3>The claim</h3><p>Whether a result supports a scientific statement. That is yours.</p></div></div><div class="note">The line to remember: agents manipulate code; you own the science.</div><div class="footer">SEES:4100 | Week 10 | 6</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>An agent refactors your script and the new version runs without errors. List three ways it could still be wrong.</p></div><div class="pause-points"><div>Silent unit change; outputs differ from the original</div><div>Edge behavior changed (first window, missing values)</div><div>It runs, but the numbers no longer match your reference</div></div><div class="footer">SEES:4100 | Week 10 | 7</div></div>
+<div class="slide"><div class="kicker">Prompts</div><h2>Weak Prompt, Strong Prompt</h2><table class="comparison-table"><thead><tr><th>Weak</th><th>Strong</th><th>What changed</th></tr></thead><tbody><tr><td>Fix my code.</td><td>Read scripts/messy_streamflow_analysis.py and summarize what it does. Do not edit files yet. List possible bugs and propose a plan.</td><td>Named file, bounded action, plan before edits</td></tr><tr><td>Make the plot better.</td><td>Improve the hydrograph using matplotlib only: axis labels with units, legend, concise caption.</td><td>Verifiable checklist, constrained tools</td></tr><tr><td>Finish this project.</td><td>Add one test using synthetic streamflow data that verifies annual mean flow.</td><td>Small, checkable, reversible</td></tr></tbody></table><div class="footer">SEES:4100 | Week 10 | 8</div></div>
+<div class="slide"><div class="kicker">Prompts</div><h2>The Pattern Behind Strong Prompts</h2><ul><li>Name the file and the goal</li><li>Bound the action: read first, edit later</li><li>Demand a plan before changes</li><li>Keep outputs comparable to a reference</li></ul><div class="footer">SEES:4100 | Week 10 | 9</div></div>
+<div class="slide"><div class="kicker">The Workflow</div><h2>Reference Answers Come First</h2><div class="code-block"><pre># BEFORE any agent touches anything:
+reference_monthly = stream.assign(
+    month=stream[&quot;date&quot;].dt.to_period(&quot;M&quot;)
+).groupby(&quot;month&quot;)[&quot;discharge_cfs&quot;].mean()
+
+# AFTER any refactor:
+np.allclose(refactored_monthly, reference_monthly)   # must be True</pre></div><div class="code-note"><ul><li>Compute trusted numbers with code you fully understand</li><li>Every AI-assisted edit must reproduce them exactly</li></ul></div><div class="footer">SEES:4100 | Week 10 | 10</div></div>
+<div class="slide"><div class="kicker">The Workflow</div><h2>And the Reference Itself Gets a Tiny Test</h2><div class="code-block"><pre>check = pd.DataFrame({
+    &quot;date&quot;: pd.to_datetime([&quot;2030-01-01&quot;, &quot;2030-01-02&quot;, &quot;2030-02-01&quot;]),
+    &quot;discharge_cfs&quot;: [100.0, 300.0, 50.0],
+})
+monthly = check.assign(month=check[&quot;date&quot;].dt.to_period(&quot;M&quot;))\
+    .groupby(&quot;month&quot;)[&quot;discharge_cfs&quot;].mean()
+assert monthly.loc[&quot;2030-01&quot;] == 200.0</pre></div><div class="code-note"><ul><li>Week 4&#x27;s tiny-test discipline, pointed at a new source of code</li></ul></div><div class="footer">SEES:4100 | Week 10 | 11</div></div>
+<div class="slide"><div class="kicker">The Workflow</div><h2>Seven Steps, Every Time</h2><div class="workflow"><div class="step"><div class="num">1</div><h3>Inspect</h3><p>Agent reads and summarizes. No edits.</p></div><div class="step"><div class="num">2</div><h3>Plan</h3><p>Agent proposes; you approve scope.</p></div><div class="step"><div class="num">3</div><h3>Small change</h3><p>One edit at a time, run after each.</p></div><div class="step"><div class="num">4</div><h3>Verify + log</h3><p>Compare to reference, sanity-check one number, record in the AI log.</p></div></div><div class="footer">SEES:4100 | Week 10 | 12</div></div>
+<div class="slide"><div class="kicker">Worked Example</div><h2>The Messy Script, Responsibly Improved</h2><div class="example-grid"><div class="example-step"><h3>Given</h3><p>messy_streamflow_analysis.py: repeated code, unclear names, a unit-label bug, fragile paths.</p></div><div class="example-step"><h3>Solve</h3><p>Inspect, plan, refactor the monthly summary only, run, compare outputs to reference.</p></div><div class="example-step"><h3>Interpret</h3><p>Outputs identical, title now says cfs, change logged. One defect fixed, provably.</p></div></div><div class="footer">SEES:4100 | Week 10 | 13</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>The messy script&#x27;s plot title says m3/s but the data are cfs. An agent offers to fix it two ways: relabel the title, or convert the values. What decides?</p></div><div class="pause-points"><div>The scientific intent: which unit should the figure speak?</div><div>Either is fine; half of each is the disaster</div></div><div class="footer">SEES:4100 | Week 10 | 14</div></div>
+<div class="slide"><div class="kicker">Integrity</div><h2>The Course Policy, Plainly</h2><ul><li>Allowed: debugging, refactoring, comments, tests, documentation</li><li>Every meaningful use disclosed in AI_USAGE_LOG.md</li><li>You must explain every submitted line</li><li>Never: fabricated data, citations, results; restricted data uploads</li></ul><div class="footer">SEES:4100 | Week 10 | 15</div></div>
+<div class="slide"><div class="kicker">Integrity</div><h2>Fairness and the Oral Check</h2><ul><li>No-AI alternative: exchange code reviews with another group</li><li>Credit for rejected suggestions, when you explain why</li><li>Final presentations include one oral question per student</li><li>Plan to understand what you submit</li></ul><div class="footer">SEES:4100 | Week 10 | 16</div></div>
+<div class="slide"><div class="kicker">Failure Gallery</div><h2>How Generated Code Fails in Practice</h2><div class="cards cols-3"><div class="card"><h3>The confident invention</h3><p>A function that almost exists: pd.read_hydrograph(). Plausible name, no such thing.</p></div><div class="card"><h3>The silent assumption</h3><p>Paths, column names, or units assumed from context and assumed wrong.</p></div><div class="card"><h3>The plausible constant</h3><p>A conversion factor that looks right and is off by ten. Only your anchor catches it.</p></div></div><div class="note">None of these raise errors on their own. Verification is the only net.</div><div class="footer">SEES:4100 | Week 10 | 17</div></div>
+<div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Group Lab 4: AI-Assisted Scientific Coding</h2><div class="two-col"><div class="panel"><h3>Wednesday</h3><ul><li>Build reference answers and the tiny check</li><li>Exercise A: ask for a plan, no edits</li><li>Exercise B: refactor one small part</li></ul></div><div class="panel"><h3>Friday studio</h3><ul><li>Exercise C: verification paragraph</li><li>Exercise D: final-project preparation prompt</li><li>AI usage log completed</li></ul></div></div><div class="footer">SEES:4100 | Week 10 | 18</div></div>
+<div class="slide"><div class="kicker">Pitfalls</div><h2>Where AI-Assisted Work Goes Wrong</h2><ul><li>Accepting a large diff nobody read</li><li>No reference computed before the first edit</li><li>Hallucinated functions that almost exist</li><li>A log written from memory on Friday night</li></ul><div class="footer">SEES:4100 | Week 10 | 19</div></div>
+<div class="slide"><div class="kicker">Bridge</div><h2>Connection to Next Week</h2><table class="comparison-table"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Verify code you did not write</td><td>Geostatistics</td><td>Verify a MAP you did not measure: cross-validation as the same instinct</td></tr></tbody></table><div class="footer">SEES:4100 | Week 10 | 20</div></div>
+<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>Reference answers before any edit</li><li>Small changes, run after each, compare always</li><li>Disclose in the log; explain at the podium</li><li>Agents draft; you decide and verify</li></ul><div class="footer">SEES:4100 | Week 10 | 21</div></div>
+<div class="slide"><div class="kicker">Discussion</div><h2>Before You Leave</h2><div class="pause-box"><p>Write one strong prompt you could give an agent about YOUR last lab notebook. Trade with a neighbor: would you approve their prompt?</p></div><div class="footer">SEES:4100 | Week 10 | 22</div></div>
+</div>
+<script>
+    function buildDownloadBlob() {
+      return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    }
+    function downloadDeck(event) {
+      event.preventDefault();
+      const blob = new Blob([buildDownloadBlob()], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const title = document.title || "sees4100-slide-deck";
+      link.href = url;
+      link.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".html";
+      link.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    }
+    document.getElementById("download-link").addEventListener("click", downloadDeck);
+</script>
+</body>
+</html>

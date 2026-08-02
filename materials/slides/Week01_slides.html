@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course Overview and Reproducible Computation | SEES:4100 Week 01</title>
+<style>
+    :root {
+      --bg: #0d1b2a; --bg-alt: #1a1a2e;
+      --panel: rgba(255, 255, 255, 0.06); --panel-strong: rgba(255, 255, 255, 0.1);
+      --text: #e0e0e0; --title: #ffffff; --gold: #f4c542; --teal: #00bcd4; --coral: #ff6b6b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28); --radius: 26px;
+      --slide-w: 1280px; --slide-h: 720px; --body-size: 22px; --small-size: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(0, 188, 212, 0.12), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(244, 197, 66, 0.1), transparent 28%),
+        linear-gradient(180deg, #08121d 0%, #111a29 100%);
+      color: var(--text);
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between;
+      align-items: center; padding: 16px 28px; background: rgba(5, 10, 16, 0.9);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .toolbar .meta {
+      font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.72);
+    }
+    .toolbar a {
+      color: var(--title); text-decoration: none; padding: 10px 16px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--teal), #16789a); font-weight: 700;
+    }
+    .deck { padding: 28px 28px 56px; }
+    .slide {
+      position: relative; width: var(--slide-w); height: var(--slide-h); margin: 0 auto 28px;
+      padding: 56px 64px; border-radius: var(--radius); overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+      box-shadow: var(--shadow); page-break-after: always;
+    }
+    .slide::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(120deg, rgba(0, 188, 212, 0.08), transparent 22%),
+        radial-gradient(circle at 85% 16%, rgba(244, 197, 66, 0.08), transparent 18%);
+      pointer-events: none;
+    }
+    .slide > * { position: relative; z-index: 1; }
+    .kicker {
+      margin-bottom: 10px; font-size: 16px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--teal);
+    }
+    h1, h2 { margin: 0 0 18px; color: var(--title); line-height: 1.05; }
+    h1 { font-size: 54px; }
+    h2 { font-size: 40px; }
+    p, li { font-size: var(--body-size); line-height: 1.35; }
+    ul { margin: 8px 0 0 24px; padding: 0; max-width: 1080px; }
+    li + li { margin-top: 10px; }
+    .title-slide { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+    .title-slide .course { font-size: 26px; color: var(--gold); font-weight: 700; }
+    .title-slide .details { font-size: 24px; color: rgba(224, 224, 224, 0.78); }
+    .title-slide .hero {
+      font-size: 20px; color: rgba(224, 224, 224, 0.85); padding: 14px 20px;
+      border-radius: 14px; background: var(--panel); border: 1px solid rgba(255,255,255,0.08);
+      max-width: 900px;
+    }
+    .tags { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tag {
+      font-size: 15px; padding: 6px 14px; border-radius: 999px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.14); color: rgba(224, 224, 224, 0.85);
+    }
+    .two-col { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: start; }
+    .panel {
+      padding: 24px; border-radius: 20px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .panel h3 { margin: 0 0 12px; font-size: 24px; color: var(--gold); }
+    .panel strong, .key { color: var(--teal); }
+    .panel p { white-space: pre-line; margin: 6px 0 0; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+    .cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      min-height: 180px; padding: 22px; border-radius: 22px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+    }
+    .card h3 { margin: 0 0 12px; font-size: 23px; color: var(--gold); }
+    .card p { font-size: 19px; margin: 0; white-space: pre-line; }
+    .metrics { display: flex; gap: 14px; margin-top: 22px; }
+    .metric {
+      flex: 1; padding: 12px 18px; border-radius: 16px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .metric .label {
+      font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(224, 224, 224, 0.6);
+    }
+    .metric .value { font-size: 26px; font-weight: 700; color: var(--title); }
+    .equation-box {
+      margin-top: 24px; padding: 26px 28px; border-radius: 22px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 188, 212, 0.35);
+    }
+    .equation {
+      font-size: 32px; line-height: 1.25; color: var(--title);
+      font-family: Consolas, "Cascadia Mono", monospace; text-align: center;
+    }
+    .variables {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 24px; margin-top: 18px; font-size: 18px;
+    }
+    .example-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+    .example-step {
+      padding: 22px; border-radius: 20px; background: var(--panel-strong);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .example-step h3 {
+      margin: 0 0 10px; font-size: 22px; color: var(--coral);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .example-step p { font-size: 19px; white-space: pre-line; margin: 0; }
+    .pause-box {
+      margin-top: 36px; padding: 28px 32px; border-left: 8px solid var(--coral);
+      border-radius: 20px; background: rgba(255, 107, 107, 0.12);
+    }
+    .pause-box p { font-size: 26px; color: var(--title); margin: 0; }
+    .pause-points { margin-top: 22px; }
+    .pause-points div {
+      margin-top: 12px; padding: 14px 20px; border-radius: 14px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); font-size: 19px;
+    }
+    .comparison-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 20px; }
+    .comparison-table th, .comparison-table td {
+      padding: 13px 16px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .comparison-table th {
+      color: var(--gold); font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .workflow { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 14px; margin-top: 26px; }
+    .workflow .step {
+      padding: 20px; border-radius: 18px; background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px;
+    }
+    .workflow .num {
+      display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
+      background: var(--teal); color: #06222b; font-weight: 800; font-size: 18px; margin-bottom: 12px;
+    }
+    .workflow h3 { margin: 0 0 8px; font-size: 20px; color: var(--gold); }
+    .workflow p { font-size: 17px; margin: 0; white-space: pre-line; }
+    .code-block {
+      margin-top: 20px; padding: 22px 26px; border-radius: 18px; background: #081420;
+      border: 1px solid rgba(0, 188, 212, 0.35); overflow-x: auto;
+    }
+    .code-block pre {
+      margin: 0; font-family: Consolas, "Cascadia Mono", monospace; font-size: 19px;
+      line-height: 1.45; color: #d8e6ee; white-space: pre;
+    }
+    .code-note { margin-top: 16px; }
+    .footer {
+      position: absolute; right: 28px; bottom: 20px; font-size: 14px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(224, 224, 224, 0.6);
+    }
+    .note {
+      position: absolute; left: 64px; bottom: 20px; font-size: 15px;
+      color: rgba(224, 224, 224, 0.55); max-width: 900px;
+    }
+    .small { font-size: var(--small-size); color: rgba(224, 224, 224, 0.78); }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="meta">SEES:4100 | Week 01 | Monday, August 24, 2026 | 24 slides</div>
+  <a href="#" id="download-link" download>Download HTML</a>
+</div>
+<div class="deck">
+<div class="slide title-slide"><div class="kicker">SEES:4100 | Computation in the Earth and Environment | Fall 2026</div><h1>Course Overview and Reproducible Computation</h1><div class="course">School of Earth, Environment, and Sustainability | University of Iowa</div><div class="details">Week 1 | Monday, August 24, 2026</div><div class="hero">From Python syntax to geoscience insight: one river, one dataset, sixteen weeks.</div><div class="tags"><span class="tag">Python</span><span class="tag">Real Iowa data</span><span class="tag">Reproducible workflows</span><span class="tag">MWF studio format</span></div><div class="footer">SEES:4100 | Week 01 | 1</div></div>
+<div class="slide"><div class="kicker">Learning Objectives</div><h2>By the end of this lecture, you will be able to...</h2><ul><li>Describe the course structure, grading, and weekly rhythm</li><li>Define a reproducible computational workflow</li><li>Identify the parts of the course repository</li><li>Explain what happens in Wednesday&#x27;s first lab</li></ul><div class="footer">SEES:4100 | Week 01 | 2</div></div>
+<div class="slide"><div class="kicker">Motivation</div><h2>June 2008: the River Outside This Building</h2><div class="two-col"><div class="panel"><h3>The flood</h3><ul><li>Iowa River crested far above flood stage</li><li>Campus buildings flooded, semester disrupted</li><li>One of Iowa&#x27;s costliest natural disasters</li></ul></div><div class="panel"><h3>The questions</h3><ul><li>How rare was that flow?</li><li>How fast did the river rise?</li><li>What rainfall produced it?</li><li>All answered with data you will use in this course</li></ul></div></div><div class="note">Same USGS record the labs use all semester.</div><div class="footer">SEES:4100 | Week 01 | 3</div></div>
+<div class="slide"><div class="kicker">Course Design</div><h2>What This Course Is</h2><div class="cards cols-3"><div class="card"><h3>Real data</h3><p>Seven years of Iowa City weather, eleven years of Iowa River flow, water quality back to 1901.</p></div><div class="card"><h3>Real questions</h3><p>Floods, droughts, heat waves, water quality: every lab answers an Earth question.</p></div><div class="card"><h3>Reproducible work</h3><p>Analyses anyone can re-run and get your figures. The professional standard.</p></div></div><div class="footer">SEES:4100 | Week 01 | 4</div></div>
+<div class="slide"><div class="kicker">Course Design</div><h2>The Weekly Rhythm</h2><table class="comparison-table"><thead><tr><th>Day</th><th>Format</th><th>What you do</th></tr></thead><tbody><tr><td>Monday</td><td>Lecture</td><td>Concepts, live demos, the why</td></tr><tr><td>Wednesday</td><td>Debrief + integrated lab</td><td>20 min student debrief, 5 min bridge, then coding</td></tr><tr><td>Friday</td><td>Open studio</td><td>Debug, finish, get help, prepare debrief card</td></tr></tbody></table><div class="footer">SEES:4100 | Week 01 | 5</div></div>
+<div class="slide"><div class="kicker">Course Design</div><h2>Grading</h2><table class="comparison-table"><thead><tr><th>Component</th><th>Weight</th></tr></thead><tbody><tr><td>Individual labs (6)</td><td>30%</td></tr><tr><td>Group labs (6)</td><td>25%</td></tr><tr><td>Final group project</td><td>30%</td></tr><tr><td>Contribution statement and participation</td><td>10%</td></tr><tr><td>Attendance and in-class engagement</td><td>5%</td></tr></tbody></table><div class="note">Rubrics live in the syllabus overview file in the course repository.</div><div class="footer">SEES:4100 | Week 01 | 6</div></div>
+<div class="slide"><div class="kicker">Course Design</div><h2>The Semester in Three Acts</h2><div class="workflow"><div class="step"><div class="num">1</div><h3>Foundations (Wk 1-6)</h3><p>Individual labs: Jupyter, Python basics, loops, functions, NumPy, pandas.</p></div><div class="step"><div class="num">2</div><h3>Applications (Wk 7-12)</h3><p>Group labs: visualization, statistics, algorithms, AI-assisted coding, geostatistics, modeling.</p></div><div class="step"><div class="num">3</div><h3>Project (Wk 13-16)</h3><p>Group research project on real data, presented in the final week.</p></div></div><div class="footer">SEES:4100 | Week 01 | 7</div></div>
+<div class="slide"><div class="kicker">Course Design</div><h2>AI Coding Tools: the One-Sentence Version</h2><ul><li>Allowed for debugging, refactoring, tests, and documentation</li><li>Every use disclosed in an AI usage log</li><li>You must be able to explain every line you submit</li><li>Week 10 teaches the full responsible workflow</li></ul><div class="footer">SEES:4100 | Week 01 | 8</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>You download a spreadsheet, fix a few cells by hand, make a chart, and email it. Next month the data update. What breaks?</p></div><div class="pause-points"><div>No record of which cells changed, or why</div><div>The chart cannot regenerate itself from new data</div><div>Nobody else, including future you, can repeat the steps</div></div><div class="footer">SEES:4100 | Week 01 | 9</div></div>
+<div class="slide"><div class="kicker">Reproducibility</div><h2>What Reproducible Means</h2><div class="two-col"><div class="panel"><h3>The definition</h3><ul><li>Same data + same code = same figures and numbers</li><li>Without asking the author anything</li><li>Verifiable by a stranger, or by you in a year</li></ul></div><div class="panel"><h3>The counterexample</h3><p>final_analysis_v3_REALLY_FINAL.xlsx
+on a laptop desktop,
+edited by hand,
+author graduated in May.</p></div></div><div class="footer">SEES:4100 | Week 01 | 10</div></div>
+<div class="slide"><div class="kicker">Reproducibility</div><h2>The Course in One Relationship</h2><div class="equation-box"><div class="equation">result = analysis(data, code)</div><div class="variables"><div>data = archived raw observations</div><div>code = every processing step, recorded</div><div>analysis = runs start to finish, no hands</div><div>result = figures anyone can regenerate</div></div></div><ul><li>If any input is missing, the result is an anecdote</li><li>The project folder keeps all of them together</li></ul><div class="footer">SEES:4100 | Week 01 | 11</div></div>
+<div class="slide"><div class="kicker">Reproducibility</div><h2>The Course Repository</h2><div class="cards cols-2"><div class="card"><h3>data/processed/</h3><p>Clean, class-ready datasets. Labs read from here; no internet needed in class.</p></div><div class="card"><h3>notebooks/student/</h3><p>Your labs and final-project templates. Guided code plus exercises.</p></div><div class="card"><h3>src/sees4100 + tests/</h3><p>Shared functions with automated tests. You will read and reuse them.</p></div><div class="card"><h3>scripts/ + lectures/</h3><p>Data download and cleaning pipeline; these lecture notes and slides.</p></div></div><div class="footer">SEES:4100 | Week 01 | 12</div></div>
+<div class="slide"><div class="kicker">Live Demo</div><h2>The Cell That Opens Every Lab</h2><div class="code-block"><pre>from pathlib import Path
+
+PROJECT_ROOT = Path.cwd()
+while not (PROJECT_ROOT / &quot;data&quot;).exists() and PROJECT_ROOT != PROJECT_ROOT.parent:
+    PROJECT_ROOT = PROJECT_ROOT.parent
+
+DATA_DIR = PROJECT_ROOT / &quot;data&quot;
+print(f&quot;Project root: {PROJECT_ROOT}&quot;)</pre></div><div class="code-note"><ul><li>Finds the project folder no matter where the notebook opens</li><li>If it prints False for the data folder, stop and fix paths first</li></ul></div><div class="footer">SEES:4100 | Week 01 | 13</div></div>
+<div class="slide"><div class="kicker">Live Demo</div><h2>Load Data, Then Look at It</h2><div class="code-block"><pre>import pandas as pd
+
+weather = pd.read_csv(DATA_DIR / &quot;processed&quot; / &quot;iowa_city_weather_daily.csv&quot;,
+                      parse_dates=[&quot;date&quot;])
+print(weather.shape)      # (rows, columns)
+print(weather.head())     # first five days</pre></div><div class="code-note"><ul><li>2,500+ days, one row per day, physical units in every column</li><li>Looking before computing is a habit, not a step to skip</li></ul></div><div class="footer">SEES:4100 | Week 01 | 14</div></div>
+<div class="slide"><div class="kicker">Live Demo</div><h2>The First Figure of the Semester</h2><div class="code-block"><pre>import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots(figsize=(10, 4))
+ax.plot(weather[&quot;date&quot;], weather[&quot;temp_mean_c&quot;], linewidth=0.7)
+ax.set_xlabel(&quot;Date&quot;)
+ax.set_ylabel(&quot;Temperature (deg C)&quot;)
+ax.set_title(&quot;Seven years of daily mean temperature, Iowa City&quot;)
+plt.show()</pre></div><div class="code-note"><ul><li>Labels and units are part of the analysis, not decoration</li><li>Wednesday you build this yourself, line by line</li></ul></div><div class="footer">SEES:4100 | Week 01 | 15</div></div>
+<div class="slide"><div class="kicker">Worked Example</div><h2>Lab 1 as Given, Solve, Interpret</h2><div class="example-grid"><div class="example-step"><h3>Given</h3><p>Daily weather for Iowa City, 2019-2025, as a clean CSV with units.</p></div><div class="example-step"><h3>Solve</h3><p>Load with pandas, compute mean, min, max temperature, plot the series with labels.</p></div><div class="example-step"><h3>Interpret</h3><p>Iowa&#x27;s seasonal swing spans roughly 40 deg C. Write two sentences on the pattern.</p></div></div><div class="footer">SEES:4100 | Week 01 | 16</div></div>
+<div class="slide"><div class="kicker">Reproducibility</div><h2>The Ritual: Restart and Run All</h2><ul><li>Kernel &gt; Restart Kernel and Run All Cells</li><li>Re-executes the whole notebook from nothing</li><li>Catches hidden state from cells run out of order</li><li>Do it before every submission, all semester</li></ul><div class="footer">SEES:4100 | Week 01 | 17</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Your notebook works when you run cells in the order you wrote them, but fails on Restart and Run All. What happened, and why does the grader care?</p></div><div class="pause-points"><div>A cell depended on state from a deleted or reordered cell</div><div>The grader always runs fresh: if it fails fresh, it fails</div></div><div class="footer">SEES:4100 | Week 01 | 18</div></div>
+<div class="slide"><div class="kicker">Studio Culture</div><h2>How to Succeed Here</h2><div class="cards cols-3"><div class="card"><h3>Bring evidence</h3><p>The next Lab starts with student reports of solved or unresolved problems. Error messages, values, and tiny tests help the class reason together.</p></div><div class="card"><h3>Read errors bottom-up</h3><p>The last line names the problem. Error messages are information, not verdicts.</p></div><div class="card"><h3>Check one number</h3><p>Verify one value by hand before trusting a table of thousands.</p></div></div><div class="footer">SEES:4100 | Week 01 | 19</div></div>
+<div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Lab 1: Jupyter Workflow and Your First Plot</h2><div class="two-col"><div class="panel"><h3>Wednesday</h3><ul><li>Open JupyterLab from the repository root</li><li>Run the path cell, load the weather CSV</li><li>Build one labeled temperature plot</li></ul></div><div class="panel"><h3>Deliverables (Friday)</h3><ul><li>Summary statistics: mean, min, max</li><li>One labeled time-series figure</li><li>Two or three interpretation sentences with units</li></ul></div></div><div class="footer">SEES:4100 | Week 01 | 20</div></div>
+<div class="slide"><div class="kicker">Honest Framing</div><h2>What This Course Is Not</h2><ul><li>Not a computer science course: no theory for theory&#x27;s sake</li><li>Not software engineering: small, readable, tested scripts</li><li>Not AI-dependent: tools assist, you decide and verify</li><li>Not math-heavy: arithmetic and one regression line</li></ul><div class="footer">SEES:4100 | Week 01 | 21</div></div>
+<div class="slide"><div class="kicker">Bridge</div><h2>Connection to Next Week</h2><table class="comparison-table"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Run notebooks and make a plot</td><td>Variables, lists, dictionaries</td><td>From running code to writing your own</td></tr></tbody></table><div class="footer">SEES:4100 | Week 01 | 22</div></div>
+<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>Monday concepts, Wednesday debrief and lab start, Friday studio</li><li>Reproducible = same data + code gives same result, hands-free</li><li>The project folder is the unit of reproducibility</li><li>Restart and Run All before every submission</li></ul><div class="footer">SEES:4100 | Week 01 | 23</div></div>
+<div class="slide"><div class="kicker">Discussion</div><h2>Before You Leave</h2><div class="pause-box"><p>What is one dataset from your own interests, any field, that you would want to analyze by December? Keep it in mind: it may become your final project.</p></div><div class="footer">SEES:4100 | Week 01 | 24</div></div>
+</div>
+<script>
+    function buildDownloadBlob() {
+      return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    }
+    function downloadDeck(event) {
+      event.preventDefault();
+      const blob = new Blob([buildDownloadBlob()], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const title = document.title || "sees4100-slide-deck";
+      link.href = url;
+      link.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".html";
+      link.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    }
+    document.getElementById("download-link").addEventListener("click", downloadDeck);
+</script>
+</body>
+</html>
