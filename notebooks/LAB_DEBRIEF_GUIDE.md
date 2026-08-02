@@ -1,6 +1,6 @@
 # Lab Debrief and Collaborative Debugging
 
-Beginning with Lab 2, each Wednesday lab starts with a 20-minute discussion of
+Beginning with Lab 2, each lab cycle starts with a 20-minute discussion of
 the previous lab. The purpose is to make debugging and scientific decision
 making visible to the whole class.
 

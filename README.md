@@ -1,8 +1,9 @@
-# SEES:4100 Computation in the Earth and Environment
+# Earth and Environmental Computing Course Hub
 
-This is the public, student-facing course repository for Fall 2026. It includes
-the course website, lecture slide decks, student lab notebooks, final-project
-templates, classroom datasets, and the code needed to run the notebooks.
+This reusable, student-facing course repository introduces computational
+methods for Earth and environmental science. It includes a course website,
+lecture slide decks, student lab notebooks, final-project templates, classroom
+datasets, and the code needed to run the notebooks.
 
 The website is published with GitHub Pages from `index.html`.
 
@@ -10,7 +11,7 @@ The website is published with GitHub Pages from `index.html`.
 
 ```bash
 conda env create -f environment.yml
-conda activate sees4100
+conda activate earth-course
 python scripts/download_data.py
 python scripts/clean_data.py
 jupyter lab
@@ -31,9 +32,10 @@ before every deployment.
 - `materials/slides/`: student-facing HTML slide decks.
 - `notebooks/`: individual labs, group labs, debrief guidance, and project templates.
 - `data/processed/`: stable classroom datasets used by the notebooks.
-- `src/sees4100/`: reusable scientific-computing functions.
+- `src/`: reusable scientific-computing functions.
 - `scripts/`: student-facing data preparation and Lab 4 files.
 - `assets/`: course website styles.
 
-Course materials remain under the copyright of their author unless a separate
-license is added.
+The site uses institution-neutral language and a week-based schedule so it can
+be adapted to different academic calendars. Course materials remain under the
+copyright of their author unless a separate license is added.

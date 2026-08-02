@@ -35,7 +35,7 @@ processed_data:
   allowed_values: [public observation, synthetic fallback]
   notes: retained in processed weather, streamflow, multisite, and water-quality tables
 synthetic_spatial:
-  source: Generated for SEES:4100
+  source: Generated for Earth & Environmental Computing
   license: Course teaching material
   variables: [soil moisture, elevation, distance to river, landcover, gridded elevation, gridded temperature]
   seed: 4100

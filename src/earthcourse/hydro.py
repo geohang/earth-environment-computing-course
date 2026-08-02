@@ -1,4 +1,4 @@
-"""Hydrologic calculation helpers used in SEES:4100 labs."""
+"""Hydrologic calculation helpers used in Earth & Environmental Computing labs."""
 
 from __future__ import annotations
 

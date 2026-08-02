@@ -1,4 +1,4 @@
-"""Small matplotlib helpers for SEES:4100 notebooks."""
+"""Small matplotlib helpers for Earth & Environmental Computing notebooks."""
 
 from __future__ import annotations
 

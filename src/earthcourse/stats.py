@@ -1,4 +1,4 @@
-"""Small statistics helpers for SEES:4100."""
+"""Small statistics helpers for Earth & Environmental Computing."""
 
 from __future__ import annotations
 

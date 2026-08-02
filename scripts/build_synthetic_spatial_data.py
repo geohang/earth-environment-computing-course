@@ -1,4 +1,4 @@
-"""Build synthetic spatial datasets for SEES:4100."""
+"""Build synthetic spatial datasets for Earth & Environmental Computing."""
 
 from __future__ import annotations
 

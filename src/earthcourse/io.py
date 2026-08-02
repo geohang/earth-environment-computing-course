@@ -1,4 +1,4 @@
-"""Input and output helpers for SEES:4100 notebooks."""
+"""Input and output helpers for Earth & Environmental Computing notebooks."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-name: sees4100
+name: earth-course
 channels:
   - conda-forge
 dependencies:

@@ -33,13 +33,13 @@ ALLOWED_FILES = {
     "scripts/clean_data.py",
     "scripts/download_data.py",
     "scripts/messy_streamflow_analysis.py",
-    "src/sees4100/__init__.py",
-    "src/sees4100/hydro.py",
-    "src/sees4100/io.py",
-    "src/sees4100/modeling.py",
-    "src/sees4100/plotting.py",
-    "src/sees4100/spatial.py",
-    "src/sees4100/stats.py",
+    "src/earthcourse/__init__.py",
+    "src/earthcourse/hydro.py",
+    "src/earthcourse/io.py",
+    "src/earthcourse/modeling.py",
+    "src/earthcourse/plotting.py",
+    "src/earthcourse/spatial.py",
+    "src/earthcourse/stats.py",
     "syllabus.md",
 }
 
@@ -118,9 +118,6 @@ def find_violations() -> list[str]:
         lower_name = path.name.lower()
         if lower_name.endswith(".pptx") or lower_name.endswith(".inspect.ndjson"):
             violations.append(f"blocked file type: {relative.as_posix()}")
-
-        if lower_name.startswith("sees4100_computation_earth_environment_syllabus_") and lower_name.endswith(".docx"):
-            violations.append(f"draft document blocked: {relative.as_posix()}")
 
     return sorted(set(violations))
 

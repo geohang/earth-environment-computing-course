@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Conditionals, Loops, and Environmental Events | SEES:4100 Week 03</title>
+<title>Conditionals, Loops, and Environmental Events | Earth &amp; Environmental Computing Week 03</title>
 <style>
     :root {
       --bg: #0d1b2a; --bg-alt: #1a1a2e;
@@ -173,12 +173,12 @@
 </head>
 <body>
 <div class="toolbar">
-  <div class="meta">SEES:4100 | Week 03 | Wednesday, September 9, 2026 (mini-lecture, then Lab 3) | 11 slides</div>
+  <div class="meta">Earth &amp; Environmental Computing | Week 03 | Course session (mini-lecture, then Lab 3) | 11 slides</div>
   <a href="#" id="download-link" download>Download HTML</a>
 </div>
 <div class="deck">
-<div class="slide title-slide"><div class="kicker">SEES:4100 | Computation in the Earth and Environment | Fall 2026</div><h1>Conditionals, Loops, and Environmental Events</h1><div class="course">School of Earth, Environment, and Sustainability | University of Iowa</div><div class="details">Week 3 | Wednesday, September 9, 2026 | 20-minute mini-lecture, then Lab 3</div><div class="hero">An event is a threshold decision a scientist must defend. Today the code learns to decide.</div><div class="tags"><span class="tag">if / elif / else</span><span class="tag">for loops</span><span class="tag">Counters</span><span class="tag">Thresholds</span></div><div class="footer">SEES:4100 | Week 03 | 1</div></div>
-<div class="slide"><div class="kicker">Learning Objectives</div><h2>By the end of this mini-lecture, you will be able to...</h2><ul><li>Write if/elif/else chains and predict which branch fires</li><li>Maintain counters across loop iterations</li><li>Explain why an environmental event is a threshold choice</li></ul><div class="footer">SEES:4100 | Week 03 | 2</div></div>
+<div class="slide title-slide"><div class="kicker">Earth &amp; Environmental Computing | Computational Methods for Earth &amp; Environmental Science | 16-Week Course</div><h1>Conditionals, Loops, and Environmental Events</h1><div class="course">Open Course Materials | Adapt for your classroom</div><div class="details">Week 3 | Course session | 20-minute mini-lecture, then Lab 3</div><div class="hero">An event is a threshold decision a scientist must defend. Today the code learns to decide.</div><div class="tags"><span class="tag">if / elif / else</span><span class="tag">for loops</span><span class="tag">Counters</span><span class="tag">Thresholds</span></div><div class="footer">Earth &amp; Environmental Computing | Week 03 | 1</div></div>
+<div class="slide"><div class="kicker">Learning Objectives</div><h2>By the end of this mini-lecture, you will be able to...</h2><ul><li>Write if/elif/else chains and predict which branch fires</li><li>Maintain counters across loop iterations</li><li>Explain why an environmental event is a threshold choice</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 03 | 2</div></div>
 <div class="slide"><div class="kicker">Core Concept</div><h2>One Decision, Three Branches</h2><div class="code-block"><pre>rain_mm = 12.0
 
 if rain_mm &gt;= 10:
@@ -188,7 +188,7 @@ elif rain_mm &gt; 0:
 else:
     label = &quot;dry&quot;
 
-print(label)     # wet</pre></div><div class="code-note"><ul><li>Exactly one branch runs</li><li>Change rain_mm, watch the branch change</li></ul></div><div class="footer">SEES:4100 | Week 03 | 3</div></div>
+print(label)     # wet</pre></div><div class="code-note"><ul><li>Exactly one branch runs</li><li>Change rain_mm, watch the branch change</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 03 | 3</div></div>
 <div class="slide"><div class="kicker">Core Concept</div><h2>Counters Remember Across Iterations</h2><div class="code-block"><pre>longest = 0
 current = 0
 for precip in precip_values:
@@ -196,23 +196,23 @@ for precip in precip_values:
         current = current + 1
         longest = max(longest, current)
     else:
-        current = 0     # forget this line and see the next slide</pre></div><div class="code-note"><ul><li>current tracks the run in progress; longest keeps the record</li><li>The reset in the else branch is where the logic lives</li></ul></div><div class="footer">SEES:4100 | Week 03 | 4</div></div>
-<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>The Planted Bug</h2><div class="pause-box"><p>Without the reset, the code reports a 900-day dry spell in a 7-year record of an Iowa town. What single check exposes the answer as absurd?</p></div><div class="pause-points"><div>Plausibility: can a dry spell exceed the record itself, or an Iowa summer?</div><div>Wrong answers that look like answers are the dangerous kind</div></div><div class="footer">SEES:4100 | Week 03 | 5</div></div>
+        current = 0     # forget this line and see the next slide</pre></div><div class="code-note"><ul><li>current tracks the run in progress; longest keeps the record</li><li>The reset in the else branch is where the logic lives</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 03 | 4</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>The Planted Bug</h2><div class="pause-box"><p>Without the reset, the code reports a 900-day dry spell in a 7-year record of an Iowa town. What single check exposes the answer as absurd?</p></div><div class="pause-points"><div>Plausibility: can a dry spell exceed the record itself, or an Iowa summer?</div><div>Wrong answers that look like answers are the dangerous kind</div></div><div class="footer">Earth &amp; Environmental Computing | Week 03 | 5</div></div>
 <div class="slide"><div class="kicker">Core Concept</div><h2>Branch Order Decides the Label</h2><div class="code-block"><pre># A day with 15 mm rain AND a 33 deg C maximum:
 if row[&quot;precipitation_mm&quot;] &gt;= 10:
     label = &quot;wet&quot;            # &lt;- evaluation stops here
 elif row[&quot;temp_max_c&quot;] &gt;= 32:
     label = &quot;hot&quot;            # never reached for this day
 else:
-    label = &quot;ordinary&quot;</pre></div><div class="code-note"><ul><li>elif chains stop at the first true branch</li><li>Wet-before-hot is a decision; the lab asks you to defend it</li></ul></div><div class="footer">SEES:4100 | Week 03 | 6</div></div>
+    label = &quot;ordinary&quot;</pre></div><div class="code-note"><ul><li>elif chains stop at the first true branch</li><li>Wet-before-hot is a decision; the lab asks you to defend it</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 03 | 6</div></div>
 <div class="slide"><div class="kicker">Verification</div><h2>Two Implementations, One Answer</h2><div class="two-col"><div class="panel"><h3>Loop version</h3><p>for each row:
   if hot and humid:
     count = count + 1</p></div><div class="panel"><h3>Vectorized version</h3><p>((temp_max &gt;= 30) &amp;
- (humidity &gt;= 70)).sum()</p></div></div><div class="note">The counts must match. Agreement between independent implementations is the lab&#x27;s built-in test.</div><div class="footer">SEES:4100 | Week 03 | 7</div></div>
-<div class="slide"><div class="kicker">The Science</div><h2>Thresholds Are Choices</h2><div class="cards cols-3"><div class="card"><h3>Farmer</h3><p>5 mm wets the topsoil: a useful rain.</p></div><div class="card"><h3>Flood manager</h3><p>25 mm in a day starts mattering downstream.</p></div><div class="card"><h3>Climatologist</h3><p>1 mm separates a wet day from a dry one in many indices.</p></div></div><div class="note">Every event count in this lab depends on a threshold somebody chose.</div><div class="footer">SEES:4100 | Week 03 | 8</div></div>
-<div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Lab 3: Event Detection</h2><div class="two-col"><div class="panel"><h3>Today</h3><ul><li>Label every day: wet, hot, cold, ordinary</li><li>Count high-flow days by month</li><li>Find the longest dry spell</li></ul></div><div class="panel"><h3>Friday studio</h3><ul><li>Muggy-day agreement check</li><li>Season function and wet-day table</li><li>Freeze-thaw months, threshold defense</li></ul></div></div><div class="footer">SEES:4100 | Week 03 | 9</div></div>
-<div class="slide"><div class="kicker">Bridge</div><h2>Connection to Next Week</h2><table class="comparison-table"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Decisions inside loops</td><td>Functions and debugging</td><td>Package the decision so it can be named, reused, and tested</td></tr></tbody></table><div class="footer">SEES:4100 | Week 03 | 10</div></div>
-<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>One branch fires; order decides which</li><li>Counters need a reset path</li><li>Check plausibility, not just execution</li><li>Defend your thresholds with a reason</li></ul><div class="footer">SEES:4100 | Week 03 | 11</div></div>
+ (humidity &gt;= 70)).sum()</p></div></div><div class="note">The counts must match. Agreement between independent implementations is the lab&#x27;s built-in test.</div><div class="footer">Earth &amp; Environmental Computing | Week 03 | 7</div></div>
+<div class="slide"><div class="kicker">The Science</div><h2>Thresholds Are Choices</h2><div class="cards cols-3"><div class="card"><h3>Farmer</h3><p>5 mm wets the topsoil: a useful rain.</p></div><div class="card"><h3>Flood manager</h3><p>25 mm in a day starts mattering downstream.</p></div><div class="card"><h3>Climatologist</h3><p>1 mm separates a wet day from a dry one in many indices.</p></div></div><div class="note">Every event count in this lab depends on a threshold somebody chose.</div><div class="footer">Earth &amp; Environmental Computing | Week 03 | 8</div></div>
+<div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Lab 3: Event Detection</h2><div class="two-col"><div class="panel"><h3>Today</h3><ul><li>Label every day: wet, hot, cold, ordinary</li><li>Count high-flow days by month</li><li>Find the longest dry spell</li></ul></div><div class="panel"><h3>Studio session</h3><ul><li>Muggy-day agreement check</li><li>Season function and wet-day table</li><li>Freeze-thaw months, threshold defense</li></ul></div></div><div class="footer">Earth &amp; Environmental Computing | Week 03 | 9</div></div>
+<div class="slide"><div class="kicker">Bridge</div><h2>Connection to Next Week</h2><table class="comparison-table"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Decisions inside loops</td><td>Functions and debugging</td><td>Package the decision so it can be named, reused, and tested</td></tr></tbody></table><div class="footer">Earth &amp; Environmental Computing | Week 03 | 10</div></div>
+<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>One branch fires; order decides which</li><li>Counters need a reset path</li><li>Check plausibility, not just execution</li><li>Defend your thresholds with a reason</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 03 | 11</div></div>
 </div>
 <script>
     function buildDownloadBlob() {
@@ -223,7 +223,7 @@ else:
       const blob = new Blob([buildDownloadBlob()], { type: "text/html;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      const title = document.title || "sees4100-slide-deck";
+      const title = document.title || "earth-environment-course-deck";
       link.href = url;
       link.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".html";
       link.click();
