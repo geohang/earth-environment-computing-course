@@ -25,8 +25,8 @@ preparation, clear evidence, and constructive participation.
 | Week | Topic | Lab or project work |
 |---|---|---|
 | 1 | Course overview and reproducible workflows | Individual Lab 1 |
-| 2 | Python basics | Individual Lab 2 |
-| 3 | Conditionals, loops, and events | Individual Lab 3 |
+| 2 | Python basics | Individual Lab 2, Part A |
+| 3 | Conditionals, loops, and events | Individual Lab 2, Part B |
 | 4 | Functions and debugging | Individual Lab 4 |
 | 5 | NumPy and arrays | Individual Lab 5 |
 | 6 | Pandas and time series | Individual Lab 6 |
@@ -40,6 +40,11 @@ preparation, clear evidence, and constructive participation.
 | 14 | Reading week or academic break | No new lab |
 | 15 | Advanced applications and project support | Project studio |
 | 16 | Course synthesis | Final presentations |
+
+Individual Lab 2 spans Weeks 2 and 3 as one notebook with two graded
+checkpoints. That structure suits a calendar in which Week 3 loses a
+meeting to a holiday, and it keeps each concept session in the same week
+as the lab work it supports.
 
 ## Grading weights
 

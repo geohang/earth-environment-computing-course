@@ -4,6 +4,10 @@ Beginning with Lab 2, each lab cycle starts with a 20-minute discussion of
 the previous lab. The purpose is to make debugging and scientific decision
 making visible to the whole class.
 
+Lab 2 spans two weeks, so its second week opens with a short check-in on
+Part A instead of a full debrief. No debrief card is due in the middle of a
+lab; the Lab 2 card is due before Lab 4 begins.
+
 Before class, complete the debrief card at the end of your previous notebook.
 Bring one of these:
 

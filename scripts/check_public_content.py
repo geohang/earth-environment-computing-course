@@ -64,8 +64,7 @@ ALLOWED_FILES.update(
     f"notebooks/individual_labs/{name}"
     for name in (
         "Lab01_setup_jupyter_first_plot.ipynb",
-        "Lab02_python_basics_weather_variables.ipynb",
-        "Lab03_conditionals_loops_environmental_events.ipynb",
+        "Lab02_python_basics_conditionals_loops_events.ipynb",
         "Lab04_functions_debugging_hydrologic_indices.ipynb",
         "Lab05_numpy_arrays_gridded_earth_data.ipynb",
         "Lab06_pandas_time_series_streamflow_weather.ipynb",
