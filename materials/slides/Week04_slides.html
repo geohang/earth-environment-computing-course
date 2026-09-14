@@ -173,54 +173,240 @@
 </head>
 <body>
 <div class="toolbar">
-  <div class="meta">Earth &amp; Environmental Computing | Week 04 | Course session | 22 slides</div>
+  <div class="meta">Earth &amp; Environmental Computing | Week 04 | Course session | 34 slides</div>
   <a href="#" id="download-link" download>Download HTML</a>
 </div>
 <div class="deck">
-<div class="slide title-slide"><div class="kicker">Earth &amp; Environmental Computing | Computational Methods for Earth &amp; Environmental Science | 16-Week Course</div><h1>Functions and Debugging</h1><div class="course">Open Course Materials | Adapt for your classroom</div><div class="details">Week 4 | Course session</div><div class="hero">A function you can test beats a code block you can only reread. A magnitude check beats trust.</div><div class="tags"><span class="tag">def / return</span><span class="tag">Docstrings</span><span class="tag">Tiny tests</span><span class="tag">Tracebacks</span><span class="tag">Unit bugs</span></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 1</div></div>
-<div class="slide"><div class="kicker">Learning Objectives</div><h2>By the end of this lecture, you will be able to...</h2><ul><li>Write a function with parameters, a docstring, and a return value</li><li>Test a function on data small enough to check by hand</li><li>Read a traceback from the bottom up</li><li>Catch unit errors that produce no error message</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 04 | 2</div></div>
-<div class="slide"><div class="kicker">Recap</div><h2>Last Week in Sixty Seconds</h2><ul><li>elif chains stop at the first true branch</li><li>Counters need a reset path, or they lie plausibly</li><li>Loop count and vectorized count must agree</li><li>Today: package those decisions into named, testable functions</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 04 | 3</div></div>
-<div class="slide"><div class="kicker">Motivation</div><h2>The Cost of Copy-Paste Analysis</h2><div class="two-col"><div class="panel"><h3>The pattern</h3><ul><li>Same calculation pasted into three cells</li><li>A bug gets fixed in one copy</li><li>The other two keep it, silently</li></ul></div><div class="panel"><h3>The fix</h3><ul><li>One function: one home for the calculation</li><li>One place to fix, one thing to test</li><li>Reuse becomes a call, not a paste</li></ul></div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 4</div></div>
-<div class="slide"><div class="kicker">Core Concept</div><h2>Anatomy of a Function</h2><div class="code-block"><pre>def annual_mean_flow_simple(df):
-    &quot;&quot;&quot;Annual mean discharge (cfs) from daily data.&quot;&quot;&quot;
-    data = df.copy()
-    data[&quot;year&quot;] = data[&quot;date&quot;].dt.year
-    return data.groupby(&quot;year&quot;, as_index=False)[&quot;discharge_cfs&quot;].mean()</pre></div><div class="code-note"><ul><li>def names it, parameters feed it, return hands the answer back</li><li>The docstring states units in and units out</li><li>df.copy() keeps the caller&#x27;s table untouched</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 5</div></div>
-<div class="slide"><div class="kicker">Core Concept</div><h2>Return, Not Print</h2><div class="equation-box"><div class="equation">result = my_function(data)     # result exists, work continues</div><div class="variables"><div>return value = feeds the next calculation</div><div>print output = pixels for humans, then gone</div><div>a printing function returns None</div><div>None breaks every downstream cell</div></div></div><ul><li>If a later cell gets None, look for a function that prints instead of returns</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 04 | 6</div></div>
-<div class="slide"><div class="kicker">The Habit</div><h2>Write the Test Before You Trust</h2><div class="code-block"><pre>tiny = pd.DataFrame({
-    &quot;date&quot;: pd.to_datetime([&quot;2020-01-01&quot;, &quot;2020-01-02&quot;, &quot;2021-01-01&quot;]),
-    &quot;discharge_cfs&quot;: [10.0, 20.0, 40.0],
-})
-result = annual_mean_flow_simple(tiny)
-assert result.loc[result[&quot;year&quot;] == 2020, &quot;discharge_cfs&quot;].iloc[0] == 15.0</pre></div><div class="code-note"><ul><li>Three rows, answer computable in your head: (10+20)/2 = 15</li><li>assert makes the check permanent, not a one-time glance</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 7</div></div>
-<div class="slide"><div class="kicker">The Habit</div><h2>Strength of Evidence</h2><ul><li>Weak: the code ran without errors</li><li>Better: a tiny test with a hand-checked answer passes</li><li>Strong: two independent implementations agree on real data</li><li>np.allclose(mine, package) is the agreement check</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 04 | 8</div></div>
-<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Why test on three invented rows when eleven years of real data are sitting right there?</p></div><div class="pause-points"><div>You know the true answer for three rows</div><div>Real data can only tell you the code ran, not that it is right</div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 9</div></div>
-<div class="slide"><div class="kicker">Debugging</div><h2>Tracebacks: Read from the Bottom</h2><div class="code-block"><pre>Traceback (most recent call last):
-  File &quot;...&quot;, line 12, in &lt;module&gt;
-    print(weather[&quot;temp_mean&quot;])
-  ...
-KeyError: &#x27;temp_mean&#x27;</pre></div><div class="code-note"><ul><li>Bottom line: what went wrong (a missing column name)</li><li>Lines above: where it happened</li><li>Fix: check weather.columns, the name is temp_mean_c</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 10</div></div>
-<div class="slide"><div class="kicker">Debugging</div><h2>The Debugging Ladder</h2><div class="workflow"><div class="step"><div class="num">1</div><h3>Read</h3><p>The bottom line of the traceback names the problem.</p></div><div class="step"><div class="num">2</div><h3>Print</h3><p>Show the intermediate value where things last made sense.</p></div><div class="step"><div class="num">3</div><h3>Shrink</h3><p>Run the function on tiny data with a known answer.</p></div><div class="step"><div class="num">4</div><h3>Compare</h3><p>Check against an independent implementation.</p></div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 11</div></div>
-<div class="slide"><div class="kicker">Silent Bugs</div><h2>The Worst Bugs Raise Nothing</h2><div class="two-col"><div class="panel"><h3>The planted bug</h3><p>def cfs_to_m3s_buggy(q):
-    return q * 0.28316846592
+<div class="slide title-slide"><div class="kicker">Earth &amp; Environmental Computing | Computational Methods for Earth &amp; Environmental Science | 16-Week Course</div><h1>Functions and Debugging</h1><div class="course">Open Course Materials | Adapt for your classroom</div><div class="details">Week 4 | Course session | Individual Lab 4 begins in the lab session</div><div class="hero">Writing code you can reuse, and finding out why it does the wrong thing.</div><div class="tags"><span class="tag">def / return</span><span class="tag">Arguments</span><span class="tag">Tracebacks</span><span class="tag">pdb</span><span class="tag">Tests</span></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 1</div></div>
+<div class="slide"><div class="kicker">Today</div><h2>Two Halves</h2><div class="two-col"><div class="panel"><h3>Part One: Functions</h3><ul><li>Definitions and returns</li><li>Arguments, defaults, and the mutable-default trap</li><li>Scope, docstrings, type hints</li><li>Turning a long script into named pieces</li></ul></div><div class="panel"><h3>Part Two: Debugging</h3><ul><li>Reading tracebacks from the bottom</li><li>The five errors you will meet</li><li>print, logging, pdb, the IDE debugger, tests</li><li>The bugs that raise nothing at all</li></ul></div></div><div class="note">Every example today runs on the Iowa River at Iowa City, USGS site 05454500.</div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 2</div></div>
+<div class="slide title-slide"><div class="kicker">Part One</div><h1>Functions</h1><div class="course"></div><div class="details"></div><div class="hero">A name for a piece of work, so you write it once and call it everywhere.</div><div class="tags"><span class="tag">def</span><span class="tag">return</span><span class="tag">arguments</span><span class="tag">scope</span></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 3</div></div>
+<div class="slide"><div class="kicker">Functions</div><h2>Anatomy of a Function</h2><div class="code-block"><pre>CFS_TO_M3S = 0.028316846592
 
-1000 cfs -&gt; 283 m3/s ??</p></div><div class="panel"><h3>The anchor</h3><ul><li>1 cfs is about 0.028 m3/s</li><li>So 1000 cfs must be about 28 m3/s</li><li>283 m3/s would rival the Mississippi at low flow</li><li>The constant is ten times too large</li></ul></div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 12</div></div>
-<div class="slide"><div class="kicker">Silent Bugs</div><h2>Magnitude Anchors to Memorize</h2><ul><li>1 cfs is about 0.028 m3/s</li><li>1 inch = 25.4 mm</li><li>Iowa River at Iowa City: roughly 100 to 40,000 cfs</li><li>Check one converted value against an anchor, every time</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 04 | 13</div></div>
-<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Your conversion says 1000 cfs = 283 m3/s. No error, no warning, the plot looks fine. What tells you it is wrong?</p></div><div class="pause-points"><div>Only the magnitude anchor: no message will ever come</div><div>The data column discharge_m3s agrees with the anchor, not with you</div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 14</div></div>
-<div class="slide"><div class="kicker">Worked Example</div><h2>Hydrologic Indices as Functions</h2><div class="example-grid"><div class="example-step"><h3>Given</h3><p>Eleven years of daily discharge for the Iowa River at Iowa City.</p></div><div class="example-step"><h3>Solve</h3><p>annual_mean_flow, seven_day_low_flow, annual_peak_flow: three tested functions, merged by year.</p></div><div class="example-step"><h3>Interpret</h3><p>Sanity asserts: means positive, peaks above low flows, every year present.</p></div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 15</div></div>
+def cfs_to_m3s(discharge_cfs):
+    &quot;&quot;&quot;Convert discharge from cubic feet per second to cubic metres per second.&quot;&quot;&quot;
+    return discharge_cfs * CFS_TO_M3S
+
+q = cfs_to_m3s(1240.0)
+print(f&quot;1240 cfs = {q:.2f} m3/s&quot;)
+</pre></div><div class="code-note"><ul><li>def starts the definition, and the name follows</li><li>The names in parentheses are parameters, filled in at call time</li><li>The indented block is the body, four spaces on every line</li><li>return hands one value back and ends the call</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 4</div></div>
+<div class="slide"><div class="kicker">Functions</div><h2>Return, Not Print</h2><div class="code-block"><pre>def mean_flow_printed(df):
+    print(df[&quot;discharge_cfs&quot;].mean())    # prints, returns None
+
+def mean_flow(df):
+    return df[&quot;discharge_cfs&quot;].mean()    # returns a usable value
+
+print(&quot;printed version handed back:&quot;, mean_flow_printed(stream))
+flow = mean_flow(stream)
+print(f&quot;returned version: {flow:.1f} cfs = {cfs_to_m3s(flow):.1f} m3/s&quot;)
+</pre></div><div class="code-note"><ul><li>The printed version hands back None, and the next line fails on it</li><li>The returned value keeps flowing through the program</li><li>If a later cell gets None, look for a function that prints instead of returns</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 5</div></div>
+<div class="slide"><div class="kicker">Functions</div><h2>Positional and Keyword Arguments</h2><div class="code-block"><pre>def sample_id(site, lat, lon):
+    return f&quot;{site}_{lat:.2f}_{lon:.2f}&quot;
+
+# positional: order is everything
+print(sample_id(&quot;IOWARIVER&quot;, 41.66, -91.53))
+
+# keyword: order stops mattering
+print(sample_id(lon=-91.53, site=&quot;IOWARIVER&quot;, lat=41.66))
+
+# swapped, and Python cannot tell
+print(sample_id(&quot;IOWARIVER&quot;, -91.53, 41.66))
+</pre></div><div class="code-note"><ul><li>Positional arguments are matched left to right</li><li>Keyword arguments are matched by name and may appear in any order</li><li>Keywords must follow positionals in a call</li><li>Use keywords for anything a reader could confuse: coordinates, depths, thresholds</li></ul></div><div class="note">The third call puts the station in Kazakhstan. No error, no warning.</div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 6</div></div>
+<div class="slide"><div class="kicker">Functions</div><h2>Default Arguments</h2><div class="code-block"><pre>def mean_flow_by(df, date_col=&quot;date&quot;, flow_col=&quot;discharge_cfs&quot;, freq=&quot;Y&quot;):
+    &quot;&quot;&quot;Mean discharge grouped by period. Returns a Series indexed by period.&quot;&quot;&quot;
+    out = df.copy()
+    key = out[date_col].dt.to_period(freq).astype(str)
+    return out.groupby(key)[flow_col].mean()
+
+print(mean_flow_by(stream).head(3))          # yearly, the default
+print(mean_flow_by(stream, freq=&quot;M&quot;).head(3))  # monthly, one keyword changed
+</pre></div><div class="code-note"><ul><li>A default makes a parameter optional; callers override only what they need</li><li>Parameters with defaults come after those without</li><li>This is the signature style used throughout src/earthcourse/hydro.py</li><li>Defaults are evaluated once, when the def line runs, which is the next slide</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 7</div></div>
+<div class="slide"><div class="kicker">Functions</div><h2>The Mutable Default Trap</h2><div class="code-block"><pre>def add_site_buggy(name, sites=[]):        # one list, shared forever
+    sites.append(name)
+    return sites
+
+def add_site(name, sites=None):            # a fresh list every call
+    sites = [] if sites is None else sites
+    sites.append(name)
+    return sites
+
+print(&quot;buggy:&quot;, add_site_buggy(&quot;Clear Creek&quot;), add_site_buggy(&quot;Rapid Creek&quot;))
+print(&quot;fixed:&quot;, add_site(&quot;Clear Creek&quot;), add_site(&quot;Rapid Creek&quot;))
+</pre></div><div class="code-note"><ul><li>Never put a list, dict, or set in a default; use None and build it inside</li><li>The default object is created once, when Python reads the def line</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 8</div></div>
+<div class="slide"><div class="kicker">Functions</div><h2>Variable Scope</h2><div class="code-block"><pre>FREEZING_C = 0.0                       # global
+
+def days_at_or_below_freezing(temps):
+    count = 0                          # local to this call
+    for t in temps:
+        if t &lt;= FREEZING_C:            # reads the global, cannot rebind it
+            count += 1
+    return count
+
+n = days_at_or_below_freezing(weather[&quot;temp_min_c&quot;])
+print(f&quot;{n} of {len(weather)} Iowa City days at or below freezing&quot;)
+</pre></div><div class="code-note"><ul><li>Names created inside a function are local and exist only during the call</li><li>A function can read a global name but cannot rebind one by assignment</li><li>Pass data in as arguments and hand results back with return</li><li>Globals as shared state are a debugging tax you pay later</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 9</div></div>
+<div class="slide"><div class="kicker">Functions</div><h2>Collecting Arguments with *args and **kwargs</h2><div class="code-block"><pre>def mean_of(*values):                  # values arrives as a tuple
+    return sum(values) / len(values)
+
+print(mean_of(2.1, 3.4, 2.8))
+print(mean_of(*stream[&quot;discharge_cfs&quot;].head(5)))    # unpack at the call
+
+def plot_flow(df, **style):            # style arrives as a dict
+    fig, ax = plt.subplots(figsize=(7, 2.2))
+    ax.plot(df[&quot;date&quot;], df[&quot;discharge_cfs&quot;], **style)   # and unpacks again
+    ax.set_ylabel(&quot;Discharge (cfs)&quot;)
+
+plot_flow(stream.head(365), color=&quot;steelblue&quot;, linewidth=0.8)
+</pre></div><div class="code-note"><ul><li>*args collects extra positional arguments into a tuple</li><li>**kwargs collects extra keyword arguments into a dict</li><li>The same stars unpack at the call site, which is how you forward options to a library</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 10</div></div>
+<div class="slide"><div class="kicker">Functions</div><h2>Docstrings</h2><div class="code-block"><pre>def seven_day_low(df, flow_col=&quot;discharge_cfs&quot;):
+    &quot;&quot;&quot;Lowest 7-day rolling mean discharge, in cubic feet per second.
+
+    Parameters
+    ----------
+    df : daily record, one row per day
+    flow_col : name of the discharge column (cfs)
+    &quot;&quot;&quot;
+    return df[flow_col].rolling(7).mean().min()
+
+print(f&quot;Lowest 7-day mean: {seven_day_low(stream):.1f} cfs&quot;)
+help(seven_day_low)
+</pre></div><div class="code-note"><ul><li>A string as the first statement of the function, in triple quotes, one summary line</li><li>State the units of every argument and of the return value</li><li>help() prints it back to you, and so does hovering in your editor</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 11</div></div>
+<div class="slide"><div class="kicker">Functions</div><h2>Type Hints</h2><div class="code-block"><pre>from pathlib import Path
+
+def peak_above(df: &quot;pd.DataFrame&quot;, threshold_cfs: float = 10000.0) -&gt; int:
+    &quot;&quot;&quot;Count days whose discharge exceeds a threshold.&quot;&quot;&quot;
+    return int((df[&quot;discharge_cfs&quot;] &gt; threshold_cfs).sum())
+
+print(&quot;Days above 10000 cfs:&quot;, peak_above(stream))
+print(&quot;Annotations:&quot;, peak_above.__annotations__)
+</pre></div><div class="code-note"><ul><li>Annotations say what goes in and what comes out</li><li>Python does not check them at run time; your editor does, before you run anything</li><li>src/earthcourse/hydro.py uses them: cfs_to_m3s(discharge_cfs: float) -&gt; float</li><li>Hints plus a docstring is the whole contract of a function in five lines</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 12</div></div>
+<div class="slide"><div class="kicker">The Habit</div><h2>Write the Test Before You Trust</h2><div class="code-block"><pre>def annual_mean_flow_simple(df):
+    &quot;&quot;&quot;Annual mean discharge (cfs) from daily data.&quot;&quot;&quot;
+    data = df.copy()                   # never mutate the caller&#x27;s table
+    data[&quot;year&quot;] = data[&quot;date&quot;].dt.year
+    return data.groupby(&quot;year&quot;, as_index=False)[&quot;discharge_cfs&quot;].mean()
+
+tiny = pd.DataFrame({&quot;date&quot;: pd.to_datetime([&quot;2020-01-01&quot;, &quot;2020-01-02&quot;, &quot;2021-01-01&quot;]),
+                     &quot;discharge_cfs&quot;: [10.0, 20.0, 40.0]})
+got = annual_mean_flow_simple(tiny)
+assert got.loc[got[&quot;year&quot;] == 2020, &quot;discharge_cfs&quot;].iloc[0] == 15.0   # (10+20)/2
+print(got)
+</pre></div><div class="code-note"><ul><li>Write the test first and state the expected answer out loud: (10 + 20) / 2 = 15</li><li>assert makes the check permanent, not a one-time glance</li><li>df.copy() keeps the caller&#x27;s table untouched</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 13</div></div>
+<div class="slide"><div class="kicker">The Habit</div><h2>Two Implementations, One Answer</h2><div class="code-block"><pre>from earthcourse.hydro import annual_mean_flow
+
+mine = annual_mean_flow_simple(stream)
+package = annual_mean_flow(stream)
+check = mine.merge(package, on=&quot;year&quot;)
+
+assert np.allclose(check[&quot;discharge_cfs&quot;], check[&quot;mean_discharge_cfs&quot;])
+print(&quot;My function matches the package function for all&quot;,
+      len(check), &quot;years.&quot;)
+</pre></div><div class="code-note"><ul><li>Agreement between two independent implementations is strong evidence</li><li>One implementation running without errors is weak evidence</li><li>This check returns in every later lab</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 14</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Why test on three invented rows when eleven years of real Iowa River data are sitting right there?</p></div><div class="pause-points"><div>You know the true answer for three rows; you do not know it for 4,018</div><div>Real data can only tell you the code ran, not that it is right</div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 15</div></div>
+<div class="slide"><div class="kicker">Refactoring</div><h2>A Script Refactored Into Functions</h2><div class="two-col"><div class="panel"><h3>scripts/messy_streamflow_analysis.py</h3><ul><li>One-letter names: p, x, a, b</li><li>A hard-coded relative path that breaks elsewhere</li><li>The same grouping idea written twice</li><li>A plot titled m3/s over a column in cfs</li></ul></div><div class="panel"><h3>src/earthcourse/</h3><ul><li>read_processed_csv finds the project root for you</li><li>mean_flow_by(df, freq=...) does both groupings</li><li>annual_mean_flow is already written and tested</li><li>Each piece is callable, testable, and fixable in one place</li></ul></div></div><div class="note">You will refactor this script in Group Lab 4, Week 10. Today it is the before picture.</div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 16</div></div>
+<div class="slide"><div class="kicker">Reuse</div><h2>Where Our Functions Live</h2><div class="two-col"><div class="panel"><h3>src/earthcourse/</h3><ul><li>io.py: find the project root, read data/processed</li><li>hydro.py: unit conversion, annual mean and peak flow, 7-day low flow, flow-duration curves</li><li>stats.py: regression summary, RMSE, MAE, split by date</li><li>plotting.py, spatial.py, modeling.py</li></ul></div><div class="panel"><h3>In every notebook</h3><ul><li>from earthcourse.hydro import annual_mean_flow</li><li>from earthcourse.hydro import flow_duration_curve</li><li>Write it once here, import it everywhere</li><li>No copy-paste between labs</li></ul></div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 17</div></div>
+<div class="slide title-slide"><div class="kicker">Part Two</div><h1>Debugging</h1><div class="course"></div><div class="details"></div><div class="hero">Your code will break. The skill is shortening the time between breaking and knowing why.</div><div class="tags"><span class="tag">Tracebacks</span><span class="tag">print</span><span class="tag">logging</span><span class="tag">pdb</span><span class="tag">Tests</span></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 18</div></div>
+<div class="slide"><div class="kicker">Debugging</div><h2>Anatomy of a Traceback</h2><div class="code-block"><pre>Traceback (most recent call last):
+  File &quot;load_gauge.py&quot;, line 18, in &lt;module&gt;
+    mean_flow = summarize(&quot;iowa_streamflow_daily_raw.rdb&quot;)
+  File &quot;load_gauge.py&quot;, line 12, in summarize
+    values = to_floats(table[&quot;42884_00060_00003&quot;])
+  File &quot;load_gauge.py&quot;, line 7, in to_floats
+    return [float(c) for c in cells]
+ValueError: could not convert string to float: &#x27;14n&#x27;
+</pre></div><div class="code-note"><ul><li>Read the last line first: it names the error and describes it</li><li>Everything above is the route Python took to get there</li><li>Then read upward for the deepest line you wrote; that is where to look</li><li>Here the fault is in the reading, not the converting: &#x27;14n&#x27; is a USGS type code</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 19</div></div>
+<div class="slide"><div class="kicker">Debugging</div><h2>Five Errors You Will Meet</h2><table class="comparison-table"><thead><tr><th>Error</th><th>What it means</th><th>Where it bit us</th></tr></thead><tbody><tr><td>NameError</td><td>The name does not exist yet</td><td>count used outside the function that made it</td></tr><tr><td>TypeError</td><td>Wrong kind of value, or wrong argument count</td><td>mean_flow_printed returned None, then None + 1</td></tr><tr><td>ValueError</td><td>Right type, impossible value</td><td>float(&#x27;14n&#x27;) on the USGS type row</td></tr><tr><td>IndexError</td><td>Position past the end of the sequence</td><td>An off-by-one loop, or a short header row</td></tr><tr><td>KeyError</td><td>That key is not in the dictionary</td><td>stream[&#x27;discharge&#x27;] when the column is discharge_cfs</td></tr></tbody></table><div class="footer">Earth &amp; Environmental Computing | Week 04 | 20</div></div>
+<div class="slide"><div class="kicker">Debugging</div><h2>print() Debugging the Raw USGS File</h2><div class="code-block"><pre>raw = pd.read_csv(RAW_GAUGE, sep=&quot;\t&quot;, comment=&quot;#&quot;, dtype=str)
+
+print(&quot;row 0      =&quot;, raw.iloc[0].to_list())
+print(&quot;row 1      =&quot;, raw.iloc[1].to_list())
+print(&quot;row 0 type =&quot;, type(raw[FLOW_COL].iloc[0]), repr(raw[FLOW_COL].iloc[0]))
+
+try:
+    float(raw[FLOW_COL].iloc[0])
+except ValueError as error:
+    print(&quot;Expected ValueError:&quot;, error)
+</pre></div><div class="code-note"><ul><li>Print the value and its type; most surprises are type surprises</li><li>Label every print, or you will not know which one spoke</li><li>Row 0 is the USGS type-definition row: 5s, 15s, 20d, 14n, 10s</li><li>It is metadata wearing a data row&#x27;s clothes</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 21</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>You fix it with pd.to_numeric(errors=&#x27;coerce&#x27;), the code runs clean, and the mean comes out at 2712.46 cfs. Is the bug gone?</p></div><div class="pause-points"><div>No. The bad row became NaN and was skipped, quietly</div><div>The mean is right this time only because it was 1 row in 4,019</div><div>You did not fix it, you got away with it</div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 22</div></div>
+<div class="slide"><div class="kicker">Silent Bugs</div><h2>The Bug With No Traceback</h2><div class="code-block"><pre>coerced = pd.to_numeric(raw[FLOW_COL], errors=&quot;coerce&quot;)
+print(&quot;rows            :&quot;, len(coerced))
+print(&quot;NaN after coerce:&quot;, int(coerced.isna().sum()))
+print(f&quot;mean with coerce: {coerced.mean():.2f} cfs&quot;)
+print(f&quot;true mean       : {stream[&#x27;discharge_cfs&#x27;].mean():.2f} cfs&quot;)
+
+# A naive filter that also fails: &#x27;14n&#x27; starts with a digit
+kept = raw[FLOW_COL].str.match(r&quot;^-?\d&quot;, na=False)
+print(&quot;rows kept by a starts-with-a-digit filter:&quot;, int(kept.sum()), &quot;of&quot;, len(raw))
+</pre></div><div class="code-note"><ul><li>Identical to the true mean, so nothing looks wrong at all</li><li>errors=&#x27;coerce&#x27; turns a loud failure into a silent one</li><li>The obvious filter does not help: &#x27;14n&#x27; starts with a digit</li><li>scripts/clean_data.py drops the row whose values end in s or d instead</li></ul></div><div class="note">A function that checks its own assumptions turns a silent wrong answer into a loud one.</div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 23</div></div>
+<div class="slide"><div class="kicker">Silent Bugs</div><h2>The Unit Bug That Raises Nothing</h2><div class="code-block"><pre>def cfs_to_m3s_buggy(discharge_cfs):
+    &quot;&quot;&quot;Convert cfs to m3/s. This version has a bug on purpose.&quot;&quot;&quot;
+    return discharge_cfs * 0.28316846592
+
+print(f&quot;Buggy   : 1000 cfs -&gt; {cfs_to_m3s_buggy(1000.0):.1f} m3/s&quot;)
+print(f&quot;Correct : 1000 cfs -&gt; {cfs_to_m3s(1000.0):.1f} m3/s&quot;)
+print()
+print(&quot;What the data itself says:&quot;)
+print(stream[[&quot;discharge_cfs&quot;, &quot;discharge_m3s&quot;]].head(3).to_string(index=False))
+</pre></div><div class="code-note"><ul><li>Memorize one anchor per conversion: 1 cfs is about 0.028 m3/s</li><li>So 1000 cfs must be about 28 m3/s, not 283</li><li>The discharge_m3s column agrees with the anchor, not with the bug</li><li>No traceback will ever find this one; only a reader who knows the units will</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 24</div></div>
+<div class="slide"><div class="kicker">Debugging</div><h2>From print() to logging</h2><div class="code-block"><pre>import logging
+logging.basicConfig(level=logging.DEBUG, format=&quot;%(levelname)s %(message)s&quot;)
+
+def read_gauge(path, flow_col):
+    table = pd.read_csv(path, sep=&quot;\t&quot;, comment=&quot;#&quot;, dtype=str)
+    logging.debug(&quot;rows read = %d&quot;, len(table))
+    if any(str(v).endswith((&quot;s&quot;, &quot;d&quot;)) for v in table.iloc[0]):
+        logging.warning(&quot;dropping USGS type row: %s&quot;, table.iloc[0].to_list())
+        table = table.iloc[1:].reset_index(drop=True)
+    logging.info(&quot;returning %d clean rows&quot;, len(table))
+    return table.assign(discharge_cfs=table[flow_col].astype(float))
+</pre></div><div class="code-note"><ul><li>One switch, the level, turns all of it on or off; you never delete the lines</li><li>DEBUG to trace, INFO for progress, WARNING for suspicious data, ERROR for failure</li><li>The 79 estimated values are exactly the kind of thing a WARNING should surface</li><li>Add filename= to keep a record of a long processing run</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 25</div></div>
+<div class="slide"><div class="kicker">Debugging</div><h2>breakpoint() and pdb</h2><div class="code-block"><pre>def to_floats(cells):
+    breakpoint()
+    return [float(c) for c in cells]
+
+to_floats(raw[&quot;42884_00060_00003&quot;])
+</pre></div><div class="code-note"><ul><li>Execution stops on that line and hands you a prompt inside the function</li><li>Every local name is live and inspectable, with no import needed</li><li>n steps to the next line, s steps into a call, p prints an expression</li><li>l lists the code around you, c continues, q quits. Delete the line when done</li></ul></div><div class="note">Not run here: breakpoint() would pause this notebook. Demonstrate it in a terminal.</div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 26</div></div>
+<div class="slide"><div class="kicker">Debugging</div><h2>A pdb Session</h2><div class="code-block"><pre>(Pdb) p len(cells)
+4019
+(Pdb) p cells.iloc[0]
+&#x27;14n&#x27;
+(Pdb) p cells.iloc[1]
+&#x27;1050&#x27;
+(Pdb) p float(cells.iloc[1])
+1050.0
+(Pdb) p cells.iloc[0].isdigit()
+False
+(Pdb) q
+</pre></div><div class="code-note"><ul><li>Five questions, asked in the room where the bug lives</li><li>Row 0 is not a number and never was; the file has a type row</li><li>Fix: drop the type row when reading, not after converting</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 27</div></div>
+<div class="slide"><div class="kicker">Debugging</div><h2>The IDE Debugger</h2><div class="cards cols-2"><div class="card"><h3>Breakpoints</h3><p>Click the gutter beside a line. No code changes, nothing to delete later.</p></div><div class="card"><h3>Variables panel</h3><p>Every local in scope, with its type, updating as you step.</p></div><div class="card"><h3>Step over, into, out</h3><p>The same three moves as pdb, on buttons: F10, F11, Shift-F11.</p></div><div class="card"><h3>Conditional breakpoints</h3><p>Stop only when row == 8417, the one row of ten thousand that fails.</p></div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 28</div></div>
+<div class="slide"><div class="kicker">Debugging</div><h2>Tests as a Debugging Tool</h2><div class="code-block"><pre># tests/test_gauge.py, run with: pytest -q
+def test_type_row_is_dropped():
+    table = read_gauge(RAW_GAUGE, FLOW_COL)
+    assert table[&quot;discharge_cfs&quot;].iloc[0] == 1050.0
+
+def test_row_count_matches_processed():
+    assert len(read_gauge(RAW_GAUGE, FLOW_COL)) == len(stream)
+
+test_type_row_is_dropped()
+test_row_count_matches_processed()
+print(&quot;2 passed&quot;)
+</pre></div><div class="code-note"><ul><li>Write the failing case as a test before you fix it; then the fix is verifiable</li><li>Small functions make this easy. This is the payoff for Part One</li><li>A test is a bug you only have to find once</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 29</div></div>
+<div class="slide"><div class="kicker">Worked Example</div><h2>Hydrologic Indices as Functions</h2><div class="example-grid"><div class="example-step"><h3>Given</h3><p>Eleven years of daily discharge for the Iowa River at Iowa City.</p></div><div class="example-step"><h3>Solve</h3><p>annual_mean_flow, annual_peak_flow, seven_day_low_flow: three tested functions, merged by year.</p></div><div class="example-step"><h3>Interpret</h3><p>Sanity asserts: every mean positive, every peak above its 7-day low.</p></div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 30</div></div>
 <div class="slide"><div class="kicker">Application</div><h2>The Flow-Duration Curve</h2><div class="code-block"><pre>from earthcourse.hydro import flow_duration_curve
 
 fdc = flow_duration_curve(stream)
-ax.semilogy(fdc[&quot;exceedance_probability&quot;] * 100,
-            fdc[&quot;discharge_cfs&quot;])
+for pct in (10, 50, 90):
+    q = np.interp(pct / 100, fdc[&quot;exceedance_probability&quot;], fdc[&quot;discharge_cfs&quot;])
+    print(f&quot;Q{pct:&lt;3} exceeded {pct:&gt;2}% of days: {q:8.1f} cfs&quot;)
+
+fig, ax = plt.subplots(figsize=(7, 2.6))
+ax.semilogy(fdc[&quot;exceedance_probability&quot;] * 100, fdc[&quot;discharge_cfs&quot;])
 ax.set_xlabel(&quot;Percent of days flow is exceeded&quot;)
-ax.set_ylabel(&quot;Discharge (cfs)&quot;)</pre></div><div class="code-note"><ul><li>One curve summarizes eleven years of river behavior</li><li>Read Q90: the flow exceeded 90 percent of days = water-supply floor</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 16</div></div>
-<div class="slide"><div class="kicker">Visual Summary</div><h2>The Week in Three Habits</h2><div class="cards cols-3"><div class="card"><h3>Name it</h3><p>One calculation, one function, one docstring with units.</p></div><div class="card"><h3>Test it</h3><p>Tiny data first, assert the hand-checked answer.</p></div><div class="card"><h3>Anchor it</h3><p>One magnitude check per unit conversion, no exceptions.</p></div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 17</div></div>
-<div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Lab 4: Functions and Debugging</h2><div class="two-col"><div class="panel"><h3>Lab session</h3><ul><li>Write annual_mean_flow_simple, test-first</li><li>Compare against the course package</li><li>Hunt the planted conversion bug</li></ul></div><div class="panel"><h3>Studio session</h3><ul><li>Flow-duration curve, labeled</li><li>count_days_above with its own test</li><li>Driest year, one written sentence</li></ul></div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 18</div></div>
-<div class="slide"><div class="kicker">Pitfalls</div><h2>Where This Week Goes Wrong</h2><ul><li>Functions that print instead of return</li><li>Variables expected to exist outside the function</li><li>Forgetting df.copy() and mutating the shared table</li><li>Skipping the written bug explanation (it is graded)</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 04 | 19</div></div>
-<div class="slide"><div class="kicker">Bridge</div><h2>Connection to Next Week</h2><table class="comparison-table"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Functions on one column</td><td>NumPy arrays and grids</td><td>From a series of days to a map of cells: shape enters the picture</td></tr></tbody></table><div class="footer">Earth &amp; Environmental Computing | Week 04 | 20</div></div>
-<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>return feeds calculations; print feeds eyes</li><li>Test on data small enough to check by hand</li><li>Read tracebacks bottom-up</li><li>Silent unit bugs die by magnitude anchors</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 04 | 21</div></div>
-<div class="slide"><div class="kicker">Discussion</div><h2>Before You Leave</h2><div class="pause-box"><p>What calculation have you copy-pasted in the last two labs that deserves to become a function this week?</p></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 22</div></div>
+ax.set_ylabel(&quot;Discharge (cfs)&quot;)
+ax.grid(True, alpha=0.3)
+</pre></div><div class="code-note"><ul><li>One curve summarizes eleven years of river behaviour</li><li>Q90 is the flow exceeded 90 percent of days: the water-supply floor</li><li>Q10/Q90 near 25 means a flashy river with little storage between storms</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 31</div></div>
+<div class="slide"><div class="kicker">Debugging</div><h2>One Bug, Start to Finish</h2><div class="workflow"><div class="step"><div class="num">1</div><h3>Read the error</h3><p>ValueError in to_floats, called from summarize. Bottom line first.</p></div><div class="step"><div class="num">2</div><h3>Localize</h3><p>The value is &#x27;14n&#x27;. The fault is upstream, in the reading, not the converting.</p></div><div class="step"><div class="num">3</div><h3>Inspect</h3><p>A breakpoint shows row 0 holding 5s, 15s, 20d, 14n, 10s.</p></div><div class="step"><div class="num">4</div><h3>Fix narrowly</h3><p>Drop the type row when reading. One condition, one function.</p></div><div class="step"><div class="num">5</div><h3>Lock it in</h3><p>Keep the test that failed. Remove the breakpoint.</p></div></div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 32</div></div>
+<div class="slide"><div class="kicker">Debugging</div><h2>A Debugging Checklist</h2><ul><li>Read the whole traceback, bottom line first</li><li>Say out loud what you expected and what happened</li><li>Check the types, not just the values</li><li>Shrink the input until the failure is two lines long</li><li>Change one thing at a time, and re-run</li><li>Keep the failing case as a test once it passes</li><li>Before you believe a converted number, check it against an anchor</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 04 | 33</div></div>
+<div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Lab 4: Functions and Debugging</h2><div class="two-col"><div class="panel"><h3>Lab session</h3><ul><li>Write annual_mean_flow_simple, then test it on three rows</li><li>Compare your version against the package with np.allclose</li><li>Hunt the planted factor-of-ten conversion bug</li></ul></div><div class="panel"><h3>Studio session</h3><ul><li>Graded checkpoint: count_days_above(df, threshold_cfs)</li><li>Read Q90 off the flow-duration curve and say who cares</li><li>Explain the bug in writing, not just in code</li></ul></div></div><div class="note">Bring one calculation you have copy-pasted in the last two labs. It deserves to become a function.</div><div class="footer">Earth &amp; Environmental Computing | Week 04 | 34</div></div>
 </div>
 <script>
     function buildDownloadBlob() {
