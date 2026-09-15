@@ -12,7 +12,7 @@ environmental, hydrologic, climate, geophysical, and geospatial questions.
 ## Weekly course structure
 
 Each teaching cycle begins with concepts and live coding. The next meeting
-starts with a 20-minute student-led debrief of the previous lab, followed by the
+starts with a 10-minute student-led debrief of the previous lab, followed by the
 new lab. A studio session provides time to work, test, and ask questions.
 
 Beginning with Lab 2, each student completes a short debrief card before the

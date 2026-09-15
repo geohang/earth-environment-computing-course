@@ -1,6 +1,6 @@
 # Lab Debrief and Collaborative Debugging
 
-Beginning with Lab 2, each lab cycle starts with a 20-minute discussion of
+Beginning with Lab 2, each lab cycle starts with a 10-minute discussion of
 the previous lab. The purpose is to make debugging and scientific decision
 making visible to the whole class.
 
@@ -20,12 +20,12 @@ An unresolved problem is a useful contribution. Do not hide it or replace it
 with a vague statement such as "the code did not work." Include the error
 message, unexpected value, figure, or small example that shows what happened.
 
-## The 20-Minute Routine
+## The 10-Minute Routine
 
-1. **0-3 minutes:** Review the issue board and select two to four examples.
-2. **3-11 minutes:** Students explain problems, fixes, or verification choices.
-3. **11-18 minutes:** The class investigates one unresolved problem together.
-4. **18-20 minutes:** Record a reusable lesson and connect it to the new lab.
+1. **0-5 minutes:** Students compare debrief cards in small groups and
+   work one unresolved problem together.
+2. **5-10 minutes:** Two to four students or groups report to the class,
+   and the class records one reusable lesson.
 
 ## A Useful Problem Report
 
