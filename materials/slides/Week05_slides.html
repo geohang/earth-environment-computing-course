@@ -186,29 +186,59 @@
 elevation.shape        # (50, 50)
 elevation[0, 0]        # one corner cell
 elevation[25, :]       # row 25: a west-east profile
-elevation[:, 10]       # column 10: a south-north profile</pre></div><div class="code-note"><ul><li>reshape fills row by row: value 51 starts row two</li><li>Convention all semester: rows are y, columns are x</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 5</div></div>
-<div class="slide"><div class="kicker">Core Concept</div><h2>Indexing a Grid</h2><div class="equation-box"><div class="equation">elevation[row, col]      # NOT (x, y)</div><div class="variables"><div>row = position along y (south to north)</div><div>col = position along x (west to east)</div><div>elevation[25:, :] = the northern half</div><div>elevation[25, :] = one terrain profile</div></div></div><ul><li>The plotting habit of (x, y) fights this all week; say row-column out loud</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 05 | 6</div></div>
+elevation[:, 10]       # column 10: a south-north profile
+</pre></div><div class="code-note"><ul><li>reshape fills row by row: value 51 starts row two</li><li>Convention all semester: rows are y, columns are x</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 5</div></div>
+<div class="slide"><div class="kicker">Core Concept</div><h2>Indexing a Grid</h2><div class="code-block"><pre># elevation[row, col]   and NOT (x, y)
+
+elevation[0, 0]      # south-west corner cell
+elevation[-1, -1]    # north-east corner cell
+elevation[:25, :]    # southern half  (25, 50)
+elevation[25:, :]    # northern half  (25, 50)
+elevation[:, :10]    # western strip  (50, 10)
+elevation[10:15, 20:25].shape   # (5, 5) window
+</pre></div><div class="code-note"><ul><li>row = position along y, south to north</li><li>col = position along x, west to east</li><li>elevation[25:, :] is the northern half</li><li>elevation[25, :] is one terrain profile</li></ul></div><div class="note">The plotting habit of (x, y) fights this all week; say row-column out loud.</div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 6</div></div>
 <div class="slide"><div class="kicker">Core Concept</div><h2>Vectorization: No Loops for Arithmetic</h2><div class="code-block"><pre>temp_f = temp_c * 9 / 5 + 32        # whole 50x50 grid, one line
 
 elevation.mean()                     # one number for the map
 elevation.mean(axis=0)               # 50 column means: a profile
-elevation.max() - elevation.min()    # total relief</pre></div><div class="code-note"><ul><li>The code reads like the equation</li><li>Aggregations collapse the grid: whole map, or one axis at a time</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 7</div></div>
-<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>A flat column of 2,500 values becomes reshape(50, 50). Where does value number 51 land?</p></div><div class="pause-points"><div>Row 1 (the second row), column 0: filling is row-major</div><div>Getting this wrong scrambles the whole map, with no error</div></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 8</div></div>
+elevation.max() - elevation.min()    # total relief
+</pre></div><div class="code-note"><ul><li>The code reads like the equation</li><li>Aggregations collapse the grid: whole map, or one axis at a time</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 7</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>A flat column of 2,500 values becomes reshape(50, 50). Where does value number 51 land?</p></div><div class="pause-points"><div>Row 0 holds values 1 to 50; row 1 starts at value 51</div><div>Row 1 (the second row), column 0: filling is row-major</div><div>Getting this wrong scrambles the whole map, with no error</div></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 8</div></div>
 <div class="slide"><div class="kicker">Masks</div><h2>A Mask Is a Map of a Condition</h2><div class="code-block"><pre>high = elevation &gt; np.percentile(elevation, 75)
 
-high.sum()               # how many cells
-high.mean()              # fraction of the area
-temperature[high].mean() # temperature only where high</pre></div><div class="code-note"><ul><li>The mask has the same shape as the grid: it IS a map</li><li>Masks count, measure area, and select in one move</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 9</div></div>
-<div class="slide"><div class="kicker">Masks</div><h2>Combining Conditions on Arrays</h2><ul><li>Use &amp; and |, never the words and / or</li><li>Parentheses around every comparison</li><li>(temp &lt; t25) &amp; (elev &gt; e75): cool AND high</li><li>Check mask.sum() before trusting any masked statistic</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 05 | 10</div></div>
-<div class="slide"><div class="kicker">Display</div><h2>The Two Classic Grid Gotchas</h2><div class="two-col"><div class="panel"><h3>1. Reshape order</h3><ul><li>Row-major filling, always</li><li>reshape(ny, nx), not (nx, ny)</li><li>Verify: check one corner value against the table</li></ul></div><div class="panel"><h3>2. Image origin</h3><ul><li>imshow counts rows downward by default</li><li>origin=&quot;lower&quot; restores map orientation</li><li>An upside-down landscape is obvious in a plot, invisible in print</li></ul></div></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 11</div></div>
+high.sum()               # 625 cells
+high.mean()              # 0.25 of the area
+temperature[high].mean() # 23.5 C, only where high
+</pre></div><div class="code-note"><ul><li>The mask has the same shape as the grid: it IS a map</li><li>Masks count, measure area, and select in one move</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 9</div></div>
+<div class="slide"><div class="kicker">Masks</div><h2>Combining Conditions on Arrays</h2><div class="code-block"><pre>t25 = np.percentile(temperature, 25)    # 22.71 C
+e75 = np.percentile(elevation, 75)      # 247.7 m
+
+cool_high = (temperature &lt; t25) &amp; (elevation &gt; e75)
+either    = (temperature &lt; t25) | (elevation &gt; e75)
+not_cool  = ~(temperature &lt; t25)
+
+cool_high.sum()                  # 80 cells
+100 * cool_high.mean()           # 3.2 % of the map
+elevation[cool_high].mean()      # 250.4 m
+</pre></div><div class="code-note"><ul><li>Use &amp; and |, never the words and / or</li><li>Parentheses around every comparison</li><li>Check mask.sum() before trusting any masked statistic</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 10</div></div>
+<div class="slide"><div class="kicker">Display</div><h2>The Two Classic Grid Gotchas</h2><div class="two-col"><div class="panel"><h3>1. Reshape order</h3><ul><li>Row-major filling, always</li><li>reshape(ny, nx), not (nx, ny)</li><li>Verify: grid[0, 0] == values[0]</li><li>and grid[1, 0] == values[nx]</li></ul></div><div class="panel"><h3>2. Image origin</h3><ul><li>imshow counts rows downward by default</li><li>ax.imshow(grid) puts row 0 on top</li><li>ax.imshow(grid, origin=&quot;lower&quot;) puts row 0 at the bottom</li><li>An upside-down landscape is obvious in a plot, invisible in print</li></ul></div></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 11</div></div>
 <div class="slide"><div class="kicker">Display</div><h2>Every Gridded Figure, Same Rules</h2><div class="code-block"><pre>fig, ax = plt.subplots(figsize=(6, 5))
 image = ax.imshow(elevation, origin=&quot;lower&quot;, cmap=&quot;terrain&quot;)
 ax.set_xlabel(&quot;Grid column&quot;)
 ax.set_ylabel(&quot;Grid row&quot;)
-fig.colorbar(image, ax=ax, label=&quot;Elevation (m)&quot;)</pre></div><div class="code-note"><ul><li>A colorbar with units is the map&#x27;s axis label</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 12</div></div>
-<div class="slide"><div class="kicker">Gradients</div><h2>Slope Needs Real Spacing</h2><div class="equation-box"><div class="equation">dz_dy, dz_dx = np.gradient(elevation, dy_m, dx_m)</div><div class="variables"><div>dz_dx = elevation change per meter, west-east</div><div>dz_dy = elevation change per meter, south-north</div><div>dx_m, dy_m = grid spacing from the coordinate columns</div><div>slope = sqrt(dz_dx**2 + dz_dy**2)</div></div></div><ul><li>Without spacing arguments the units are meters per grid cell: physically meaningless</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 05 | 13</div></div>
-<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Your slope map has values near 40. Percent, degrees, or meters per cell? How do you know?</p></div><div class="pause-points"><div>Whatever the code made it: trace the spacing arguments and the times-100</div><div>Units are decided by you, not discovered by the computer</div></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 14</div></div>
-<div class="slide"><div class="kicker">Worked Example</div><h2>Does Temperature Follow Elevation?</h2><div class="example-grid"><div class="example-step"><h3>Given</h3><p>50 x 50 synthetic elevation and temperature grids on the same coordinates.</p></div><div class="example-step"><h3>Solve</h3><p>Flatten both with .ravel(), fit a line with np.polyfit, plot scatter plus fit.</p></div><div class="example-step"><h3>Interpret</h3><p>Slope times 100 = an apparent lapse rate in deg C per 100 m, sign included.</p></div></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 15</div></div>
+fig.colorbar(image, ax=ax, label=&quot;Elevation (m)&quot;)
+</pre></div><div class="code-note"><ul><li>A colorbar with units is the map&#x27;s axis label</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 12</div></div>
+<div class="slide"><div class="kicker">Gradients</div><h2>Slope Needs Real Spacing</h2><div class="code-block"><pre>dx_m = 204.1   # from the x_km column
+dy_m = 163.3   # from the y_km column, and it differs from dx
+
+dz_dy, dz_dx = np.gradient(elevation, dy_m, dx_m)
+slope = np.sqrt(dz_dx**2 + dz_dy**2)      # m per m
+
+slope_pct = 100 * slope                    # percent
+slope_deg = np.degrees(np.arctan(slope))   # degrees
+</pre></div><div class="code-note"><ul><li>dz_dx = elevation change per meter, west-east</li><li>dz_dy = elevation change per meter, south-north</li><li>The two spacings differ here, so the order of arguments matters</li></ul></div><div class="note">Without spacing arguments the units are meters per grid cell: physically meaningless.</div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 13</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Your slope map has values near 40. Percent, degrees, or meters per cell? How do you know?</p></div><div class="pause-points"><div>Whatever the code made it: trace the spacing arguments and the times-100</div><div>Units are decided by you, not discovered by the computer</div><div>On this gentle synthetic terrain the honest answer is under 1 percent</div></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 14</div></div>
+<div class="slide"><div class="kicker">Worked Example</div><h2>Does Temperature Follow Elevation?</h2><div class="example-grid"><div class="example-step"><h3>Given</h3><p>50 x 50 synthetic elevation and temperature grids on the same coordinates.</p></div><div class="example-step"><h3>Solve</h3><p>Flatten both with .ravel(), fit a line with np.polyfit, plot scatter plus fit.</p></div><div class="example-step"><h3>Interpret</h3><p>Slope times 100 = an apparent lapse rate in deg C per 100 m, sign included.</p></div></div><div class="note">This synthetic field warms with height, +0.91 C per 100 m, so the sign is the discussion.</div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 15</div></div>
 <div class="slide"><div class="kicker">Visual Summary</div><h2>Three Sentences to Keep</h2><div class="cards cols-3"><div class="card"><h3>Slice</h3><p>A slice is a subregion of the map: elevation[25:, :] is the north half.</p></div><div class="card"><h3>Mask</h3><p>A mask is a map of a condition: where is it steep, high, or cold?</p></div><div class="card"><h3>Gradient</h3><p>A gradient with real spacing is terrain slope with real units.</p></div></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 16</div></div>
 <div class="slide"><div class="kicker">Error Gallery</div><h2>Three Messages You Will Meet This Week</h2><ul><li>ValueError: cannot reshape array of size 2500 into (60, 60): count your cells</li><li>The ambiguous truth-value error: you wrote and/or where &amp; / | belongs</li><li>IndexError: index 50 out of bounds: rows run 0 to 49</li><li>Each names its cause; read the bottom line first</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 05 | 17</div></div>
 <div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Lab 5: NumPy Arrays and Gridded Earth Data</h2><div class="two-col"><div class="panel"><h3>Lab session</h3><ul><li>Reshape and verify the elevation grid</li><li>North/south comparison, one profile plot</li><li>Slope with correct units</li></ul></div><div class="panel"><h3>Studio session</h3><ul><li>Lapse-rate scatter and fit</li><li>Joint mask percentage, column profile</li><li>Steep versus gentle temperature contrast</li></ul></div></div><div class="footer">Earth &amp; Environmental Computing | Week 05 | 18</div></div>
