@@ -17,7 +17,9 @@ python scripts/clean_data.py
 jupyter lab
 ```
 
-Students who prefer `pip` can use `requirements.txt`.
+Students who prefer `pip` can use `requirements.txt`. Students who work in VS
+Code on their own computer can follow the step-by-step guide in
+`vscode-setup.html`, which the course site links from its setup section.
 
 ## Public-content boundary
 

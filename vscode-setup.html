@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Step-by-step instructions for opening and running a course Jupyter notebook in VS Code on your own computer.">
+  <title>Open a Notebook in VS Code | Course Hub</title>
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the setup steps</a>
+
+  <header class="site-header">
+    <a class="course-mark" href="index.html" aria-label="Course home">
+      <span class="course-code">COURSE HUB</span>
+      <span>16-week format</span>
+    </a>
+    <nav aria-label="Course navigation">
+      <a href="index.html#schedule">Schedule</a>
+      <a href="index.html#materials">Materials</a>
+      <a href="index.html#setup">Setup</a>
+      <a href="index.html#policies">Policies</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="guide-hero" aria-labelledby="guide-title">
+      <p class="eyebrow">Setup guide · Your own computer</p>
+      <h1 id="guide-title">Open a lab notebook <span>in VS Code</span></h1>
+      <p class="hero-summary">
+        Follow these steps the first time you run a course notebook on a laptop
+        or home computer. Steps 1 to 4 happen once per computer. Steps 5 to 8
+        are the routine for every lab.
+      </p>
+      <ul class="guide-needs" aria-label="What you need before you start">
+        <li>VS Code</li>
+        <li>Anaconda or Miniconda</li>
+        <li>A copy of the course repository</li>
+        <li>Internet access for step 2</li>
+      </ul>
+    </section>
+
+    <section class="guide-section" aria-labelledby="once-title">
+      <div class="guide-phase">
+        <p class="eyebrow">Part A · Once per computer</p>
+        <h2 id="once-title">Prepare your computer</h2>
+        <p>Most of the time here goes to step 2, while conda downloads packages.</p>
+      </div>
+
+      <ol class="guide-steps" role="list">
+        <li class="guide-step" id="step-1">
+          <span class="step-number"><span class="sr-only">Step </span>1</span>
+          <div>
+            <h3>Unzip the course folder</h3>
+            <p>If you downloaded the repository from GitHub as a ZIP file, extract it first: on Windows, right-click the file and choose <strong>Extract All</strong>; on macOS, double-click it. Move the extracted folder somewhere easy to find, such as Documents.</p>
+            <p>The course folder is the one that contains <code>environment.yml</code> and the <code>data</code>, <code>notebooks</code>, and <code>src</code> folders. If extracting created a folder of the same name inside another one, use the inner folder. A folder cloned with Git or GitHub Desktop is ready as it is.</p>
+          </div>
+        </li>
+
+        <li class="guide-step" id="step-2">
+          <span class="step-number"><span class="sr-only">Step </span>2</span>
+          <div>
+            <h3>Create the course environment</h3>
+            <p>Open <strong>Anaconda Prompt</strong> from the Start menu on Windows, or <strong>Terminal</strong> on macOS. The prompt usually begins with <code>(base)</code>. Then run:</p>
+            <div class="terminal" role="region" aria-label="Environment commands" tabindex="0">
+              <div class="terminal-bar"><span></span><span></span><span></span><strong>Anaconda Prompt or Terminal</strong></div>
+              <pre><code><span>cd</span> path/to/course-folder
+<span>conda</span> env create -f environment.yml
+<span>conda</span> env list</code></pre>
+            </div>
+            <p>Replace <code>path/to/course-folder</code> with the location of your course folder. The quickest way: type <code>cd</code> and a space, drag the course folder from File Explorer (Windows) or Finder (macOS) into the window, and press <kbd>Enter</kbd>.</p>
+            <p>conda then downloads the packages listed in <code>environment.yml</code> and builds an environment named <code>earth-course</code>, which can take several minutes. When it finishes, <code>conda env list</code> shows <code>earth-course</code>.</p>
+            <p class="guide-note">Created <code>earth-course</code> on this computer before? conda will report that it already exists; go on to step 3. You do not need the data download scripts for lab work, because the cleaned datasets every notebook reads are already in <code>data/processed/</code>.</p>
+          </div>
+        </li>
+
+        <li class="guide-step" id="step-3">
+          <span class="step-number"><span class="sr-only">Step </span>3</span>
+          <div>
+            <h3>Add the Python and Jupyter extensions</h3>
+            <p>Open VS Code and press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd> (<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd> on macOS) to open the Extensions view. Search for and install <strong>Python</strong> and <strong>Jupyter</strong>, and check that Microsoft is the publisher of both.</p>
+            <p>VS Code may add companion extensions, such as Pylance, on its own. That is expected.</p>
+          </div>
+        </li>
+
+        <li class="guide-step" id="step-4">
+          <span class="step-number"><span class="sr-only">Step </span>4</span>
+          <div>
+            <h3>Open the course folder and trust it</h3>
+            <p>Choose <strong>File → Open Folder…</strong> and select the course folder from step 1, the one that contains <code>environment.yml</code>. The Explorer sidebar on the left then lists <code>data</code>, <code>notebooks</code>, <code>src</code>, and the other course folders.</p>
+            <p>When VS Code asks <strong>Do you trust the authors of the files in this folder?</strong>, choose <strong>Yes, I trust the authors</strong>. VS Code runs notebook cells only in folders you trust.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="guide-section" aria-labelledby="each-title">
+      <div class="guide-phase">
+        <p class="eyebrow">Part B · Every lab</p>
+        <h2 id="each-title">Open and run a lab notebook</h2>
+        <p>Repeat these steps each time you start or continue a lab.</p>
+      </div>
+
+      <ol class="guide-steps" role="list" start="5">
+        <li class="guide-step" id="step-5">
+          <span class="step-number"><span class="sr-only">Step </span>5</span>
+          <div>
+            <h3>Keep the notebook inside the course folder</h3>
+            <p>Lab notebooks belong in <code>notebooks/individual_labs/</code> or <code>notebooks/group_labs/</code> inside the course folder. The first code cell finds the course data by searching upward from the notebook's own location for a folder named <code>data</code>, so a notebook left in Downloads or on the Desktop cannot find it.</p>
+            <p>A notebook you download from the <a class="text-link" href="index.html#materials">Course materials</a> section lands in your Downloads folder. Move it into the matching subfolder before you open it.</p>
+            <p class="guide-note">Continuing a lab you started on another computer? Copy your in-progress <code>.ipynb</code> file to this computer (for example, through cloud storage, email, or a USB drive) and put it in the same subfolder.</p>
+          </div>
+        </li>
+
+        <li class="guide-step" id="step-6">
+          <span class="step-number"><span class="sr-only">Step </span>6</span>
+          <div>
+            <h3>Select the <code>earth-course</code> kernel</h3>
+            <p>In the Explorer sidebar, open the <code>notebooks</code> folder and click your <code>.ipynb</code> file.</p>
+            <p>Click <strong>Select Kernel</strong> in the top-right corner of the notebook, choose <strong>Python Environments…</strong>, and pick <code>earth-course</code> from the list.</p>
+            <p>The top-right corner now shows <code>earth-course</code>. VS Code usually remembers this choice for the notebook, but glance at that corner each time you open one.</p>
+          </div>
+        </li>
+
+        <li class="guide-step" id="step-7">
+          <span class="step-number"><span class="sr-only">Step </span>7</span>
+          <div>
+            <h3>Run the path cell first</h3>
+            <p>Click the run button (▷) to the left of the first code cell, or click inside the cell and press <kbd>Shift</kbd>+<kbd>Enter</kbd>. The output should look like this:</p>
+            <div class="terminal" role="region" aria-label="Expected path cell output" tabindex="0">
+              <div class="terminal-bar"><span></span><span></span><span></span><strong>Expected output (Windows example)</strong></div>
+              <pre><code>Project root: C:\Users\you\Documents\earth-environment-computing-course
+Processed data folder exists: True</code></pre>
+            </div>
+            <p><code>Project root</code> should be your course folder. If the second line reads <code>False</code>, stop and return to step 5 before you run anything else.</p>
+          </div>
+        </li>
+
+        <li class="guide-step" id="step-8">
+          <span class="step-number"><span class="sr-only">Step </span>8</span>
+          <div>
+            <h3>Save often, then restart and run all</h3>
+            <p>Save with <kbd>Ctrl</kbd>+<kbd>S</kbd> (<kbd>Cmd</kbd>+<kbd>S</kbd> on macOS). VS Code does not save on its own unless you turn on <strong>File → Auto Save</strong>.</p>
+            <p>Before you submit, click <strong>Restart</strong> in the notebook toolbar, then <strong>Run All</strong>. Every cell should run from top to bottom without an error; this is the same Restart and Run All check the course uses all semester.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="guide-section" id="troubleshooting" aria-labelledby="trouble-title">
+      <div class="guide-phase">
+        <p class="eyebrow">Troubleshooting</p>
+        <h2 id="trouble-title">If something goes wrong</h2>
+        <p>Find the message you see, then try the fix next to it.</p>
+      </div>
+      <div class="trouble-grid">
+        <article class="trouble-card">
+          <h3><code>conda</code> is not recognized, or command not found</h3>
+          <p>On Windows, open Anaconda Prompt from the Start menu; PowerShell, Command Prompt, and the VS Code terminal often cannot find conda. On macOS, quit and reopen Terminal after installing Anaconda.</p>
+        </article>
+        <article class="trouble-card">
+          <h3>conda cannot find <code>environment.yml</code></h3>
+          <p>The prompt is not in the course folder yet. Run <code>dir</code> (Windows) or <code>ls</code> (macOS) and confirm that <code>environment.yml</code> is listed. On Windows, if the folder is on a drive other than C:, use <code>cd /d</code> followed by the path.</p>
+        </article>
+        <article class="trouble-card">
+          <h3><code>earth-course</code> is missing from the kernel list</h3>
+          <p>Quit and reopen VS Code so it detects the new environment, then repeat step 6. If the name is still missing, run <code>conda env list</code> to check that step 2 finished without an error.</p>
+        </article>
+        <article class="trouble-card">
+          <h3><code>No module named 'pandas'</code>, or a prompt to install <code>ipykernel</code></h3>
+          <p>The notebook is using a different Python environment. Switch the kernel to <code>earth-course</code> (step 6), which already includes pandas, NumPy, Matplotlib, and <code>ipykernel</code>. Then click <strong>Restart</strong> and run the notebook from the first cell.</p>
+        </article>
+        <article class="trouble-card">
+          <h3><code>No module named 'earthcourse'</code></h3>
+          <p>Run the path cell first (step 7). It adds the course folder's <code>src</code> directory, where <code>earthcourse</code> lives, to Python's search path. If the error remains, the notebook is outside the course folder (step 5).</p>
+        </article>
+        <article class="trouble-card">
+          <h3><code>Processed data folder exists: False</code>, or <code>FileNotFoundError</code></h3>
+          <p>The notebook is outside the course folder. Move it into the matching <code>notebooks/</code> subfolder (step 5), reopen it from the VS Code Explorer, and click <strong>Restart</strong> before you run the path cell again.</p>
+        </article>
+        <article class="trouble-card">
+          <h3>Cells will not run, and VS Code mentions Restricted Mode</h3>
+          <p>The folder is not trusted yet. Click <strong>Restricted Mode</strong> at the left end of the status bar, at the bottom of the window, and trust the folder.</p>
+        </article>
+        <article class="trouble-card">
+          <h3>Creating the environment fails</h3>
+          <p>Copy the last lines of the error message and bring them to studio, or include them in an email to your instructor. Meanwhile, if you installed the full Anaconda Distribution, you can pick its <code>base</code> environment in step 6; it already includes every package these labs use.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="guide-section" aria-labelledby="jupyterlab-title">
+      <div class="guide-phase">
+        <p class="eyebrow">Alternative</p>
+        <h2 id="jupyterlab-title">Prefer JupyterLab?</h2>
+        <p>The commands in the course hub's <a class="text-link" href="index.html#setup">setup section</a> open the same notebooks in JupyterLab, in your web browser, with the same <code>earth-course</code> environment. From Anaconda Prompt or Terminal:</p>
+      </div>
+      <div class="terminal" role="region" aria-label="JupyterLab commands" tabindex="0">
+        <div class="terminal-bar"><span></span><span></span><span></span><strong>Anaconda Prompt or Terminal</strong></div>
+        <pre><code><span>cd</span> path/to/course-folder
+<span>conda</span> activate earth-course
+<span>jupyter</span> lab</code></pre>
+      </div>
+      <p class="guide-closing">In JupyterLab, the check before you submit is <strong>Kernel → Restart Kernel and Run All Cells…</strong>. Still stuck? Bring evidence to the next studio session: the full error message, the step you were on, and a screenshot that shows the kernel name in the notebook's top-right corner.</p>
+      <a class="text-link" href="index.html#setup">← Back to course setup</a>
+    </section>
+  </main>
+
+  <footer>
+    <div><strong>COURSE HUB</strong><span>Computational Methods for Earth &amp; Environmental Science</span></div>
+    <p>Open, reusable course materials</p>
+  </footer>
+</body>
+</html>

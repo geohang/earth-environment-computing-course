@@ -41,6 +41,7 @@ ALLOWED_FILES = {
     "src/earthcourse/spatial.py",
     "src/earthcourse/stats.py",
     "syllabus.md",
+    "vscode-setup.html",
 }
 
 ALLOWED_FILES.update(
