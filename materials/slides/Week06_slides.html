@@ -160,6 +160,19 @@
       line-height: 1.45; color: #d8e6ee; white-space: pre;
     }
     .code-note { margin-top: 16px; }
+    .code-output { display: grid; gap: 12px; margin-top: 12px; }
+    .code-output.side { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+    .block-label {
+      margin-bottom: 6px; font-size: 13px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .code-output .code-block { margin-top: 0; padding: 14px 22px; }
+    .code-output .code-block pre { font-size: 16px; line-height: 1.35; }
+    .code-block.output { background: rgba(255, 255, 255, 0.04); border-color: rgba(244, 197, 66, 0.35); }
+    .code-block.output pre { color: #efe3bd; }
+    .code-output + .code-note { margin-top: 10px; }
+    .code-output + .code-note li { font-size: 20px; }
+    .code-output + .code-note li + li { margin-top: 4px; }
     .footer {
       position: absolute; right: 28px; bottom: 20px; font-size: 14px; letter-spacing: 0.08em;
       text-transform: uppercase; color: rgba(224, 224, 224, 0.6);
@@ -173,7 +186,7 @@
 </head>
 <body>
 <div class="toolbar">
-  <div class="meta">Earth &amp; Environmental Computing | Week 06 | Course session | 22 slides</div>
+  <div class="meta">Earth &amp; Environmental Computing | Week 06 | Course session | 30 slides</div>
   <a href="#" id="download-link" download>Download HTML</a>
 </div>
 <div class="deck">
@@ -186,40 +199,161 @@
 weather[&quot;date&quot;].dt.year      # 2019 ... 2025
 weather[&quot;date&quot;].dt.month     # 1 ... 12
 weather[&quot;date&quot;].dt.dayofyear # 1 ... 366</pre></div><div class="code-note"><ul><li>parse_dates turns strings into timestamps at read time</li><li>The .dt accessor exposes calendar parts as columns</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 5</div></div>
-<div class="slide"><div class="kicker">Core Concept</div><h2>The Silent Failure of String Dates</h2><ul><li>Without parse_dates, dates are text</li><li>Filtering still runs, comparing alphabetically</li><li>&quot;2019-12-31&quot; &lt; &quot;2019-2-01&quot; as strings: true, and wrong</li><li>Check once: df.dtypes shows datetime64 or object</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 06 | 6</div></div>
-<div class="slide"><div class="kicker">Core Concept</div><h2>Groupby: Split, Apply, Combine</h2><div class="equation-box"><div class="equation">stream.groupby(stream[&quot;date&quot;].dt.month)[&quot;discharge_cfs&quot;].mean()</div><div class="variables"><div>split = rows into 12 month-groups</div><div>apply = mean within each group</div><div>combine = a 12-row table</div><div>answers: what is a TYPICAL May?</div></div></div><ul><li>Every May in the record contributes to the May number</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 06 | 7</div></div>
+<div class="slide"><div class="kicker">Live Code · Course Data</div><h2>Loading the Real Records with earthcourse</h2><div class="code-output"><div><div class="block-label">Python</div><div class="code-block"><pre>from earthcourse.io import read_processed_csv
+
+weather = read_processed_csv(&quot;iowa_city_weather_daily.csv&quot;, parse_dates=[&quot;date&quot;])
+stream  = read_processed_csv(&quot;iowa_streamflow_daily.csv&quot;,  parse_dates=[&quot;date&quot;])
+
+print(weather.shape, weather[&quot;date&quot;].min(), weather[&quot;date&quot;].max())
+print(stream.shape,  stream[&quot;date&quot;].min(),  stream[&quot;date&quot;].max())
+weather[[&quot;date&quot;, &quot;temp_mean_c&quot;, &quot;precipitation_mm&quot;]].dtypes
+</pre></div></div><div><div class="block-label">Output</div><div class="code-block output"><pre>(2549, 13) 2019-01-01 00:00:00 2025-12-30 00:00:00
+(4018, 7) 2015-01-01 00:00:00 2025-12-31 00:00:00
+
+date                datetime64[ns]
+temp_mean_c                float64
+precipitation_mm           float64
+dtype: object</pre></div></div></div><div class="code-note"><ul><li>read_processed_csv finds data/processed from any notebook folder and passes parse_dates to pandas</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 6</div></div>
+<div class="slide"><div class="kicker">Core Concept</div><h2>The Silent Failure of String Dates</h2><ul><li>Without parse_dates, dates are text</li><li>Filtering still runs, comparing alphabetically</li><li>&quot;2019-12-31&quot; &lt; &quot;2019-2-01&quot; as strings: true, and wrong</li><li>Check once: df.dtypes shows datetime64 or object</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 06 | 7</div></div>
+<div class="slide"><div class="kicker">Live Code · Silent Failure</div><h2>The String-Date Bug, Measured on Our Weather File</h2><div class="code-output"><div><div class="block-label">Python</div><div class="code-block"><pre>raw = read_processed_csv(&quot;iowa_city_weather_daily.csv&quot;)   # no parse_dates
+raw[&quot;date&quot;].dtype                            # object: text, not datetime64
+
+len(raw[raw[&quot;date&quot;] &gt;= &quot;2019-6-1&quot;])          # compares characters
+len(weather[weather[&quot;date&quot;] &gt;= &quot;2019-6-1&quot;])  # compares dates
+</pre></div></div><div><div class="block-label">Output</div><div class="code-block output"><pre>2184
+2398</pre></div></div></div><div class="code-note"><ul><li>214 rows lost: every day from June through December 2019</li><li>&quot;2019-06-15&quot; &lt; &quot;2019-6-1&quot; because the character &quot;0&quot; sorts before &quot;6&quot;; no error, no warning</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 8</div></div>
+<div class="slide"><div class="kicker">Core Concept</div><h2>Groupby: Split, Apply, Combine</h2><div class="equation-box"><div class="equation">stream.groupby(stream[&quot;date&quot;].dt.month)[&quot;discharge_cfs&quot;].mean()</div><div class="variables"><div>split = rows into 12 month-groups</div><div>apply = mean within each group</div><div>combine = a 12-row table</div><div>answers: what is a TYPICAL May?</div></div></div><ul><li>Every May in the record contributes to the May number</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 06 | 9</div></div>
+<div class="slide"><div class="kicker">Live Code · Groupby</div><h2>Monthly Climatology of the Iowa River, 2015-2025</h2><div class="code-output side"><div><div class="block-label">Python</div><div class="code-block"><pre>clim = (stream
+        .groupby(stream[&quot;date&quot;].dt.month)
+        [&quot;discharge_cfs&quot;]
+        .mean()
+        .round(1))
+clim
+
+# the same pattern in the course package:
+from earthcourse.hydro import annual_mean_flow
+annual_mean_flow(stream)   # groupby(&quot;year&quot;)
+</pre></div></div><div><div class="block-label">Output</div><div class="code-block output"><pre>date
+1     1817.0
+2     1756.5
+3     3365.7
+4     3415.6
+5     3896.4
+6     4412.1
+7     3649.0
+8     1922.1
+9     1711.7
+10    2538.2
+11    1969.9
+12    2032.3
+Name: discharge_cfs, dtype: float64</pre></div></div></div><div class="code-note"><ul><li>12 rows from 4018 days: June is the typical high-flow month, September the low</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 10</div></div>
 <div class="slide"><div class="kicker">Core Concept</div><h2>Resample: Calendar-Aware Aggregation</h2><div class="code-block"><pre>monthly = (weather.set_index(&quot;date&quot;)
            .resample(&quot;MS&quot;)
            .agg({&quot;temp_mean_c&quot;: &quot;mean&quot;,
-                 &quot;precipitation_mm&quot;: &quot;sum&quot;}))</pre></div><div class="code-note"><ul><li>Needs a datetime index: set_index first</li><li>Knows February is short; no fixed-window trick does</li><li>Answers: what happened in May 2019, specifically?</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 8</div></div>
-<div class="slide"><div class="kicker">Core Concept</div><h2>Groupby Month vs Resample Month</h2><div class="two-col"><div class="panel"><h3>groupby(month)</h3><ul><li>12 rows, the climatology</li><li>A typical year, month by month</li><li>Every May averaged together</li></ul></div><div class="panel"><h3>resample(&quot;MS&quot;)</h3><ul><li>One row per actual month</li><li>The historical sequence</li><li>May 2019 stands alone</li></ul></div></div><div class="note">Conflating these two is the most common error of the week.</div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 9</div></div>
-<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Which tool answers: was May 2019 an unusual month for the Iowa River?</p></div><div class="pause-points"><div>Both, together: resample gives May 2019, groupby gives typical May</div><div>The difference between them is the anomaly</div></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 10</div></div>
-<div class="slide"><div class="kicker">The Science</div><h2>Aggregation Is a Scientific Choice</h2><ul><li>Monthly temperature: a mean</li><li>Monthly precipitation: a sum</li><li>Monthly discharge: a mean of a rate</li><li>A monthly mean of daily rainfall answers a different question</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 06 | 11</div></div>
+                 &quot;precipitation_mm&quot;: &quot;sum&quot;}))</pre></div><div class="code-note"><ul><li>Needs a datetime index: set_index first</li><li>Knows February is short; no fixed-window trick does</li><li>Answers: what happened in May 2019, specifically?</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 11</div></div>
+<div class="slide"><div class="kicker">Live Code · Resample</div><h2>Resample on Real Weather: January to August 2019</h2><div class="code-output side"><div><div class="block-label">Python</div><div class="code-block"><pre>monthly = (weather.set_index(&quot;date&quot;)
+                  .resample(&quot;MS&quot;)
+                  .agg({&quot;temp_mean_c&quot;: &quot;mean&quot;,
+                        &quot;precipitation_mm&quot;: &quot;sum&quot;})
+                  .round(1))
+
+monthly.loc[&quot;2019-01&quot;:&quot;2019-08&quot;]
+</pre></div></div><div><div class="block-label">Output</div><div class="code-block output"><pre>            temp_mean_c  precipitation_mm
+date
+2019-01-01         -6.7              28.4
+2019-02-01         -6.1              67.6
+2019-03-01          1.4              51.1
+2019-04-01         10.6             112.5
+2019-05-01         15.2             255.3
+2019-06-01         21.9              81.8
+2019-07-01         26.5              34.0
+2019-08-01         22.9             122.2</pre></div></div></div><div class="code-note"><ul><li>May 2019: 255 mm of rain, the wettest month in this window</li><li>The Iowa River peaked for the year on 2019-05-29 at 12,600 cfs</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 12</div></div>
+<div class="slide"><div class="kicker">Core Concept</div><h2>Groupby Month vs Resample Month</h2><div class="two-col"><div class="panel"><h3>groupby(month)</h3><ul><li>12 rows, the climatology</li><li>A typical year, month by month</li><li>Every May averaged together</li></ul></div><div class="panel"><h3>resample(&quot;MS&quot;)</h3><ul><li>One row per actual month</li><li>The historical sequence</li><li>May 2019 stands alone</li></ul></div></div><div class="note">Conflating these two is the most common error of the week.</div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 13</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Which tool answers: was May 2019 an unusual month for the Iowa River?</p></div><div class="pause-points"><div>Both, together: resample gives May 2019, groupby gives typical May</div><div>The difference between them is the anomaly</div></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 14</div></div>
+<div class="slide"><div class="kicker">The Science</div><h2>Aggregation Is a Scientific Choice</h2><ul><li>Monthly temperature: a mean</li><li>Monthly precipitation: a sum</li><li>Monthly discharge: a mean of a rate</li><li>A monthly mean of daily rainfall answers a different question</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 06 | 15</div></div>
 <div class="slide"><div class="kicker">Core Concept</div><h2>Rolling Windows and Anomalies</h2><div class="code-block"><pre>s = stream.set_index(&quot;date&quot;).sort_index()
 s[&quot;rolling_30d&quot;] = s[&quot;discharge_cfs&quot;].rolling(30, min_periods=15).mean()
 
 clim = s.groupby(s.index.month)[&quot;discharge_cfs&quot;].mean()
-s[&quot;anomaly&quot;] = s[&quot;discharge_cfs&quot;] - s.index.month.map(clim)</pre></div><div class="code-note"><ul><li>Rolling smooths storms without snapping to calendar edges</li><li>Anomaly = observed minus what is normal for that month</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 12</div></div>
+s[&quot;anomaly&quot;] = s[&quot;discharge_cfs&quot;] - s.index.month.map(clim)</pre></div><div class="code-note"><ul><li>Rolling smooths storms without snapping to calendar edges</li><li>Anomaly = observed minus what is normal for that month</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 16</div></div>
+<div class="slide"><div class="kicker">Live Code · Anomaly</div><h2>Monthly Anomalies in 2024: Low Winter, Wet Summer</h2><div class="code-output side"><div><div class="block-label">Python</div><div class="code-block"><pre>s = stream.set_index(&quot;date&quot;)[&quot;discharge_cfs&quot;]
+m = s.resample(&quot;MS&quot;).mean()          # actual months
+clim = m.groupby(m.index.month).mean() # typical month
+
+anom = m - m.index.month.map(clim)
+anom.loc[&quot;2024&quot;].round(0)
+</pre></div></div><div><div class="block-label">Output</div><div class="code-block output"><pre>date
+2024-01-01   -1645.0
+2024-02-01   -1263.0
+2024-03-01   -3031.0
+2024-04-01   -2228.0
+2024-05-01    1981.0
+2024-06-01    1295.0
+2024-07-01    1106.0
+2024-08-01    -126.0
+2024-09-01   -1349.0
+2024-10-01   -2362.0
+2024-11-01   -1098.0
+2024-12-01   -1071.0
+Freq: MS, Name: discharge_cfs, dtype: float64</pre></div></div></div><div class="code-note"><ul><li>January to April 2024 ran 1,260 to 3,030 cfs below normal; May to July ran well above</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 17</div></div>
+<div class="slide"><div class="kicker">From the Course Repo</div><h2>Rolling and Groupby Inside earthcourse.hydro</h2><div class="code-output"><div><div class="block-label">Python</div><div class="code-block"><pre>from earthcourse.hydro import annual_peak_flow, seven_day_low_flow
+
+peaks = annual_peak_flow(stream)     # groupby year, then idxmax
+low7  = seven_day_low_flow(stream)   # reindex to every day, rolling(7, min_periods=7)
+
+peaks.merge(low7, on=&quot;year&quot;).round(1).tail(6)
+</pre></div></div><div><div class="block-label">Output</div><div class="code-block output"><pre>    year   peak_date  peak_discharge_cfs  low7_discharge_cfs
+5   2020  2020-07-02             10400.0               224.4
+6   2021  2021-03-10              7910.0               184.4
+7   2022  2022-05-06              6770.0               172.1
+8   2023  2023-03-04              6480.0                89.3
+9   2024  2024-05-28             10600.0               140.4
+10  2025  2025-08-10             10700.0               293.3</pre></div></div></div><div class="code-note"><ul><li>seven_day_low_flow reindexes to a full calendar so a missing day breaks the window</li><li>2023 holds the lowest 7-day flow in the 2015-2025 record: 89.3 cfs</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 18</div></div>
 <div class="slide"><div class="kicker">Core Concept</div><h2>Merging Two Records</h2><div class="code-block"><pre>merged = weather.merge(stream[[&quot;date&quot;, &quot;discharge_cfs&quot;]],
                        on=&quot;date&quot;, how=&quot;inner&quot;)
 
-len(weather)   # 2019-2025 weather days
-len(stream)    # 2015-2025 flow days
-len(merged)    # the overlap only</pre></div><div class="code-note"><ul><li>Inner join keeps dates present in BOTH tables</li><li>len() before and after, every merge, every time</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 13</div></div>
-<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Weather starts in 2019, streamflow in 2015. After an inner merge on date, what date range survives, and where did 2015-2018 go?</p></div><div class="pause-points"><div>2019-2025 survives: the intersection</div><div>2015-2018 flow rows dropped silently: only len() shows it</div></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 14</div></div>
-<div class="slide"><div class="kicker">Worked Example</div><h2>How Fast Does the River Answer the Rain?</h2><div class="example-grid"><div class="example-step"><h3>Given</h3><p>The five largest daily rainfalls in the merged 2019-2025 record.</p></div><div class="example-step"><h3>Solve</h3><p>For each event, read flow on day 0 and the peak within the next five days.</p></div><div class="example-step"><h3>Interpret</h3><p>Days-to-peak column shows the watershed&#x27;s response time, event by event.</p></div></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 15</div></div>
-<div class="slide"><div class="kicker">Visual Summary</div><h2>Four Tools, Four Questions</h2><div class="cards cols-4"><div class="card"><h3>groupby</h3><p>What is typical?</p></div><div class="card"><h3>resample</h3><p>What actually happened, period by period?</p></div><div class="card"><h3>rolling</h3><p>What is the smoothed trend?</p></div><div class="card"><h3>merge</h3><p>How do two records line up?</p></div></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 16</div></div>
-<div class="slide"><div class="kicker">Core Concept</div><h2>Date Arithmetic for Event Windows</h2><div class="code-block"><pre>event = pd.Timestamp(&quot;2024-06-18&quot;)
+len(weather)   # 2549  (2019-01-01 to 2025-12-30)
+len(stream)    # 4018  (2015-01-01 to 2025-12-31)
+len(merged)    # 2549  -&gt; 1469 flow days dropped</pre></div><div class="code-note"><ul><li>Inner join keeps dates present in BOTH tables</li><li>len() before and after, every merge, every time</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 19</div></div>
+<div class="slide"><div class="kicker">Pause &amp; Think</div><h2>Concept Check</h2><div class="pause-box"><p>Weather starts in 2019, streamflow in 2015. After an inner merge on date, what date range survives, and where did 2015-2018 go?</p></div><div class="pause-points"><div>2019-2025 survives: the intersection</div><div>2015-2018 flow rows dropped silently: only len() shows it</div></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 20</div></div>
+<div class="slide"><div class="kicker">Worked Example</div><h2>How Fast Does the River Answer the Rain?</h2><div class="example-grid"><div class="example-step"><h3>Given</h3><p>The five largest daily rainfalls in the merged 2019-2025 record.</p></div><div class="example-step"><h3>Solve</h3><p>For each event, read flow on day 0 and the peak within the next five days.</p></div><div class="example-step"><h3>Interpret</h3><p>Days-to-peak column shows the watershed&#x27;s response time, event by event.</p></div></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 21</div></div>
+<div class="slide"><div class="kicker">Live Code · Worked Example</div><h2>The Event-Response Table, Computed</h2><div class="code-output"><div><div class="block-label">Python</div><div class="code-block"><pre>merged = weather.merge(stream[[&quot;date&quot;, &quot;discharge_cfs&quot;]], on=&quot;date&quot;, how=&quot;inner&quot;)
+flow   = stream.set_index(&quot;date&quot;)[&quot;discharge_cfs&quot;]
+events = merged.nlargest(5, &quot;precipitation_mm&quot;)
+rows = []
+for day, rain in zip(events[&quot;date&quot;], events[&quot;precipitation_mm&quot;]):
+    w = flow.loc[day : day + pd.Timedelta(days=5)]
+    rows.append({&quot;date&quot;: day.date(), &quot;rain_mm&quot;: round(rain, 1),
+                 &quot;flow_day0&quot;: w.iloc[0], &quot;peak_cfs&quot;: w.max(),
+                 &quot;days_to_peak&quot;: (w.idxmax() - day).days})
+pd.DataFrame(rows)
+</pre></div></div><div><div class="block-label">Output</div><div class="code-block output"><pre>         date  rain_mm  flow_day0  peak_cfs  days_to_peak
+0  2020-06-09     88.4     7700.0    7700.0             0
+1  2024-06-20     67.3     2660.0    3600.0             4
+2  2024-08-15     64.3     3070.0    3070.0             0
+3  2024-04-02     59.4     1820.0    2210.0             1
+4  2021-10-24     56.6      537.0    1240.0             5</pre></div></div></div><div class="code-note"><ul><li>Response ranges from 0 to 5 days; a day-5 peak sits on the window edge, so widen and recheck</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 22</div></div>
+<div class="slide"><div class="kicker">Visual Summary</div><h2>Four Tools, Four Questions</h2><div class="cards cols-4"><div class="card"><h3>groupby</h3><p>What is typical?</p></div><div class="card"><h3>resample</h3><p>What actually happened, period by period?</p></div><div class="card"><h3>rolling</h3><p>What is the smoothed trend?</p></div><div class="card"><h3>merge</h3><p>How do two records line up?</p></div></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 23</div></div>
+<div class="slide"><div class="kicker">Core Concept</div><h2>Date Arithmetic for Event Windows</h2><div class="code-block"><pre>event = pd.Timestamp(&quot;2024-06-20&quot;)
 window = flow_by_date.loc[event : event + pd.Timedelta(days=5)]
 
-window.iloc[0]              # flow on the rain day
-window.max()                # peak within five days
-window.to_numpy().argmax()  # days until that peak</pre></div><div class="code-note"><ul><li>Timedelta makes calendar windows explicit</li><li>This exact pattern builds the lab&#x27;s event-response table</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 17</div></div>
-<div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Lab 6: Time Series for Streamflow and Weather</h2><div class="two-col"><div class="panel"><h3>Lab session</h3><ul><li>Monthly summaries with the right aggregations</li><li>Precipitation-discharge comparison figure</li><li>30-day rolling mean</li></ul></div><div class="panel"><h3>Studio session</h3><ul><li>2024 anomaly plot</li><li>Event-response table: days to peak</li><li>Monthly correlation versus daily</li></ul></div></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 18</div></div>
-<div class="slide"><div class="kicker">Pitfalls</div><h2>Where This Week Goes Wrong</h2><ul><li>Resample without a datetime index</li><li>Precipitation averaged when it should be summed</li><li>Climatology table confused with the full-length column</li><li>Merge losses discovered three cells too late</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 06 | 19</div></div>
-<div class="slide"><div class="kicker">Bridge</div><h2>Connection to Next Week</h2><table class="comparison-table"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Compute the numbers</td><td>Scientific visualization</td><td>Group labs begin: make the pattern visible and defensible</td></tr></tbody></table><div class="footer">Earth &amp; Environmental Computing | Week 06 | 20</div></div>
-<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>parse_dates first; .dt unlocks the calendar</li><li>groupby = typical, resample = actual</li><li>Sum precipitation, average temperature</li><li>Count rows before and after every merge</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 06 | 21</div></div>
-<div class="slide"><div class="kicker">Discussion</div><h2>Before You Leave</h2><div class="pause-box"><p>Estimate before you compute: how many days should the Iowa River take to peak after a big rain, and what controls that number?</p></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 22</div></div>
+window.iloc[0]              # 2660.0 cfs on the rain day
+window.max()                # 3600.0 cfs peak in 5 days
+window.to_numpy().argmax()  # 4 days to peak</pre></div><div class="code-note"><ul><li>Timedelta makes calendar windows explicit</li><li>This exact pattern builds the lab&#x27;s event-response table</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 24</div></div>
+<div class="slide"><div class="kicker">This Week&#x27;s Lab</div><h2>Lab 6: Time Series for Streamflow and Weather</h2><div class="two-col"><div class="panel"><h3>Lab session</h3><ul><li>Monthly summaries with the right aggregations</li><li>Precipitation-discharge comparison figure</li><li>30-day rolling mean</li></ul></div><div class="panel"><h3>Studio session</h3><ul><li>2024 anomaly plot</li><li>Event-response table: days to peak</li><li>Monthly correlation versus daily</li></ul></div></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 25</div></div>
+<div class="slide"><div class="kicker">Lab Preview · Studio Session</div><h2>Daily vs Monthly Correlation, Rain to River</h2><div class="code-output"><div><div class="block-label">Python</div><div class="code-block"><pre>daily_r = merged[&quot;precipitation_mm&quot;].corr(merged[&quot;discharge_cfs&quot;])
+
+monthly = (merged.set_index(&quot;date&quot;)
+                 .resample(&quot;MS&quot;)
+                 .agg({&quot;precipitation_mm&quot;: &quot;sum&quot;, &quot;discharge_cfs&quot;: &quot;mean&quot;}))
+monthly_r = monthly[&quot;precipitation_mm&quot;].corr(monthly[&quot;discharge_cfs&quot;])
+
+print(f&quot;daily r = {daily_r:.3f}   monthly r = {monthly_r:.3f}&quot;)
+</pre></div></div><div><div class="block-label">Output</div><div class="code-block output"><pre>daily r = 0.107   monthly r = 0.428</pre></div></div></div><div class="code-note"><ul><li>Same data, four times the correlation: flow answers rain days later, so same-day pairs miss the link</li><li>Aggregation choice changes the answer, so state it in every figure caption</li></ul></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 26</div></div>
+<div class="slide"><div class="kicker">Pitfalls</div><h2>Where This Week Goes Wrong</h2><ul><li>Resample without a datetime index</li><li>Precipitation averaged when it should be summed</li><li>Climatology table confused with the full-length column</li><li>Merge losses discovered three cells too late</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 06 | 27</div></div>
+<div class="slide"><div class="kicker">Bridge</div><h2>Connection to Next Week</h2><table class="comparison-table"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Compute the numbers</td><td>Scientific visualization</td><td>Group labs begin: make the pattern visible and defensible</td></tr></tbody></table><div class="footer">Earth &amp; Environmental Computing | Week 06 | 28</div></div>
+<div class="slide"><div class="kicker">Summary</div><h2>Key Takeaways</h2><ul><li>parse_dates first; .dt unlocks the calendar</li><li>groupby = typical, resample = actual</li><li>Sum precipitation, average temperature</li><li>Count rows before and after every merge</li></ul><div class="footer">Earth &amp; Environmental Computing | Week 06 | 29</div></div>
+<div class="slide"><div class="kicker">Discussion</div><h2>Before You Leave</h2><div class="pause-box"><p>Estimate before you compute: how many days should the Iowa River take to peak after a big rain, and what controls that number?</p></div><div class="footer">Earth &amp; Environmental Computing | Week 06 | 30</div></div>
 </div>
 <script>
     function buildDownloadBlob() {
