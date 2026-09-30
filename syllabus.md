@@ -60,6 +60,16 @@ Each student lab contains guided examples, a graded checkpoint requiring new
 code or analysis, a written scientific explanation, and a debrief card. An
 unchanged guided notebook does not satisfy the graded checkpoint.
 
+## Group lab pairs
+
+Each group lab is written for two partners. Both partners run a shared start
+together. Partner A then completes Module A and Partner B completes Module B,
+each with its own graded task and named hand-off variables, so neither partner
+waits for the other. A joint finish combines the two results, and in it each
+partner checks one number from the other partner's module. Partners swap
+letters from one group lab to the next and submit one notebook per pair, with a
+contribution record and one debrief card each.
+
 ## Responsible AI-assisted coding
 
 When allowed, students may use AI coding tools for debugging, refactoring,
