@@ -186,6 +186,37 @@ Processed data folder exists: True</code></pre>
           <h3>Creating the environment fails</h3>
           <p>Copy the last lines of the error message and bring them to studio, or include them in an email to your instructor. Meanwhile, if you installed the full Anaconda Distribution, you can pick its <code>base</code> environment in step 6; it already includes every package these labs use.</p>
         </article>
+        <article class="trouble-card wide" id="kernel-crash">
+          <h3>The kernel crashes, or VS Code says the kernel died</h3>
+          <p>A crash with no Python error message points to the Python environment on this computer. If the same notebook runs on another computer, the notebook itself is fine. Work through these checks in order.</p>
+          <ol class="trouble-steps">
+            <li>
+              <p><strong>Check the kernel.</strong> The name at the top right of the notebook should read <code>earth-course</code>. If it shows <code>base</code>, another Python version, or a Microsoft Store Python, switch it (step 6).</p>
+            </li>
+            <li>
+              <p><strong>Test the environment outside Jupyter.</strong> Run the two lines below in Anaconda Prompt or Terminal. If they print <code>OK</code> and create <code>test_plot.png</code>, the environment works and the problem is in Jupyter. If they show an error, that message is the clue to fix.</p>
+              <div class="terminal" role="region" aria-label="Environment test commands" tabindex="0">
+                <div class="terminal-bar"><span></span><span></span><span></span><strong>Anaconda Prompt or Terminal</strong></div>
+                <pre><code><span>conda</span> activate earth-course
+<span>python</span> -c "import pandas, matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt; plt.plot([1, 2, 3]); plt.savefig('test_plot.png'); print('OK', pandas.__version__, matplotlib.__version__)"</code></pre>
+              </div>
+            </li>
+            <li>
+              <p><strong>Read the Jupyter log.</strong> Click <strong>View Jupyter log</strong> in the crash message, or open the <strong>Output</strong> panel and choose <strong>Jupyter</strong>. The last lines usually name the actual error.</p>
+            </li>
+            <li>
+              <p><strong>Rebuild the environment.</strong> In Anaconda Prompt or Terminal, go to the course folder (as in step 2), then remove <code>earth-course</code> and create it again. Reopen VS Code, select <code>earth-course</code> (step 6), and click <strong>Restart</strong>.</p>
+              <div class="terminal" role="region" aria-label="Environment rebuild commands" tabindex="0">
+                <div class="terminal-bar"><span></span><span></span><span></span><strong>Anaconda Prompt or Terminal</strong></div>
+                <pre><code><span>conda</span> deactivate
+<span>conda</span> env remove -n earth-course
+<span>conda</span> env create -f environment.yml</code></pre>
+              </div>
+              <p>Avoid installing extra packages into <code>earth-course</code> with <code>pip</code>; mixing pip and conda installs is one common cause of crashes.</p>
+            </li>
+          </ol>
+          <p>Still crashing? Bring the last lines of the Jupyter log to studio, or include them in an email to your instructor. Until it is fixed, you can keep working on any computer where the course environment runs.</p>
+        </article>
       </div>
     </section>
 
