@@ -224,6 +224,24 @@ p { margin: 0 0 var(--space-3, 12px); }
   margin: 0; text-align: center; white-space: pre-wrap;
 }
 
+/* Formulas built from CSS rather than from characters. The two fonts ship as
+   latin subsets, so a deck that spells a formula with box-drawing rules and
+   Unicode sub- and superscripts loses them to a fallback font, which breaks
+   the alignment of the block it sits in. Structure survives; glyphs do not. */
+.math {
+  font-family: var(--font-mono); font-size: 30px; line-height: 50px;
+  padding: 32px; background: var(--color-neutral-900); color: var(--color-neutral-100);
+}
+.math .row { margin: 0 0 20px; }
+.math .row:last-child { margin-bottom: 0; }
+.math sub, .math sup { font-size: 0.6em; line-height: 0; }
+.math .frac {
+  display: inline-flex; flex-direction: column; text-align: center;
+  vertical-align: -0.55em; margin: 0 8px;
+}
+.math .frac > span:first-child { border-bottom: 2px solid currentColor; padding: 0 12px 6px; }
+.math .frac > span:last-child { padding: 6px 12px 0; }
+
 .check { justify-content: center; gap: 56px; }
 .check .q-mark {
   font-family: var(--font-heading); font-weight: var(--font-heading-weight);
@@ -347,16 +365,13 @@ img { display: block; max-width: 100%; }
 <div class="pair-even" style="margin-top:0">
   <div>
     <p class="code-label">Equation</p>
-    <pre class="code" style="--cs:26px;--cl:42px">x̄ = (1/n) Σ xᵢ
-
-median = middle value,
-         once sorted</pre>
+    <div class="math"><div class="row">x&#772; = (1/n) sum of x<sub>i</sub></div><div class="row">median = the middle value, once sorted</div></div>
   </div>
   <div>
     <p class="code-label">Five days of flow, hundreds of cfs</p>
     <pre class="code out" style="--cs:24px;--cl:38px">Sorted:  2, 3, 3, 4, 18
 
-x̄      = (2+3+3+4+18) / 5
+mean   = (2+3+3+4+18) / 5
        = 30 / 5 = 6
 
 median = 3rd of 5 sorted = 3</pre>
@@ -371,19 +386,17 @@ median = 3rd of 5 sorted = 3</pre>
 <div class="pair-even" style="margin-top:0">
   <div>
     <p class="code-label">Equation</p>
-    <pre class="code" style="--cs:26px;--cl:42px">g = (1/n) Σ ((xᵢ − x̄) / s)³
-
-z = log₁₀ x   ⇔   x = 10ᶻ</pre>
+    <div class="math"><div class="row">g = (1/n) sum of (<span class="frac"><span>x<sub>i</sub> &#8722; x&#772;</span><span>s</span></span>)<sup>3</sup></div><div class="row">z = log<sub>10</sub> x, &nbsp; so &nbsp; x = 10<sup>z</sup></div></div>
   </div>
   <div>
     <p class="code-label">Flow that doubles each step</p>
     <pre class="code out" style="--cs:24px;--cl:38px">Raw:    100, 200, 400, 800, 1600 cfs
         g = 0.89
 
-log₁₀:  2.0, 2.3, 2.6, 2.9, 3.2
+log10:  2.0, 2.3, 2.6, 2.9, 3.2
         g = 0
 
-+0.30 in log₁₀ = ×2 in cfs;  +1 = ×10</pre>
++0.30 in log10 = ×2 in cfs;  +1 = ×10</pre>
   </div>
 </div>
 <div class="callout">Same five values. On the raw axis the gaps grow; in log10 they are equal.</div><div class="page-foot" aria-hidden="true"></div></div></div>
@@ -395,19 +408,17 @@ log₁₀:  2.0, 2.3, 2.6, 2.9, 3.2
 <div class="pair-even" style="margin-top:0">
   <div>
     <p class="code-label">Equation</p>
-    <pre class="code" style="--cs:26px;--cl:42px">      Σ (xᵢ − x̄)(yᵢ − ȳ)
-r = ──────────────────────────
-    √( Σ(xᵢ−x̄)² · Σ(yᵢ−ȳ)² )</pre>
+    <div class="math"><div class="row">r = <span class="frac"><span>sum of (x<sub>i</sub> &#8722; x&#772;)(y<sub>i</sub> &#8722; y&#772;)</span><span>sqrt( sum of (x<sub>i</sub> &#8722; x&#772;)<sup>2</sup> &#183; sum of (y<sub>i</sub> &#8722; y&#772;)<sup>2</sup> )</span></span></div></div>
   </div>
   <div>
     <p class="code-label">Five weeks of rain (x) and flow (y)</p>
     <pre class="code out" style="--cs:24px;--cl:38px">x = 1, 2, 3, 4, 5
-y = 1, 3, 2, 5, 4       x̄ = ȳ = 3
+y = 1, 3, 2, 5, 4      mean x = mean y = 3
 
-Σ(x−x̄)(y−ȳ) = 4+0+0+2+2 = 8
-Σ(x−x̄)² = 10    Σ(y−ȳ)² = 10
+sum (x-mx)(y-my) = 4+0+0+2+2 = 8
+sum (x-mx)² = 10    sum (y-my)² = 10
 
-r = 8 / √(10 × 10) = 0.80</pre>
+r = 8 / sqrt(10 × 10) = 0.80</pre>
   </div>
 </div>
 <div class="callout">Most points sit upper-right or lower-left of the means, so the products are positive.</div><div class="page-foot" aria-hidden="true"></div></div></div>
@@ -419,12 +430,10 @@ r = 8 / √(10 × 10) = 0.80</pre>
 <div class="pair-even" style="margin-top:0">
   <div>
     <p class="code-label">Equation</p>
-    <pre class="code" style="--cs:26px;--cl:42px">eᵢ  = yᵢ − ŷᵢ
-
-SSE = Σ eᵢ²   →   minimum</pre>
+    <div class="math"><div class="row">e<sub>i</sub> = y<sub>i</sub> &#8722; yhat<sub>i</sub></div><div class="row">SSE = sum of e<sub>i</sub><sup>2</sup>, made as small as possible</div></div>
   </div>
   <div>
-    <p class="code-label">Same five points, line ŷ = 0.6 + 0.8x</p>
+    <p class="code-label">Same five points, line yhat = 0.6 + 0.8x</p>
     <pre class="code out" style="--cs:24px;--cl:38px">Residuals:
   −0.4, +0.8, −1.0, +1.2, −0.6
 
@@ -443,24 +452,18 @@ Every other straight line gives a larger SSE</pre>
 <div class="pair-even" style="margin-top:0">
   <div>
     <p class="code-label">Equation</p>
-    <pre class="code" style="--cs:26px;--cl:42px">ŷ = b₀ + b₁x
-
-     Σ (xᵢ − x̄)(yᵢ − ȳ)
-b₁ = ────────────────────
-        Σ (xᵢ − x̄)²
-
-b₀ = ȳ − b₁x̄</pre>
+    <div class="math"><div class="row">yhat = b<sub>0</sub> + b<sub>1</sub>x</div><div class="row">b<sub>1</sub> = <span class="frac"><span>sum of (x<sub>i</sub> &#8722; x&#772;)(y<sub>i</sub> &#8722; y&#772;)</span><span>sum of (x<sub>i</sub> &#8722; x&#772;)<sup>2</sup></span></span></div><div class="row">b<sub>0</sub> = y&#772; &#8722; b<sub>1</sub>x&#772;</div></div>
   </div>
   <div>
     <p class="code-label">Same five points</p>
-    <pre class="code out" style="--cs:24px;--cl:38px">b₁ = 8 / 10 = 0.8
-b₀ = 3 − 0.8 × 3 = 0.6
+    <pre class="code out" style="--cs:24px;--cl:38px">b1 = 8 / 10 = 0.8
+b0 = 3 − 0.8 × 3 = 0.6
 
-If y is log₁₀ flow:
-  +0.8 in log₁₀ = ×10⁰·⁸ = ×6.3 in cfs</pre>
+If y is log10 flow:
+  +0.8 in log10 = ×10^0.8 = ×6.3 in cfs</pre>
   </div>
 </div>
-<div class="callout">b₁ uses the same sum as r: 8. Dividing by Σ(x − x̄)² instead puts it in units of y per x.</div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="callout">b1 uses the same sum as r: 8. Dividing by the sum of (x − mean)² instead puts it in units of y per x.</div><div class="page-foot" aria-hidden="true"></div></div></div>
 <div class="frame"><div class="slide content" data-speaker-notes="Show that r² equals r squared on this example, then warn that it only holds for one predictor and a fitted intercept." data-label="Concept 6"><div class="kicker"><span>Part 1 · Concept 6 of 7</span></div><h2 class="slide-title">r², the Share of Spread Explained</h2>
 <div class="rise" style="margin-top:44px">
   <p class="code-label">Definition</p>
@@ -469,10 +472,7 @@ If y is log₁₀ flow:
 <div class="pair-even" style="margin-top:0">
   <div>
     <p class="code-label">Equation</p>
-    <pre class="code" style="--cs:26px;--cl:42px">r² = 1 − SSE / SST
-
-SST = Σ (yᵢ − ȳ)²
-SSE = Σ (yᵢ − ŷᵢ)²</pre>
+    <div class="math"><div class="row">r<sup>2</sup> = 1 &#8722; <span class="frac"><span>SSE</span><span>SST</span></span></div><div class="row">SST = sum of (y<sub>i</sub> &#8722; y&#772;)<sup>2</sup></div><div class="row">SSE = sum of (y<sub>i</sub> &#8722; yhat<sub>i</sub>)<sup>2</sup></div></div>
   </div>
   <div>
     <p class="code-label">Same five points</p>
@@ -493,18 +493,16 @@ r² = 1 − 3.6 / 10
 <div class="pair-even" style="margin-top:0">
   <div>
     <p class="code-label">Equation</p>
-    <pre class="code" style="--cs:26px;--cl:42px">RMSE = √( (1/n) Σ (yᵢ − ŷᵢ)² )
-
-     = √( SSE / n )</pre>
+    <div class="math"><div class="row">RMSE = sqrt( (1/n) sum of (y<sub>i</sub> &#8722; yhat<sub>i</sub>)<sup>2</sup> )</div><div class="row">&nbsp;&nbsp;&nbsp;&nbsp; = sqrt( <span class="frac"><span>SSE</span><span>n</span></span> )</div></div>
   </div>
   <div>
     <p class="code-label">Same five points</p>
-    <pre class="code out" style="--cs:24px;--cl:38px">RMSE = √(3.6 / 5)
-     = √0.72
+    <pre class="code out" style="--cs:24px;--cl:38px">RMSE = sqrt(3.6 / 5)
+     = sqrt(0.72)
      = 0.85
 
-If y is log₁₀ flow:
-  ×10⁰·⁸⁵ ≈ ×7 in cfs</pre>
+If y is log10 flow:
+  ×10^0.85 = about ×7 in cfs</pre>
   </div>
 </div>
 <div class="callout">Most points fall within one RMSE of the line. r² is a share; RMSE is a size, in y&#x27;s units.</div><div class="page-foot" aria-hidden="true"></div></div></div>
