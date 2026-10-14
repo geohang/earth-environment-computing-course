@@ -378,7 +378,7 @@ median = 3rd of 5 sorted = 3</pre>
   </div>
 </div>
 <div class="callout">One flood day pulls the mean up; the median stays at 3. Without it, both are 3.</div><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content" data-speaker-notes="This is why every flow axis in this course is log10. Point at the two rows: identical data, one of them symmetric." data-label="Concept 2"><div class="kicker"><span>Part 1 · Concept 2 of 7</span></div><h2 class="slide-title">Skew and the Log Transform</h2>
+<div class="frame"><div class="slide content" data-speaker-notes="This is why every flow axis in this course is log10. Point at the two rows: identical data, one of them symmetric. Then run the notebook cell: scipy returns 0.89 and pandas returns 1.33 for the same five numbers, because pandas applies the sample correction. Neither is wrong, and a student who quotes a skewness without saying which form has said very little." data-label="Concept 2"><div class="kicker"><span>Part 1 · Concept 2 of 7</span></div><h2 class="slide-title">Skew and the Log Transform</h2>
 <div class="rise" style="margin-top:44px">
   <p class="code-label">Definition</p>
   <p style="font-size:30px;line-height:44px;margin:0 0 30px;max-width:1500px">Skew measures how lopsided values are: 0 is symmetric, positive means a long right tail. log10 turns equal ratios into equal steps.</p>
@@ -400,7 +400,7 @@ log10:  2.0, 2.3, 2.6, 2.9, 3.2
   </div>
 </div>
 <div class="callout">Same five values. On the raw axis the gaps grow; in log10 they are equal.</div><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content" data-speaker-notes="Work the numerator aloud, term by term. The two zeros are worth a sentence: a point on a mean contributes nothing either way." data-label="Concept 3"><div class="kicker"><span>Part 1 · Concept 3 of 7</span></div><h2 class="slide-title">Correlation, r</h2>
+<div class="frame"><div class="slide content" data-speaker-notes="Work the numerator aloud, term by term. The two zeros are worth a sentence: a point on a mean contributes nothing either way. The notebook cell ends on the p-value scipy hands back with r: 0.10, so this strong-looking 0.80 on five points is not distinguishable from chance. Park that until Part 2, where 2,537 days make a much weaker r highly significant." data-label="Concept 3"><div class="kicker"><span>Part 1 · Concept 3 of 7</span></div><h2 class="slide-title">Correlation, r</h2>
 <div class="rise" style="margin-top:44px">
   <p class="code-label">Definition</p>
   <p style="font-size:30px;line-height:44px;margin:0 0 30px;max-width:1500px">r measures how closely points fall along one straight line, from −1 to +1. It says nothing about why.</p>
