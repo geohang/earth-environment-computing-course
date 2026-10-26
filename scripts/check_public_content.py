@@ -48,6 +48,30 @@ ALLOWED_FILES.update(
     f"materials/slides/Week{week:02d}_slides.html"
     for week in (*range(1, 14), 15, 16)
 )
+# Week 10 is taught in two lectures, and its decks link films, cartoons and
+# stills from the films beside them.
+ALLOWED_FILES.add("materials/slides/Week10b_slides.html")
+ALLOWED_FILES.update(
+    f"materials/slides/media/Week10_{name}"
+    for name in (
+        "claude_code_session.mp4",
+        "claude_code_session.png",
+        "copilot_three_models.mp4",
+        "copilot_three_models.png",
+        "shot_plan.png",
+        "shot_edit.png",
+        "shot_copilot.png",
+        "cartoon_levels.png",
+        "cartoon_contractor.png",
+        "cartoon_kitchen.png",
+        "cartoon_housesitter.png",
+        "cartoon_drivers.png",
+        "cartoon_playlist_tax.png",
+        "cartoon_directions.png",
+        "cartoon_key_first.png",
+        "cartoon_accept_all.png",
+    )
+)
 ALLOWED_FILES.update(
     f"data/processed/{name}"
     for name in (
