@@ -167,6 +167,11 @@ def find_violations() -> list[str]:
         if lower_name.endswith(".pptx") or lower_name.endswith(".inspect.ndjson"):
             violations.append(f"blocked file type: {relative.as_posix()}")
 
+        # The instructor decks carry speaker notes; the public copies must not.
+        if relative.parts[:2] == ("materials", "slides") and lower_name.endswith(".html"):
+            if "data-speaker-notes" in path.read_text(encoding="utf-8"):
+                violations.append(f"speaker notes in deck: {relative_posix}")
+
     return sorted(set(violations))
 
 

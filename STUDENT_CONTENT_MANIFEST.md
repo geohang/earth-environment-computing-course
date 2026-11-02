@@ -22,5 +22,6 @@ Only student-facing material belongs in this public repository.
 - Slide-generation source files, speaker notes, and inspection artifacts.
 - Temporary files, caches, local environments, credentials, or private data.
 
-The deployment safety check blocks common private-content path patterns and any
-top-level item outside the allowlist.
+The deployment safety check blocks common private-content path patterns, any
+top-level item outside the allowlist, and slide decks that still carry speaker
+notes.
