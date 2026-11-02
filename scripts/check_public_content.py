@@ -72,6 +72,29 @@ ALLOWED_FILES.update(
         "cartoon_accept_all.png",
     )
 )
+# Week 11's deck links its figures from media/ too, and its demo notebook (with
+# the 80-probe file it reads) follows the lecture code from top to bottom.
+ALLOWED_FILES.update(
+    f"materials/slides/media/Week11_{name}.png"
+    for name in (
+        "probe_map",
+        "interp_extrap",
+        "mean_baseline",
+        "tobler_maps",
+        "variogram_cloud",
+        "hand_gamma",
+        "variogram",
+        "shuffle_test",
+        "idw_three_neighbors",
+        "power_profiles",
+        "idw_three_maps",
+        "choose_power",
+        "one_to_one",
+        "distance_to_probe",
+        "masked_map",
+    )
+)
+ALLOWED_FILES.add("notebooks/lecture_demos/Week11_demo.ipynb")
 ALLOWED_FILES.update(
     f"data/processed/{name}"
     for name in (
@@ -80,6 +103,7 @@ ALLOWED_FILES.update(
         "iowa_river_water_quality.csv",
         "iowa_stream_sites_annual_flow.csv",
         "iowa_streamflow_daily.csv",
+        "soil_moisture_80.csv",
         "synthetic_elevation_grid.csv",
         "synthetic_soil_moisture_spatial.csv",
         "synthetic_temperature_grid.csv",

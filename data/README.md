@@ -20,6 +20,9 @@ use. Processed files are the stable inputs for notebooks.
   so these data do not overlap the 2015-2025 streamflow record. Use them for
   seasonal and historical questions rather than paired flow analyses.
 - `synthetic_soil_moisture_spatial.csv`: irregular spatial soil-moisture points.
+- `soil_moisture_80.csv`: 80 soil-moisture probes (`x_km`, `y_km`, and
+  `moisture_pct` in percent) on a 10 km by 10 km field, used by the Week 11
+  slides and demo notebook. Group Lab 5 uses `synthetic_soil_moisture_spatial.csv`.
 - `synthetic_elevation_grid.csv`: 50 by 50 gridded synthetic elevation.
 - `synthetic_temperature_grid.csv`: 50 by 50 gridded synthetic temperature.
 

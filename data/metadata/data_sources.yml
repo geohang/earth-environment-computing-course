@@ -39,3 +39,7 @@ synthetic_spatial:
   license: Course teaching material
   variables: [soil moisture, elevation, distance to river, landcover, gridded elevation, gridded temperature]
   seed: 4100
+week11_lecture_points:
+  source: Week 11 lecture dataset, added with the revised slides on 2026-11-01
+  variables: [id, x_km, y_km, moisture_pct]
+  notes: 80 soil-moisture probes in percent on a 10 km by 10 km field, read by the Week 11 slides and demo notebook; the script that generated it is not in this repository

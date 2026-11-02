@@ -164,6 +164,23 @@ p { margin: 0 0 var(--space-3, 12px); }
 .cols-4 p { font-size: var(--type-kicker); line-height: 36px; }
 .cols .num { font-size: var(--type-kicker); color: var(--color-accent); font-feature-settings: "tnum" 1; letter-spacing: 0.08em; }
 .cols .bullets.sm { margin-left: 36px; }
+.cols .rows { display: grid; grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr); column-gap: 24px; }
+.cols .rows > b, .cols .rows > span {
+  font-size: var(--type-kicker); line-height: 34px; padding: 9px 0;
+  border-top: 1px solid var(--color-divider);
+}
+.cols .rows > span { color: color-mix(in srgb, var(--color-text) 80%, transparent); }
+/* META "compact": a deck that puts more on each slide opens its blocks closer
+   under the title and the lede, and keeps the panel text a step smaller. */
+.compact .cols, .compact .steps, .compact .table, .compact .code-wrap { margin-top: 48px; }
+.compact .lede { margin-top: 24px; }
+.compact .cols > div { padding-top: 28px; gap: 18px; }
+.compact .cols h3 { font-size: var(--type-small); line-height: 38px; }
+.compact .cols p, .compact .cols .bullets.sm { font-size: var(--type-kicker); line-height: 36px; }
+.compact .cols .bullets.sm li { line-height: 36px; }
+.compact .callout { margin-top: 40px; padding: 22px 32px; }
+.compact .table td { padding: 14px 20px; line-height: 34px; font-size: var(--type-kicker); }
+.compact .table th { padding: 14px 20px 12px; }
 
 .toc2 {
   display: grid; grid-template-columns: 1fr 1fr; column-gap: 96px;
@@ -206,6 +223,7 @@ p { margin: 0 0 var(--space-3, 12px); }
 }
 .code-wrap { margin-top: 72px; }
 .code-wrap .bullets.sm { margin-top: 40px; }
+.code-wrap .pair-even { margin-top: 0; }  /* the wrap already opens 72px under the title */
 
 .pair { display: grid; grid-template-columns: 780px minmax(0, 1fr); column-gap: 64px; margin-top: 72px; align-items: start; }
 .pair > div { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
@@ -222,6 +240,47 @@ p { margin: 0 0 var(--space-3, 12px); }
   font-family: var(--font-mono); font-size: 44px; line-height: 60px;
   margin: 0; text-align: center; white-space: pre-wrap;
 }
+
+/* Formulas built from CSS rather than from characters. The two fonts ship as
+   latin subsets, so a deck that spells a formula with box-drawing rules and
+   Unicode sub- and superscripts loses them to a fallback font, which breaks
+   the alignment of the block it sits in. Structure survives; glyphs do not. */
+.math {
+  font-family: var(--font-mono); font-size: 30px; line-height: 50px;
+  padding: 32px; background: var(--color-neutral-900); color: var(--color-neutral-100);
+}
+.math .row { margin: 0 0 20px; }
+.math .row:last-child { margin-bottom: 0; }
+.math sub, .math sup { font-size: 0.6em; line-height: 0; }
+.math .frac {
+  display: inline-flex; flex-direction: column; text-align: center;
+  vertical-align: -0.55em; margin: 0 8px;
+}
+.math .frac > span:first-child { border-bottom: 2px solid currentColor; padding: 0 12px 6px; }
+.math .frac > span:last-child { padding: 6px 12px 0; }
+
+/* A screen recording at 1280 x 720 with its talking points beside it. The
+   film is 16:9, so it takes the full content height under the title and the
+   slide carries no footnote line. */
+.video-wrap {
+  display: grid; grid-template-columns: 1280px minmax(0, 1fr);
+  column-gap: 48px; margin-top: 36px; align-items: start;
+}
+.video-wrap video {
+  display: block; width: 1280px; height: 720px;
+  background: var(--color-neutral-900);
+}
+.video-side p {
+  font-size: 25px; line-height: 38px; margin: 0 0 22px;
+  padding-top: 18px; border-top: 2px solid var(--color-divider);
+}
+/* A caption line that is not a chapter ("1:43 ...") is the film's takeaway. */
+.video-side p.takeaway { font-weight: 700; color: var(--color-accent); border-top-color: var(--color-accent); }
+/* The picture layout: a still or a drawing in the film's place. Its width is
+   set per slide, so the image keeps its proportions. */
+.video-wrap.picture img { display: block; height: auto; }
+.video-wrap.picture.framed img { outline: 6px solid var(--color-neutral-900); }
+.video-side p strong { color: var(--color-accent-700); }
 
 .check { justify-content: center; gap: 56px; }
 .check .q-mark {
@@ -327,52 +386,264 @@ img { display: block; max-width: 100%; }
 }
 </style>
 </head>
-<body>
+<body class="compact">
 <div class="toolbar">
-  <div class="meta">Earth &amp; Environmental Computing · Week 11 · Course session · 27 slides</div>
+  <div class="meta">Earth &amp; Environmental Computing · Week 11 · Course session · 52 slides</div>
   <a href="#" id="download-link" download>Download HTML</a>
 </div>
 <div class="deck">
-<div class="frame"><div class="slide cover"><div class="kicker"><span>Earth &amp; Environmental Computing | Computational Methods for Earth &amp; Environmental Science | 16-Week Course</span></div><div class="rise"><h1 class="display">Geostatistics and Spatial Prediction</h1><p class="cover-sub">A map between observations is a claim. Cross-validation is how the claim gets tested.</p></div><div class="pin-bottom"><div class="meta" style="margin-bottom:18px">Spatial correlation · Semivariogram · IDW · Cross-validation</div><div class="meta"><span>Week 11</span><span>·</span><span>Course session</span><span>·</span><span>Open Course Materials | Adapt for your classroom</span><span>·</span><span>Week 11 | Course session</span></div></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>Learning Objectives</span></div><h2 class="slide-title">By the end of this lecture, you will be able to...</h2><ul class="bullets"><li>Explain spatial autocorrelation in plain terms</li><li>Read nugget, sill, and range off a semivariogram</li><li>Write the IDW formula and predict the power parameter&#x27;s effect</li><li>Explain leave-one-out cross-validation</li></ul><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content" data-speaker-notes="Four parts. Section 02 is the implementation; 03 is what makes it defensible."><div class="kicker"><span>Contents</span></div><h2 class="slide-title">Today&#x27;s Lecture</h2><div class="toc2 rise"><div class="toc-row"><span class="toc-num">01</span><span>Spatial Autocorrelation</span></div><div class="toc-row"><span class="toc-num">03</span><span>Validation</span></div><div class="toc-row"><span class="toc-num">02</span><span>Inverse Distance Weighting</span></div><div class="toc-row"><span class="toc-num">04</span><span>Putting It to Work</span></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>Recap</span></div><h2 class="slide-title">Last Week in Sixty Seconds</h2><ul class="bullets"><li>Reference answers before edits; verify after every change</li><li>Agents draft; you own units, plausibility, and the claim</li><li>Disclosure in the log, explanation at the podium</li><li>Today: the verification instinct meets MAPS</li></ul><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>Motivation</span></div><h2 class="slide-title">Eighty Probes, One Field</h2><div class="cols cols-2 rise"><div><h3>The problem</h3><ul class="bullets sm"><li>80 soil-moisture measurements, irregular locations</li><li>The manager wants a value everywhere</li><li>Between probes: no data, only claims</li></ul></div><div><h3>The bigger picture</h3><ul class="bullets sm"><li>Every gridded map you have seen is an interpolation</li><li>Precipitation maps, soil maps, temperature surfaces</li><li>This week you make one, and test it</li></ul></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide cover"><div class="kicker"><span>Earth &amp; Environmental Computing | Computational Methods for Earth &amp; Environmental Science | 16-Week Course</span></div><div class="rise"><h1 class="display">Geostatistics and Spatial Prediction</h1><p class="cover-sub">A map between observations is a claim. Cross-validation is how the claim gets tested.</p></div><div class="pin-bottom"><div class="meta" style="margin-bottom:18px">Spatial data · Distance · Semivariogram · IDW · Cross-validation</div><div class="meta"><span>Week 11</span><span>·</span><span>Course session</span><span>·</span><span>Open Course Materials | Adapt for your classroom</span><span>·</span><span>Week 11 | Course session</span></div></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>Learning objectives</span></div><h2 class="slide-title">By the End of This Lecture, You Will Be Able To</h2><ul class="bullets"><li>Describe spatial data as (x, y, z) and tell interpolation from extrapolation</li><li>Compute distances and semivariance by hand, then in NumPy</li><li>Read nugget, sill, and range off a semivariogram and explain what each means</li><li>Write the IDW formula and predict what the power parameter p does</li><li>Code IDW and leave-one-out in Python and report RMSE and MAE</li></ul><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>Contents</span></div><h2 class="slide-title">Today&#x27;s Lecture</h2><div class="toc2 rise"><div class="toc-row"><span class="toc-num">00</span><span>Foundations: load data, distances, the mean baseline</span></div><div class="toc-row"><span class="toc-num">03</span><span>Validation: loo_idw, scores, choosing p, masking</span></div><div class="toc-row"><span class="toc-num">01</span><span>Spatial Autocorrelation: pairs, binning, plotting the variogram</span></div><div class="toc-row"><span class="toc-num">04</span><span>Putting It to Work: the whole workflow in code, common bugs</span></div><div class="toc-row"><span class="toc-num">02</span><span>Inverse Distance Weighting: idw_point, idw_grid, three maps</span></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>Recap</span></div><h2 class="slide-title">Last Week in Sixty Seconds</h2><div class="cols cols-4 rise"><div><span class="num">1</span><h3>Reference first</h3><p>Reference answers before edits; verify after every change</p></div><div><span class="num">2</span><h3>You own the claim</h3><p>Agents draft; you own units, plausibility, and the claim</p></div><div><span class="num">3</span><h3>Disclose</h3><p>Disclosure in the log, explanation at the podium</p></div><div><span class="num">4</span><h3>Today</h3><p>The verification instinct meets MAPS</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>Motivation</span></div><h2 class="slide-title">Eighty Probes, One Field</h2><div class="video-wrap picture rise" style="grid-template-columns:727px minmax(0, 1fr)"><img src="media/Week11_probe_map.png" alt="Map of 80 soil-moisture probes coloured by moisture, with a red X at a location that has no probe" width="727" height="600"><div class="video-side"><p><strong>The problem</strong> 80 soil-moisture measurements at irregular locations.</p><p>The manager wants a value everywhere.</p><p>Between probes: no data, only claims.</p><p><strong>The bigger picture</strong> Every gridded map you have seen is an interpolation: precipitation maps, soil maps, temperature surfaces.</p><p>This week you make one, and you test it.</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide divider"><div class="rise"><div class="ghost-num">00</div><h2 class="slide-title">Foundations</h2><p class="sub">Before any method: what the data look like, what a distance is, and what a baseline is.</p></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>00 · Foundations</span></div><h2 class="slide-title">Spatial Data Are Triplets: (x, y, z)</h2><div class="pair rise" style="grid-template-columns:minmax(0, 0.5fr) minmax(0, 0.5fr)"><table class="table" style="margin-top:0"><thead><tr><th style="text-transform:none;letter-spacing:0">id</th><th style="text-transform:none;letter-spacing:0">x_km</th><th style="text-transform:none;letter-spacing:0">y_km</th><th style="text-transform:none;letter-spacing:0">moisture (%)</th></tr></thead><tbody><tr><td>1</td><td>8.67</td><td>6.41</td><td>29.6</td></tr><tr><td>2</td><td>3.69</td><td>5.36</td><td>27.4</td></tr><tr><td>3</td><td>0.56</td><td>9.63</td><td>25.9</td></tr><tr><td>4</td><td>4.47</td><td>8.46</td><td>22.7</td></tr><tr><td>5</td><td>4.84</td><td>0.73</td><td>36.0</td></tr><tr><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>80</td><td></td><td></td><td></td></tr></tbody></table><div><div class="video-side"><p><strong>x, y = location</strong> Projected coordinates in consistent units (km or m). They tell you WHERE the measurement was taken.</p><p><strong>z = attribute</strong> The measured quantity: soil moisture, nitrate, depth to water, resistivity. It tells you WHAT was found there.</p><p class="takeaway"><strong>Point data → gridded map</strong> We have 80 scattered rows. We want a value in every grid cell. Spatial prediction fills that gap.</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>00 · Foundations · Code</span></div><h2 class="slide-title">Load and Look at the Data</h2><div class="pair rise" style="grid-template-columns:960px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:20px;--cl:31px">import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+points = pd.read_csv(&quot;soil_moisture_80.csv&quot;)
+x = points[&quot;x_km&quot;].to_numpy()
+y = points[&quot;y_km&quot;].to_numpy()
+z = points[&quot;moisture_pct&quot;].to_numpy()
+print(points.shape)          # (80, 4)
+
+fig, ax = plt.subplots()
+sc = ax.scatter(x, y, c=z, cmap=&quot;YlGnBu&quot;,
+                s=50, edgecolor=&quot;k&quot;)
+fig.colorbar(sc, label=&quot;Soil moisture (%)&quot;)
+ax.set_aspect(&quot;equal&quot;)</pre></div><div><img src="media/Week11_probe_map.png" alt="The scatter map this code draws: 80 probes coloured by soil moisture" width="640" height="528"></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>00 · Foundations</span></div><h2 class="slide-title">Interpolation versus Extrapolation</h2><div class="video-wrap picture rise" style="grid-template-columns:1000px minmax(0, 1fr)"><img src="media/Week11_interp_extrap.png" alt="Moisture along a transect: a shaded interpolation band between the observations and extrapolation bands beyond them" width="1000" height="575"><div class="video-side"><p><strong>Interpolation</strong> Predict a value BETWEEN observations. Neighbors on several sides constrain the estimate.</p><p><strong>Extrapolation</strong> Predict BEYOND the data. Nothing constrains the estimate on the far side. Every method becomes unreliable.</p><p class="takeaway">Trust in a prediction drops with distance from the nearest observation</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>00 · Foundations</span></div><h2 class="slide-title">Distance: The One Ingredient Everything Uses</h2><div class="equation-box rise"><p class="equation">d_ij = √[ (x_i − x_j)² + (y_i − y_j)² ]</p></div><div class="cols cols-2"><div><h3>Worked example</h3><p>Probe A at (2, 3) km, probe B at (5, 7) km</p><p>Δx = 5 − 2 = 3 km,  Δy = 7 − 3 = 4 km</p><p>d = √(3² + 4²) = √(9 + 16) = √25 = 5 km</p></div><div><h3>Watch the units</h3><ul class="bullets sm"><li>Use projected coordinates (UTM, km or m)</li><li>In degrees, 1° longitude ≈ 83 km at Iowa City but 1° latitude ≈ 111 km</li><li>Euclidean distance on raw lat/lon distorts every result that follows</li></ul></div></div><div class="callout">Compute distances once; the variogram and IDW both reuse them</div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>00 · Foundations · Code</span></div><h2 class="slide-title">Distances in NumPy</h2><div class="pair rise" style="grid-template-columns:1000px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:22px;--cl:34px"># one pair, by hand
+dx, dy = 5 - 2, 7 - 3
+d = np.sqrt(dx**2 + dy**2)          # 5.0
+
+# all pairs at once: broadcasting
+D = np.sqrt((x[:, None] - x[None, :])**2 +
+            (y[:, None] - y[None, :])**2)
+D.shape                             # (80, 80)
+np.allclose(D, D.T)                 # True
+
+# the course helper does the same
+from earthcourse.spatial import pairwise_distances_xy
+D = pairwise_distances_xy(points[&quot;x_km&quot;],
+                          points[&quot;y_km&quot;])</pre></div><div><div class="video-side"><p><strong>Broadcasting</strong> (80, 1) minus (1, 80) gives (80, 80): every pair at once, no loop.</p><p><strong>Sanity checks</strong> Symmetric, zeros on the diagonal, units in km.</p><p class="takeaway"><strong>D[i, j]</strong> Distance between probes i and j</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>00 · Foundations</span></div><h2 class="slide-title">The Simplest Prediction: The Field Mean</h2><div class="video-wrap picture rise" style="grid-template-columns:780px minmax(0, 1fr)"><img src="media/Week11_mean_baseline.png" alt="Histogram of the 80 moisture values with the mean, 24.5 percent, and one standard deviation either side" width="780" height="589"><div class="video-side"><p><span class="mono">z̄ = (1/n) Σ z_i</span></p><p><span class="mono">s² = 1/(n−1) Σ (z_i − z̄)²</span></p><p><strong>Our 80 probes</strong> Mean = 24.5 %. Variance = 29.1 %² (sd = 5.4 %). Predict the mean everywhere: LOO RMSE = 5.43 %.</p><p class="takeaway">The baseline: any spatial method must beat 5.43 %</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>00 · Foundations · Code</span></div><h2 class="slide-title">The Baseline in Code</h2><div class="pair rise" style="grid-template-columns:1000px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:24px;--cl:38px">print(f&quot;mean = {z.mean():.1f} %&quot;)
+print(f&quot;variance = {z.var(ddof=1):.1f} %^2&quot;)
+
+# leave each probe out, predict it with the mean
+errors = []
+for k in range(len(z)):
+    others = np.delete(z, k)
+    errors.append(others.mean() - z[k])
+errors = np.array(errors)
+
+rmse_mean = np.sqrt(np.mean(errors**2))
+print(f&quot;baseline RMSE = {rmse_mean:.2f} %&quot;)</pre></div><div><div><p class="code-label">Output</p><pre class="code out" style="--cs:22px;--cl:34px">mean = 24.5 %
+variance = 29.1 %^2
+baseline RMSE = 5.43 %</pre></div><div class="video-side"><p><strong>ddof=1</strong> Sample variance (n − 1). NumPy&#x27;s default is n.</p><p class="takeaway"><strong>Preview</strong> This loop IS leave-one-out. Section 03 swaps the mean for IDW.</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide check"><div class="kicker"><span>Pause and think</span></div><p class="q-mark">?</p><p class="q">Predicting the mean everywhere ignores one column of the data table. Which one, and why does that matter?</p><div class="answers"><div>The coordinates: the mean throws away WHERE each value was measured</div><div>Spatial methods help only if location carries information. Section 01 tests whether it does.</div></div><p class="footnote">Think for 30 seconds, tell a neighbor, then reveal.</p><div class="page-foot" aria-hidden="true"></div></div></div>
 <div class="frame"><div class="slide divider"><div class="rise"><div class="ghost-num">01</div><h2 class="slide-title">Spatial Autocorrelation</h2><p class="sub">Near things are more alike, and the semivariogram measures how much.</p></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>01 · Spatial autocorrelation</span></div><h2 class="slide-title">Spatial Autocorrelation</h2><ul class="bullets"><li>Tobler (1970): near things are more related than distant things</li><li>Quantify it: how different are pairs, as distance grows?</li><li>Close pairs differ little; distant pairs differ up to a ceiling</li><li>80 points make 3,160 pairs: the raw material</li></ul><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>01 · Spatial autocorrelation</span></div><h2 class="slide-title">Half the Squared Difference, Binned</h2><div class="equation-box rise"><p class="equation">gamma(h) = mean of 0.5 * (z_i - z_j)^2   for pairs at distance h</p></div><div class="cols cols-2" style="margin-top:48px"><div><p>z_i, z_j = values at two locations</p></div><div><p>h = separation distance (binned)</p></div><div><p>gamma = semivariance at that distance</p></div><div><p>small gamma = the pair still resembles</p></div></div><ul class="bullets sm"><li>One curve turns 3,160 pair comparisons into a spatial story</li></ul><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>01 · Spatial autocorrelation</span></div><h2 class="slide-title">Three Features Carry the Science</h2><div class="cols cols-3 rise"><div><h3>Nugget</h3><p>Intercept near zero distance: measurement noise plus variation finer than the sampling.</p></div><div><h3>Sill</h3><p>The plateau: the field&#x27;s overall variance. The resemblance budget runs out.</p></div><div><h3>Range</h3><p>Distance where the curve reaches the sill. Beyond it, points stop informing each other.</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide check"><div class="kicker"><span>Pause and think</span></div><p class="q-mark">?</p><p class="q">Your variogram&#x27;s range is 3 km. Your sensors sit 5 km apart. What does the map between them rest on?</p><div class="answers"><div>Very little: beyond the range, interpolation is barely supported</div><div>The range is directly actionable: it prices sensor spacing</div></div><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide divider"><div class="rise"><div class="ghost-num">02</div><h2 class="slide-title">Inverse Distance Weighting</h2><p class="sub">Twelve lines that carry the whole idea.</p></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>02 · Inverse distance weighting</span></div><h2 class="slide-title">Inverse Distance Weighting</h2><div class="equation-box rise"><p class="equation">z_hat = sum(w_i * z_i) / sum(w_i),   w_i = 1 / d_i^p</p></div><div class="cols cols-2" style="margin-top:48px"><div><p>z_hat = predicted value at the target</p></div><div><p>d_i = distance to observation i</p></div><div><p>p = the power parameter</p></div><div><p>at an observation: return it exactly</p></div></div><ul class="bullets sm"><li>A weighted average where distance sets the weights</li></ul><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>02 · Inverse distance weighting</span></div><h2 class="slide-title">What the Power Does</h2><div class="cols cols-3 rise"><div><h3>p near 0</h3><p>Everything weighs equally: the field mean, everywhere. Maximum smoothing.</p></div><div><h3>p = 2</h3><p>The convention, not a law. Balanced borrowing from neighbors.</p></div><div><h3>p large</h3><p>Only the nearest point counts: nearest-neighbor patches, bullseyes on the map.</p></div></div><p class="footnote">The lab draws the same field at p = 1, 2, 4 and lets validation pick.</p><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>02 · Inverse distance weighting</span></div><h2 class="slide-title">Twelve Lines, the Whole Idea</h2><div class="code-wrap rise"><div><p class="code-label">Python</p><pre class="code" style="--cs:24px;--cl:38px">def idw(x_target, power):
-    distance = np.abs(x_obs - x_target)
-    if np.any(distance == 0):
-        return values[np.argmin(distance)]
-    weights = 1.0 / distance**power
-    return np.sum(weights * values) / np.sum(weights)
+<div class="frame"><div class="slide content"><div class="kicker"><span>01 · Spatial autocorrelation</span></div><h2 class="slide-title">Tobler&#x27;s First Law</h2><div class="video-wrap picture rise" style="grid-template-columns:1100px minmax(0, 1fr)"><img src="media/Week11_tobler_maps.png" alt="Two maps of the same 80 values: the real field, where neighbours resemble, and the values shuffled, with no structure" width="1100" height="563"><div class="video-side"><p>Tobler (1970): near things are more related than distant things</p><p>Both maps: same 80 values, same mean, same histogram</p><p>Only the arrangement differs</p><p>We need a tool that compares values AS A FUNCTION OF distance</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>01 · Spatial autocorrelation</span></div><h2 class="slide-title">From 80 Points to 3,160 Pairs</h2><p class="lede">pairs = n(n − 1) / 2 = 80 × 79 / 2 = 3,160</p><div class="pair rise" style="grid-template-columns:900px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:24px;--cl:38px">i, j = np.triu_indices(len(z), k=1)
+h = D[i, j]                  # distances
+g = 0.5 * (z[i] - z[j])**2   # dissimilarity
+len(h)                       # 3160
 
-for p in [0.5, 2, 8]:
-    print(p, idw(5.0, p))</pre></div><ul class="bullets sm"><li>Watch the prediction drift toward the nearest observation as p grows</li></ul></div><div class="page-foot" aria-hidden="true"></div></div></div>
+plt.scatter(h, g, s=4, alpha=0.4)
+plt.xlabel(&quot;Separation h (km)&quot;)</pre></div><div><img src="media/Week11_variogram_cloud.png" alt="The variogram cloud: half the squared difference of all 3,160 pairs against their separation" width="700" height="448"><div class="video-side"><p class="takeaway">Upper triangle, k=1: each pair once, no self-pairs</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>01 · Spatial autocorrelation</span></div><h2 class="slide-title">Worked Example: Four Points by Hand</h2><p class="lede">x (km): 0, 1, 2, 3   ·   z (%): 10, 12, 15, 14</p><div class="pair rise" style="grid-template-columns:minmax(0, 0.64fr) minmax(0, 0.36fr)"><table class="table" style="margin-top:0"><thead><tr><th style="text-transform:none;letter-spacing:0">h (km)</th><th style="text-transform:none;letter-spacing:0">Pairs</th><th style="text-transform:none;letter-spacing:0">(z_i − z_j)²</th><th style="text-transform:none;letter-spacing:0">γ(h)</th></tr></thead><tbody><tr><td>1</td><td>(10,12) (12,15) (15,14)</td><td>4, 9, 1</td><td>14 / (2·3) = 2.33</td></tr><tr><td>2</td><td>(10,15) (12,14)</td><td>25, 4</td><td>29 / (2·2) = 7.25</td></tr><tr><td>3</td><td>(10,14)</td><td>16</td><td>16 / (2·1) = 8.00</td></tr></tbody></table><div><img src="media/Week11_hand_gamma.png" alt="Semivariance of the four-point example rising from 2.33 at 1 km to 8.00 at 3 km" width="400" height="388"></div></div><div class="callout">Same recipe for 80 points: just 3,160 pairs instead of 6</div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>01 · Spatial autocorrelation · Code</span></div><h2 class="slide-title">Binning: Turning the Cloud into a Curve</h2><div class="pair rise" style="grid-template-columns:980px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:18px;--cl:28px">def empirical_variogram(h, g, bin_width=0.5,
+                        max_distance=5.0):
+    edges = np.arange(0, max_distance + bin_width,
+                      bin_width)
+    centers, gamma, npairs = [], [], []
+    for lo, hi in zip(edges[:-1], edges[1:]):
+        in_bin = (h &gt;= lo) &amp; (h &lt; hi)
+        if in_bin.sum() == 0:
+            continue
+        centers.append((lo + hi) / 2)
+        gamma.append(g[in_bin].mean())
+        npairs.append(in_bin.sum())
+    return (np.array(centers), np.array(gamma),
+            np.array(npairs))
+
+lags, gamma, npairs = empirical_variogram(h, g)</pre></div><div><table class="table" style="margin-top:0"><thead><tr><th style="text-transform:none;letter-spacing:0">lag (km)</th><th style="text-transform:none;letter-spacing:0">γ (%²)</th><th style="text-transform:none;letter-spacing:0">pairs</th></tr></thead><tbody><tr><td>0.25</td><td>2.7</td><td>32</td></tr><tr><td>0.75</td><td>11.6</td><td>83</td></tr><tr><td>1.25</td><td>20.4</td><td>154</td></tr><tr><td>1.75</td><td>31.9</td><td>133</td></tr><tr><td>2.25</td><td>27.6</td><td>175</td></tr></tbody></table><div class="video-side"><p><strong>γ for a bin</strong> g[in_bin].mean(): the formula in one line</p><p><strong>Rules of thumb</strong> ≥ 30 pairs per bin; max_distance ≈ half the field (5 of 10 km)</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>01 · Spatial autocorrelation</span></div><h2 class="slide-title">Three Features Carry the Science</h2><div class="video-wrap picture rise" style="grid-template-columns:900px minmax(0, 1fr)"><img src="media/Week11_variogram.png" alt="Empirical semivariogram with the nugget, the sill at the sample variance, and the range at about 2.2 km marked" width="900" height="593"><div class="video-side"><p><strong>Nugget ≈ 0.5 %²</strong> Jump at zero distance: measurement noise plus variation finer than the sampling.</p><p><strong>Sill ≈ 29 %²</strong> The plateau. Matches the sample variance (29.1 %²): beyond it, pairs are as different as random.</p><p><strong>Range ≈ 2.2 km</strong> Distance where the sill is reached. Beyond it, points stop informing each other.</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>01 · Spatial autocorrelation · Code</span></div><h2 class="slide-title">Plot and Read the Variogram</h2><div class="pair rise" style="grid-template-columns:960px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:18px;--cl:28px">fig, ax = plt.subplots()
+ax.plot(lags, gamma, &quot;o-&quot;, color=&quot;tab:red&quot;)
+
+# label each point with its pair count
+for lag, gam, n in zip(lags, gamma, npairs):
+    ax.annotate(str(n), (lag, gam),
+                textcoords=&quot;offset points&quot;,
+                xytext=(0, 8), ha=&quot;center&quot;,
+                fontsize=8)
+
+# the sill should sit near the sample variance
+ax.axhline(z.var(ddof=1), ls=&quot;--&quot;, color=&quot;k&quot;,
+           label=&quot;sample variance&quot;)
+ax.set_xlabel(&quot;Separation h (km)&quot;)
+ax.set_ylabel(&quot;Semivariance (%^2)&quot;)
+ax.legend()</pre></div><div><img src="media/Week11_variogram.png" alt="The semivariogram this code draws, with pair counts above the points" width="640" height="421"><div class="video-side"><p class="takeaway"><strong>Read by eye</strong> Range: where the curve first reaches the dashed line (≈ 2.2 km here)</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>01 · Spatial autocorrelation</span></div><h2 class="slide-title">Proof by Shuffling</h2><div class="pair rise" style="grid-template-columns:900px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:24px;--cl:38px">rng = np.random.default_rng(0)
+z_shuf = rng.permutation(z)
+g_shuf = 0.5 * (z_shuf[i] - z_shuf[j])**2
+lags_s, gamma_s, _ = empirical_variogram(
+    h, g_shuf)
+
+plt.plot(lags, gamma, &quot;o-&quot;,
+         label=&quot;real&quot;)
+plt.plot(lags_s, gamma_s, &quot;s--&quot;,
+         label=&quot;shuffled&quot;)
+plt.legend()</pre></div><div><img src="media/Week11_shuffle_test.png" alt="Semivariogram of the real field rising from near zero, and of the shuffled values, flat at the variance" width="700" height="475"><div class="video-side"><p class="takeaway">Flat shuffled curve = no structure. The gap is what IDW can use.</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide check"><div class="kicker"><span>Pause and think</span></div><p class="q-mark">?</p><p class="q">Your variogram&#x27;s range is 3 km. Your sensors sit 5 km apart. What does the map between them rest on?</p><div class="answers"><div>Very little: beyond the range, neighbors barely inform each other, so the map drifts toward the mean</div><div>The range is directly actionable: it prices sensor spacing (place sensors closer than the range)</div></div><p class="footnote">Think for 30 seconds, tell a neighbor, then reveal.</p><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide divider"><div class="rise"><div class="ghost-num">02</div><h2 class="slide-title">Inverse Distance Weighting</h2><p class="sub">A weighted average where distance sets the weights.</p></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>02 · Inverse distance weighting</span></div><h2 class="slide-title">The IDW Formula</h2><div class="equation-box rise"><p class="equation">ẑ(x₀) = Σ w_i z_i / Σ w_i ,     w_i = 1 / d_iᵖ</p></div><div class="cols cols-4"><div><h3>ẑ(x₀)</h3><p>Predicted value at the target location x₀</p></div><div><h3>d_i</h3><p>Distance from the target to observation i</p></div><div><h3>p</h3><p>Power: how fast influence decays with distance</p></div><div><h3>÷ Σ w_i</h3><p>Weights sum to 1: a true weighted average</p></div></div><div class="callout">Exact: at an observation (d = 0), return the observed value. Bounded: never below the minimum or above the maximum observed value.</div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>02 · Inverse distance weighting</span></div><h2 class="slide-title">Worked Example: Three Neighbors</h2><div class="pair rise" style="grid-template-columns:minmax(0, 0.62fr) minmax(0, 0.38fr)"><table class="table" style="margin-top:0"><thead><tr><th style="text-transform:none;letter-spacing:0">Neighbor</th><th style="text-transform:none;letter-spacing:0">d (km)</th><th style="text-transform:none;letter-spacing:0">z (%)</th><th style="text-transform:none;letter-spacing:0">w = 1/d²</th><th style="text-transform:none;letter-spacing:0">w / Σw</th></tr></thead><tbody><tr><td>A</td><td>1</td><td>20</td><td>1.000</td><td>0.762</td></tr><tr><td>B</td><td>2</td><td>30</td><td>0.250</td><td>0.190</td></tr><tr><td>C</td><td>4</td><td>40</td><td>0.0625</td><td>0.048</td></tr><tr><td>Sum</td><td></td><td></td><td>1.3125</td><td>1.000</td></tr></tbody></table><div><img src="media/Week11_idw_three_neighbors.png" alt="Bar chart of the prediction at p = 0, 1, 2 and 8: 30.0, 25.7, 22.9 and 20.0 percent" width="480" height="438"></div></div><div class="callout">ẑ = 20(0.762) + 30(0.190) + 40(0.048) = 22.9 %</div><p class="footnote">p = 0 gives the plain mean (30.0); large p approaches the nearest value (20)</p><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>02 · Inverse distance weighting · Code</span></div><h2 class="slide-title">IDW at One Point</h2><div class="pair rise" style="grid-template-columns:1000px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:24px;--cl:38px">def idw_point(x0, y0, x, y, z, power=2.0):
+    d = np.sqrt((x - x0)**2 + (y - y0)**2)
+    if np.any(d == 0):              # exact hit
+        return z[np.argmin(d)]
+    w = 1.0 / d**power
+    return np.sum(w * z) / np.sum(w)
+
+# test on the hand example first
+xs = np.array([1.0, 2.0, 4.0])
+ys = np.zeros(3)
+zs = np.array([20.0, 30.0, 40.0])
+idw_point(0, 0, xs, ys, zs, power=2)</pre></div><div><div><p class="code-label">Output</p><pre class="code out" style="--cs:22px;--cl:34px">22.857142857142858</pre></div><div class="video-side"><p><strong>Matches the hand result</strong> 22.9 % from the worked example. Now we can trust the function.</p><p class="takeaway"><strong>Habit</strong> Test every function on a case you solved by hand before running it on real data.</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>02 · Inverse distance weighting</span></div><h2 class="slide-title">What the Power Does</h2><div class="video-wrap picture rise" style="grid-template-columns:960px minmax(0, 1fr)"><img src="media/Week11_power_profiles.png" alt="IDW along a line through five observations for p = 0.5, 1, 2 and 8: low powers hug the mean, high powers make flat steps" width="960" height="599"><div class="video-side"><p><strong>p near 0</strong> Everything weighs equally: the field mean, everywhere. Maximum smoothing.</p><p><strong>p = 2</strong> The convention, not a law. Balanced borrowing from neighbors.</p><p><strong>p large</strong> Only the nearest point counts: flat patches and sharp steps.</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>02 · Inverse distance weighting · Code</span></div><h2 class="slide-title">From One Point to a Whole Map</h2><div class="pair rise" style="grid-template-columns:1060px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:22px;--cl:34px">gx = np.linspace(0, 10, 120)
+gy = np.linspace(0, 10, 120)
+GX, GY = np.meshgrid(gx, gy)        # 120 x 120
+
+def idw_grid(GX, GY, x, y, z, power=2.0):
+    # every grid node vs every probe: (14400, 80)
+    d = np.sqrt((GX.ravel()[:, None] - x[None, :])**2 +
+                (GY.ravel()[:, None] - y[None, :])**2)
+    d = np.maximum(d, 1e-12)        # no divide by zero
+    w = 1.0 / d**power
+    zhat = (w * z).sum(axis=1) / w.sum(axis=1)
+    return zhat.reshape(GX.shape)
+
+Z2 = idw_grid(GX, GY, x, y, z, power=2)</pre></div><div><div class="video-side"><p><strong>meshgrid</strong> Turns two 1D axes into 2D arrays of node coordinates.</p><p><strong>ravel + broadcasting</strong> 14,400 nodes × 80 probes in one array, no loop.</p><p><strong>sum(axis=1)</strong> Sum over probes, then reshape to the grid.</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>02 · Inverse distance weighting · Code</span></div><h2 class="slide-title">Plotting Three Powers Side by Side</h2><div class="pair rise" style="grid-template-columns:1000px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:24px;--cl:38px">fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+for ax, p in zip(axes, [1, 2, 4]):
+    Zp = idw_grid(GX, GY, x, y, z, power=p)
+    im = ax.pcolormesh(GX, GY, Zp, cmap=&quot;YlGnBu&quot;,
+                       vmin=z.min(), vmax=z.max())
+    ax.scatter(x, y, s=8, c=&quot;k&quot;)
+    ax.set_title(f&quot;p = {p}&quot;)
+    ax.set_aspect(&quot;equal&quot;)
+fig.colorbar(im, ax=axes,
+             label=&quot;Soil moisture (%)&quot;)</pre></div><div><div class="video-side"><p class="takeaway"><strong>Same vmin, vmax</strong> One color scale for all panels, or the comparison is meaningless.</p><p><strong>Show the probes</strong> Viewers must see where the data are.</p><p><strong>One colorbar</strong> fig.colorbar(im, ax=axes) shares it across the row.</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>02 · Inverse distance weighting</span></div><h2 class="slide-title">Same Data, Three Maps</h2><div class="rise" style="margin-top:40px"><img src="media/Week11_idw_three_maps.png" alt="IDW maps of the 80 probes at p = 1, 2 and 4 on one colour scale" width="1440" height="478"><p class="fig-note" style="margin-top:20px">p = 1: smooth, near the mean &nbsp;·&nbsp; p = 2: the common default &nbsp;·&nbsp; p = 4: patches and bullseyes</p></div><div class="callout">All three honor every probe exactly. The picture cannot pick the winner.</div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>02 · Inverse distance weighting · Code</span></div><h2 class="slide-title">Adding a Search Radius: max_distance</h2><div class="pair rise" style="grid-template-columns:960px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:24px;--cl:38px">def idw_point(x0, y0, x, y, z, power=2.0,
+              max_distance=None):
+    d = np.sqrt((x - x0)**2 + (y - y0)**2)
+    if np.any(d == 0):
+        return z[np.argmin(d)]
+    if max_distance is not None:
+        keep = d &lt;= max_distance
+        if not keep.any():
+            return np.nan       # nobody close enough
+        d, z = d[keep], z[keep]
+    w = 1.0 / d**power
+    return np.sum(w * z) / np.sum(w)</pre></div><div><div class="video-side"><p><strong>max_distance</strong> Probes beyond it get zero weight. Studio session: test its sensitivity.</p><p class="takeaway"><strong>np.nan</strong> No probe close enough: leave the cell blank.</p><p><strong>Duplicates first</strong> <span class="mono">points.groupby([&quot;x_km&quot;, &quot;y_km&quot;], as_index=False).mean()</span></p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
 <div class="frame"><div class="slide divider"><div class="rise"><div class="ghost-num">03</div><h2 class="slide-title">Validation</h2><p class="sub">Leave one out, and what that number does and does not say.</p></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>03 · Validation</span></div><h2 class="slide-title">Leave-One-Out Cross-Validation</h2><div class="steps steps-4 rise"><div><span class="big">1</span><h3>Remove</h3><p>Take one observation out of the dataset.</p></div><div><span class="big">2</span><h3>Predict</h3><p>Interpolate its location from the remaining 79.</p></div><div><span class="big">3</span><h3>Compare</h3><p>Prediction versus the held-out truth.</p></div><div><span class="big">4</span><h3>Repeat</h3><p>All 80 points; the RMSE is the map&#x27;s honest error.</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>03 · Validation</span></div><h2 class="slide-title">What LOO Does and Does Not Say</h2><ul class="bullets"><li>Scores the method AT observation locations</li><li>Far from all observations, the map is extrapolating</li><li>LOO is silent there: mask or caveat those areas</li><li>The 1:1 scatter shows compression: highs under, lows over</li></ul><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide check"><div class="kicker"><span>Pause and think</span></div><p class="q-mark">?</p><p class="q">IDW with a very high power reproduces every observation exactly. Why does it usually validate WORSE?</p><div class="answers"><div>Fitting the points is free; predicting between them is the test</div><div>Bullseye maps memorize; smooth maps generalize (sound familiar?)</div></div><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide divider"><div class="rise"><div class="ghost-num">04</div><h2 class="slide-title">Putting It to Work</h2><p class="sub">The full workflow, the distance matrix, and where kriging would start.</p></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>04 · Putting it to work</span></div><h2 class="slide-title">The Lab&#x27;s Full Workflow</h2><div class="cols cols-3 rise"><div><span class="num">01</span><h3>Given</h3><p>80 synthetic soil-moisture points with coordinates, elevation, land cover.</p></div><div><span class="num">02</span><h3>Solve</h3><p>Variogram with range estimate; IDW maps at p = 1, 2, 4; LOO RMSE for each.</p></div><div><span class="num">03</span><h3>Interpret</h3><p>Pick a power with evidence; state where the map should not be trusted.</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>04 · Putting it to work</span></div><h2 class="slide-title">Everything Starts from the Distance Matrix</h2><div class="code-wrap rise"><div><p class="code-label">Python</p><pre class="code" style="--cs:24px;--cl:38px">from earthcourse.spatial import pairwise_distances_xy
+<div class="frame"><div class="slide content"><div class="kicker"><span>03 · Validation</span></div><h2 class="slide-title">Leave-One-Out Cross-Validation</h2><div class="steps steps-4 rise"><div><span class="big">1</span><h3>Remove</h3><p>Take probe k out of the dataset.</p></div><div><span class="big">2</span><h3>Predict</h3><p>Interpolate its location from the remaining 79.</p></div><div><span class="big">3</span><h3>Compare</h3><p>Error e_k = prediction − held-out truth.</p></div><div><span class="big">4</span><h3>Repeat</h3><p>All 80 probes: 80 honest errors.</p></div></div><div class="callout">Summarize the 80 errors with RMSE and MAE: the map&#x27;s honest error bar</div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>03 · Validation · Code</span></div><h2 class="slide-title">Leave-One-Out in Code</h2><div class="pair rise" style="grid-template-columns:960px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:24px;--cl:38px">def loo_idw(x, y, z, power=2.0):
+    n = len(z)
+    pred = np.empty(n)
+    for k in range(n):
+        keep = np.arange(n) != k     # all but k
+        pred[k] = idw_point(x[k], y[k],
+                            x[keep], y[keep],
+                            z[keep], power)
+    return pred
 
+pred = loo_idw(x, y, z, power=2)
+err = pred - z</pre></div><div><div class="video-side"><p><strong>Remove</strong> <span class="mono">keep = np.arange(n) != k</span></p><p><strong>Predict</strong> idw_point at probe k from the other 79</p><p class="takeaway"><strong>Classic bug</strong> Forget to drop k and RMSE = 0.00, because IDW is exact.</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>03 · Validation · Code</span></div><h2 class="slide-title">Scoring the Errors: MAE, RMSE, Bias</h2><div class="pair rise" style="grid-template-columns:960px minmax(0, 1fr)"><div style="display:flex;flex-direction:column;gap:32px"><div><p class="code-label">Python</p><pre class="code" style="--cs:22px;--cl:34px">def scores(pred, obs):
+    err = pred - obs
+    return {&quot;MAE&quot;:  np.mean(np.abs(err)),
+            &quot;RMSE&quot;: np.sqrt(np.mean(err**2)),
+            &quot;Bias&quot;: np.mean(err)}
+
+# hand example
+s = scores(np.array([24, 27, 20, 25]),
+           np.array([22, 30, 18, 26]))
+print({k: round(float(v), 2) for k, v in s.items()})</pre></div><div><p class="code-label">Output</p><pre class="code out" style="--cs:22px;--cl:34px">{&#x27;MAE&#x27;: 2.0, &#x27;RMSE&#x27;: 2.12, &#x27;Bias&#x27;: 0.0}</pre></div></div><div><table class="table" style="margin-top:0"><thead><tr><th style="text-transform:none;letter-spacing:0">Probe</th><th style="text-transform:none;letter-spacing:0">Observed</th><th style="text-transform:none;letter-spacing:0">Predicted</th><th style="text-transform:none;letter-spacing:0">Error e</th></tr></thead><tbody><tr><td>1</td><td>22</td><td>24</td><td>+2</td></tr><tr><td>2</td><td>30</td><td>27</td><td>−3</td></tr><tr><td>3</td><td>18</td><td>20</td><td>+2</td></tr><tr><td>4</td><td>26</td><td>25</td><td>−1</td></tr></tbody></table><div class="video-side"><p><strong>Read the numbers</strong> MAE = 8 / 4 = 2.00. RMSE = √(18 / 4) = 2.12. RMSE ≥ MAE; a big gap means a few large misses.</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>03 · Validation · Code</span></div><h2 class="slide-title">Choosing p in Code</h2><div class="pair rise" style="grid-template-columns:1000px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:24px;--cl:38px">powers = [0.5, 1, 1.5, 2, 2.5, 3, 4, 6, 8]
+rows = []
+for p in powers:
+    pred = loo_idw(x, y, z, power=p)
+    rows.append({&quot;power&quot;: p, **scores(pred, z)})
+
+table = pd.DataFrame(rows)
+print(table.round(2))
+
+best = table.loc[table[&quot;RMSE&quot;].idxmin(), &quot;power&quot;]
+print(&quot;best power:&quot;, best)</pre></div><div><table class="table" style="margin-top:0"><thead><tr><th style="text-transform:none;letter-spacing:0">p</th><th style="text-transform:none;letter-spacing:0">MAE</th><th style="text-transform:none;letter-spacing:0">RMSE</th></tr></thead><tbody><tr><td>0.5</td><td>4.40</td><td>5.07</td></tr><tr><td>1</td><td>3.86</td><td>4.51</td></tr><tr><td>2</td><td>2.67</td><td>3.30</td></tr><tr style="color:var(--color-accent-700);font-weight:700"><td>3</td><td>2.18</td><td>2.86</td></tr><tr><td>4</td><td>2.12</td><td>2.86</td></tr><tr><td>8</td><td>2.31</td><td>3.14</td></tr></tbody></table><div><p class="code-label">Output</p><pre class="code out" style="--cs:22px;--cl:34px">best power: 3.0</pre></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>03 · Validation</span></div><h2 class="slide-title">Letting Validation Pick the Power</h2><div class="video-wrap picture rise" style="grid-template-columns:1200px minmax(0, 1fr)"><img src="media/Week11_choose_power.png" alt="Left: LOO RMSE against the IDW power, lowest near p = 3, all below the field-mean baseline. Right: the 1:1 plot at p = 3" width="1200" height="571"><div class="video-side"><p><strong>5.43 %</strong> Mean baseline</p><p><strong>3.30 %</strong> IDW, p = 2</p><p class="takeaway"><strong>2.86 %</strong> IDW, p = 3 (best)</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>03 · Validation · Code</span></div><h2 class="slide-title">The 1:1 Plot in Code</h2><div class="pair rise" style="grid-template-columns:1000px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:24px;--cl:38px">pred = loo_idw(x, y, z, power=best)
+
+fig, ax = plt.subplots()
+ax.scatter(z, pred, alpha=0.7)
+lims = [z.min() - 1, z.max() + 1]
+ax.plot(lims, lims, &quot;r-&quot;)         # perfect line
+ax.set_aspect(&quot;equal&quot;)
+ax.set_xlabel(&quot;Observed (%)&quot;)
+ax.set_ylabel(&quot;LOO predicted (%)&quot;)
+
+s = scores(pred, z)
+ax.set_title(f&quot;RMSE = {s[&#x27;RMSE&#x27;]:.2f} %, &quot;
+             f&quot;MAE = {s[&#x27;MAE&#x27;]:.2f} %&quot;)</pre></div><div><img src="media/Week11_one_to_one.png" alt="Observed against LOO-predicted moisture with the 1:1 line; RMSE 2.86 percent, MAE 2.18 percent" width="560" height="579"></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>03 · Validation</span></div><h2 class="slide-title">What LOO Does and Does Not Say</h2><div class="video-wrap picture rise" style="grid-template-columns:750px minmax(0, 1fr)"><img src="media/Week11_distance_to_probe.png" alt="Map of the distance to the nearest probe, with a red line enclosing the area within 1.0 km of a probe" width="750" height="599"><div class="video-side"><p>Scores the method AT observation locations only</p><p>Far from all observations, the map is extrapolating</p><p>LOO is silent there: mask or caveat those areas</p><p>The 1:1 scatter shows compression: highs under-predicted, lows over-predicted</p><p>Report RMSE together with WHERE it applies</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>03 · Validation · Code</span></div><h2 class="slide-title">Masking Cells Far from Every Probe</h2><div class="pair rise" style="grid-template-columns:1000px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:24px;--cl:38px">from scipy.spatial import cKDTree
+
+tree = cKDTree(np.column_stack([x, y]))
+nodes = np.column_stack([GX.ravel(), GY.ravel()])
+dist_nearest, _ = tree.query(nodes)
+dist_nearest = dist_nearest.reshape(GX.shape)
+
+Zbest = idw_grid(GX, GY, x, y, z, power=best)
+max_gap = 1.0                 # km, about half the range
+Z_masked = np.where(dist_nearest &lt;= max_gap,
+                    Zbest, np.nan)
+plt.pcolormesh(GX, GY, Z_masked, cmap=&quot;YlGnBu&quot;)</pre></div><div><img src="media/Week11_masked_map.png" alt="The p = 3 IDW map with every cell farther than 1.0 km from a probe left blank" width="600" height="514"><div class="video-side"><p>≈ 20 % of cells blanked</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide check"><div class="kicker"><span>Pause and think</span></div><p class="q-mark">?</p><p class="q">IDW with a very high power reproduces every observation exactly. Why does it usually validate WORSE?</p><div class="answers"><div>Fitting the points is free; predicting between them is the test</div><div>Bullseye maps memorize; smooth maps generalize (sound familiar from machine learning?)</div></div><p class="footnote">Think for 30 seconds, tell a neighbor, then reveal.</p><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide divider"><div class="rise"><div class="ghost-num">04</div><h2 class="slide-title">Putting It to Work</h2><p class="sub">The whole workflow in code, where kriging would start, and common bugs.</p></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>04 · Putting it to work</span></div><h2 class="slide-title">The Lab&#x27;s Full Workflow</h2><div class="steps rise"><div><span class="big">1</span><h3>Given</h3><p>80 synthetic soil-moisture points with coordinates, elevation, land cover.</p></div><div><span class="big">2</span><h3>Solve</h3><p>Variogram with range estimate; IDW maps at p = 1, 2, 4; LOO RMSE for each.</p></div><div><span class="big">3</span><h3>Interpret</h3><p>Pick a power with evidence; state where the map should not be trusted.</p></div></div><div class="callout">The INTERPRET step is graded as much as the code</div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>04 · Putting it to work · Code</span></div><h2 class="slide-title">The Whole Workflow in Code</h2><div class="pair rise" style="grid-template-columns:1100px minmax(0, 1fr)"><div><p class="code-label">Python</p><pre class="code" style="--cs:16px;--cl:25px">points = pd.read_csv(&quot;soil_moisture_80.csv&quot;)
+x, y, z = (points[c].to_numpy()
+           for c in [&quot;x_km&quot;, &quot;y_km&quot;, &quot;moisture_pct&quot;])
+
+# 1. variogram
 D = pairwise_distances_xy(points[&quot;x_km&quot;], points[&quot;y_km&quot;])
-D.shape          # (80, 80)
-D[3, 17]         # distance between points 3 and 17
-# upper triangle: 80 * 79 / 2 = 3,160 unique pairs</pre></div><ul class="bullets sm"><li>The variogram bins these pairs; IDW weights them</li><li>One matrix, two methods</li></ul></div><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>04 · Putting it to work</span></div><h2 class="slide-title">What Kriging Adds (and Why We Stop Here)</h2><ul class="bullets"><li>Kriging picks weights FROM the variogram, not from a fixed power</li><li>It attaches an uncertainty map to the prediction map</li><li>The price: fitting a variogram model and heavier assumptions</li><li>IDW plus honest validation covers this course&#x27;s needs</li></ul><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>04 · This week&#x27;s lab</span></div><h2 class="slide-title">Group Lab 5: Geostatistics and IDW</h2><div class="cols cols-2 rise"><div><h3>Lab session</h3><ul class="bullets sm"><li>Empirical semivariogram, range by eye</li><li>Three-power map comparison</li><li>LOO table</li></ul></div><div><h3>Studio session</h3><ul class="bullets sm"><li>1:1 validation scatter with RMSE and MAE</li><li>max_distance sensitivity</li><li>Land-cover group means</li></ul></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>Pitfalls</span></div><h2 class="slide-title">Where This Week Goes Wrong</h2><ul class="bullets"><li>Reading wiggles in bins with a handful of pairs</li><li>Confusing semivariance with variance</li><li>Judging maps by prettiness: detailed-looking bullseyes validate worst</li><li>Reporting values far outside the observed network</li></ul><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>Bridge</span></div><h2 class="slide-title">Connection to Next Week</h2><table class="table rise"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Predict in space, validate by holdout</td><td>Environmental modeling</td><td>Predict in time with physics, validate on the year the model never saw</td></tr></tbody></table><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide content"><div class="kicker"><span>Summary</span></div><h2 class="slide-title">Key Takeaways</h2><ul class="bullets"><li>Near things resemble; the variogram quantifies how far that lasts</li><li>Nugget, sill, range: noise, budget, reach</li><li>IDW power trades smoothness against bullseyes</li><li>LOO gives the map an honest error bar</li></ul><div class="page-foot" aria-hidden="true"></div></div></div>
-<div class="frame"><div class="slide check"><div class="kicker"><span>Discussion · Next week: simple environmental modeling</span></div><p class="q-mark">?</p><p class="q">Your campus installs 10 new soil sensors. Using this week&#x27;s vocabulary, what one number would you estimate first to place them, and why?</p><div class="page-foot" aria-hidden="true"></div></div></div>
+i, j = np.triu_indices(len(z), k=1)
+lags, gamma, npairs = empirical_variogram(
+    D[i, j], 0.5 * (z[i] - z[j])**2)
+
+# 2. choose p by LOO
+table = pd.DataFrame([{&quot;power&quot;: p,
+                       **scores(loo_idw(x, y, z, p), z)}
+                      for p in [1, 2, 4]])
+best = table.loc[table[&quot;RMSE&quot;].idxmin(), &quot;power&quot;]
+
+# 3. final map
+Zbest = idw_grid(GX, GY, x, y, z, power=best)</pre></div><div><div class="video-side"><p><strong>1 · Variogram</strong> range by eye</p><p><strong>2 · LOO table</strong> pick p with evidence</p><p><strong>3 · Final map</strong> mask far cells</p></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>04 · Putting it to work</span></div><h2 class="slide-title">What Kriging Adds (and Why We Stop Here)</h2><table class="table rise"><thead><tr><th></th><th>IDW</th><th>Kriging</th></tr></thead><tbody><tr><td>Weights from</td><td>A fixed power p</td><td>The fitted variogram</td></tr><tr><td>Uncertainty map</td><td>No</td><td>Yes (kriging variance)</td></tr><tr><td>Needs a variogram model</td><td>No</td><td>Yes</td></tr><tr><td>Assumptions</td><td>Few</td><td>Stationarity, model choice</td></tr></tbody></table><div class="callout">IDW plus honest validation covers this course&#x27;s needs</div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>04 · This week&#x27;s lab</span></div><h2 class="slide-title">Group Lab 5: Geostatistics and IDW</h2><div class="cols cols-2 rise"><div><h3>Lab session</h3><ul class="bullets sm"><li>Empirical semivariogram, range by eye</li><li>Three-power map comparison (p = 1, 2, 4)</li><li>LOO table with RMSE for each power</li></ul></div><div><h3>Studio session</h3><ul class="bullets sm"><li>1:1 validation scatter with RMSE and MAE</li><li>max_distance sensitivity</li><li>Land-cover group means</li></ul></div></div><div class="callout">Start from the distance matrix; report every RMSE next to the mean baseline (5.43 % for today&#x27;s 80 probes)</div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>Pitfalls</span></div><h2 class="slide-title">Where This Week Goes Wrong</h2><div class="cols cols-2 rise" style="row-gap:48px"><div><span class="num">!</span><h3>Noisy bins</h3><p>Reading wiggles in bins with only a handful of pairs</p></div><div><span class="num">!</span><h3>Wrong word</h3><p>Confusing semivariance (a function of h) with variance (one number)</p></div><div><span class="num">!</span><h3>Pretty maps</h3><p>Judging by looks: detailed-looking bullseyes validate worst</p></div><div><span class="num">!</span><h3>Outside the network</h3><p>Reporting values far from every probe</p></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>Pitfalls · Code</span></div><h2 class="slide-title">Common Code Bugs (and the One-Line Fix)</h2><div class="cols cols-2 rise" style="row-gap:48px"><div><h3>Degrees in the distance</h3><p>Symptom: distorted distances: 1° lon ≠ 1° lat</p><div><p class="code-label">Fix</p><pre class="code" style="--cs:24px;--cl:38px">x = points[&quot;x_km&quot;]   # not longitude</pre></div></div><div><h3>k not dropped in LOO</h3><p>Symptom: RMSE = 0.00, too good to be true</p><div><p class="code-label">Fix</p><pre class="code" style="--cs:24px;--cl:38px">keep = np.arange(n) != k</pre></div></div><div><h3>Divide by zero on a probe</h3><p>Symptom: inf or nan pixels on the map</p><div><p class="code-label">Fix</p><pre class="code" style="--cs:24px;--cl:38px">d = np.maximum(d, 1e-12)</pre></div></div><div><h3>Different color limits</h3><p>Symptom: panels differ for the wrong reason</p><div><p class="code-label">Fix</p><pre class="code" style="--cs:24px;--cl:38px">vmin=z.min(), vmax=z.max()</pre></div></div></div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>Bridge</span></div><h2 class="slide-title">Connection to Next Week</h2><table class="table rise"><thead><tr><th>This week</th><th>Next week</th><th>Bridge idea</th></tr></thead><tbody><tr><td>Predict in space, validate by holdout</td><td>Environmental modeling</td><td>Predict in time with physics, validate on the year the model never saw</td></tr></tbody></table><div class="callout">Same habit, new axis: hold out, predict, score</div><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide content"><div class="kicker"><span>Summary</span></div><h2 class="slide-title">Key Takeaways</h2><ul class="bullets"><li>Every step is a few lines of NumPy: test each on a hand example first</li><li>The field mean is the baseline every method must beat</li><li>Near things resemble; the variogram quantifies how far that lasts</li><li>Nugget, sill, range: noise, total variance, reach</li><li>IDW power trades smoothness against bullseyes</li><li>LOO gives the map an honest error bar, but only near the data</li></ul><div class="page-foot" aria-hidden="true"></div></div></div>
+<div class="frame"><div class="slide check"><div class="kicker"><span>Discussion · Next week: Simple environmental modeling</span></div><p class="q-mark">?</p><p class="q">Your campus installs 10 new soil sensors. Using this week&#x27;s vocabulary, what one number would you estimate first to place them, and why?</p><div class="page-foot" aria-hidden="true"></div></div></div>
 </div>
 <script>
     // The canvas is a fixed 1920x1080, shown at two thirds by default. On a

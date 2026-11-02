@@ -32,7 +32,7 @@ before every deployment.
 ## Repository layout
 
 - `materials/slides/`: student-facing HTML slide decks.
-- `notebooks/`: individual labs, group labs, debrief guidance, and project templates.
+- `notebooks/`: individual labs, group labs, lecture demos, debrief guidance, and project templates.
 - `data/processed/`: stable classroom datasets used by the notebooks.
 - `src/`: reusable scientific-computing functions.
 - `scripts/`: student-facing data preparation and Lab 4 files.
